@@ -1,0 +1,10 @@
+globals.inc.php
+spa.inc.php
+npm-debug.log
+phpunit-temp.phar
+spabusiness.com/
+jhunexjun/
+user_guide/
+phpunit.phar
+*.sql
+readme.txt
