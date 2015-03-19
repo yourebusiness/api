@@ -21,15 +21,16 @@ $(document).ready(function(){
 		var data = {
 			username: $username.val(),
 			password: $password.val(),
+			v: "companyProfile",
 		};
 
 
 		$.ajax({
 			type: 'POST',
-			url: 'http://yourspa.com/admin/addService',
+			url: 'http://yourspa.com/admin/checkLogin',
 			data: data,
 			success: function(response) {
-				$('#successAlert').slideDown();
+				window.location.href = 'http://yourspa.com/admin/companyProfile';
 			},
 			error: function() {
 				console.log("Error.");

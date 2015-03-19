@@ -179,8 +179,11 @@ class Users extends baseClass {
     		if (!$stmt->execute())
     			throw new Exception("Error executing sql.");
 
-    		$returnValue = true;
-    	
+    		$stmt->store_result();
+			if ($stmt->num_rows != 1)
+				$returnResult = false;
+    		else
+    			$returnValue = true;    	
     	} catch (Exception $e) {
     		error_log($e->getMessage());
     		$returnValue = false;

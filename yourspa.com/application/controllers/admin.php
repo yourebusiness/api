@@ -423,10 +423,14 @@ class Admin extends CI_Controller {
 	/* controller for company profile */
 
 	public function companyProfile() {
-		$headerData["title"] = "Company";
-		$headerData['username'] = $this->username;
-		$this->load->view("templates/header", $headerData);
-		$this->load->view("sessioned/company_view");
+		if ($this->input->cookie("yourspa_login")) {
+			$headerData["title"] = "Company";
+			$headerData['username'] = $this->username;
+			$this->load->view("templates/header", $headerData);
+			$this->load->view("sessioned/company_view");
+		} else {
+			redirect("admin/login?v=companyProfile");
+		}
 	}
 
 	// we have to avoid hacking here.
@@ -478,28 +482,32 @@ class Admin extends CI_Controller {
     }
 
     public function checkLogin() {
-    	$v = $this->input->post("v");
-    	if ($v == "" || $v == 0)
-    		redirect(base_url());
+    	$v = trim($this->input->post("v"));
+    	if ($v == "") {
+    		redirect(base_url("admin"));
+    		exit(0);
+    	}
 
     	// current user should match with what the user input.
     	$username = $this->input->post("username");
-    	if ($username != $this->session->userdata["username"])
-    		redirect(base_url());
-
+    	if ($username != $this->session->userdata["username"]) {
+    		redirect(base_url("admin"));
+    		exit(0);
+    	}
+    	
     	$data = array("username" => $username, "password" => $this->input->post("password"));
     	if ($v == "companyProfile") {
     		$this->load->model("Admin_model");
-    		if (!$this->Admin_model->login($data))
-    			redirect(base_url("admin/login"));
-    		else {
-    			$headerData["title"] = "Company";
-	    		$headerData['username'] = $this->username;
-		        $this->load->view("templates/header", $headerData);
-		        $this->load->view("sessioned/company_view");
+    		if ($this->Admin_model->login($data)) {
+    			$cookie = array(
+				    'name'   => 'yourspa_login',
+				    'value'  => 'value',
+				    'expire' => '600',
+				);
+
+				$this->input->set_cookie($cookie);
     		}
     	}
-
     }
 
 } /* end of admin.php class */
