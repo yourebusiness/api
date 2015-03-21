@@ -29,7 +29,7 @@ class Profile {
 	}
 
 	private function checkDataForUpdateProfile($data) {
-		$keys = array("userId", "fName", "lName", "gender");
+		$keys = array("userId", "fName", "lName", "gender", "updatedBy");
 		foreach ($keys as $key)
 			if (!array_key_exists($key, $data))
 				return false;
@@ -52,9 +52,9 @@ class Profile {
 
 		$returnValue = false;
 
-		$sql = "update `users` set fName=?,midName=?,lName=?,gender=?,address=? where userId=?";
+		$sql = "update `users` set fName=?,midName=?,lName=?,gender=?,address=?,updateDate=now(),updatedBy=? where userId=?";
 		$stmt = $this->mysqli->prepare($sql);
-		$stmt->bind_param("sssssi", $data["fName"], $data["midName"], $data["lName"], $data["gender"], $data["address"], $data["userId"]);
+		$stmt->bind_param("sssssii", $data["fName"], $data["midName"], $data["lName"], $data["gender"], $data["address"], $data["updatedBy"], $data["userId"]);
 		if ($stmt->execute())
     		$returnValue = true;
     	else

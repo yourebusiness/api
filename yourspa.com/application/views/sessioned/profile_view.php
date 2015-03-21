@@ -75,42 +75,63 @@
 
     <div class="row">
       <input type="hidden" id="userId" name="userId" value="<?php echo $userId; ?>" />
+      <div class="col-sm-2">
+      </div>
       <div class="col-sm-8">
         <div class="alert alert-success alert-block fade in" id="successAlert">
           <h4>Success!!!</h4>
-          <p>New record has been successfully added.</p>
+          <p>Your profile has been successfully updated.</p>
         </div>
 
         <div class="alert alert-danger alert-block fade in" id="dangerAlert">
           <h4>Error!!!</h4>
-          <p>First/Last names, and gender are must fields.</p>
+          <p>First/Last names, gender, and username/email are must fields.</p>
         </div>
 
-        <div class="col-xs-3">
-          <input id="username" name="username" type="text" class="form-control" placeholder="Username/email" />
-        </div>
-        <div class="col-xs-3">
-          <input id="fName" name="fName" type="text" class="form-control" placeholder="First name" />
-        </div>
-        <div class="col-xs-3">
-          <input type="text" name="midName" id="midName" class="form-control" placeholder="Middle name" />
-        </div>
-        <div class="col-xs-3">
-          <input type="text" name="lName" id="lName" class="form-control" placeholder="Last name" />
-        </div>
-        <div class="col-xs-3">
-          <textarea id="address" rows="4" name="address" class="form-control" placeholder="Address here" style="resize: none;"></textarea>
-        </div>
-        <div class="col-xs-2">
-          <select id="gender" name="gender" class="form-control">
-            <option value="M">Male</option>
-            <option value="F">Female</option>
-          </select>
-        </div>
+        <form id="form" method="get" action="<?php echo base_url("admin/editCompanyProfile"); ?>" class="form-horizontal" role="form">
+          <div class="form-group">
+              <div class="col-md-5">
+                <input id="username" name="username" type="text" class="form-control" placeholder="Username/email" />
+              </div>
+                <label class="col-md-7"></label>
+          </div>
+
+          <div class="form-group">
+            <div class="col-md-4">
+              <input id="fName" name="fName" type="text" class="form-control" placeholder="First name" />
+            </div>
+            <div class="col-md-4">
+              <input type="text" name="midName" id="midName" class="form-control" placeholder="Middle name" />
+            </div>
+            <div class="col-md-4">
+              <input type="text" name="lName" id="lName" class="form-control" placeholder="Last name" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-md-8">
+              <textarea id="address" rows="4" name="address" class="form-control" placeholder="Address here" style="resize: none;"></textarea>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-md-2">
+              <select id="gender" name="gender" class="form-control">
+              <option value="M">Male</option>
+              <option value="F">Female</option>
+            </select>
+            </div>
+          </div>
+
+        </form>
+
+        <hr />
+
         <button id="update_profile" type="button" class="btn btn-primary">Update</button>
+        <button type="button" class="btn btn-default" onclick="window.location.href='<?php echo base_url("admin"); ?>'">Cancel</button>
         <a href="<?php echo base_url("admin/changePasswordView"); ?>">Change password.</a>
       </div>
-      <div class="col-sm-4">
+      <div class="col-sm-2">
       </div>
 
       <!-- <button type="button">Update</button> -->

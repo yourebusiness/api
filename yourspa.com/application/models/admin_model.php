@@ -88,7 +88,7 @@ class Admin_model extends CI_Model {
 
     /* end for model services */
 
-    /* model for profile */
+    /* model for user's profile */
     public function profile($id) {
     	return $this->profile->getProfileByUserId($id);
     }

@@ -22,6 +22,10 @@ $(document).ready(function(){
 			$dangerAlert.slideDown();
 			return;
 		}
+		if (jQuery.trim($username.val()).length < 10) {
+			$dangerAlert.slideDown();
+			return;
+		}
 		if (jQuery.trim($fName.val()).length < 2) {
 			$dangerAlert.slideDown();
 			return;
@@ -46,7 +50,7 @@ $(document).ready(function(){
 			url: 'http://yourspa.com/admin/updateProfile',
 			data: $data,
 			success: function(response) {
-				console.log("Success");
+				$successAlert.slideDown();
 			},
 			error: function() {
 				console.log("Error.");

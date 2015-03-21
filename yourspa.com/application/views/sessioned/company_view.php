@@ -74,9 +74,7 @@
 <div class="container-fluid">
     <h4>Company Profile</h4> <hr />
 
-    <div class="col-md-1">
-    </div>
-    <div class="col-md-1">
+    <div class="col-md-2">
     </div>
     <div class="col-md-8">
       <div class="alert alert-danger" role="alert">
@@ -149,9 +147,7 @@
       </form>
 
     </div>
-    <div class="col-md-1">
-    </div>
-    <div class="col-md-1">
+    <div class="col-md-2">
     </div>
 </div>
 

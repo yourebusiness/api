@@ -349,9 +349,7 @@ class Admin extends CI_Controller {
 		$headerData['username'] = $this->username;
 		$this->load->view("templates/header", $headerData);
 		$this->load->view("sessioned/profile_view", $data);
-	}
-
-	
+	}	
 
 	public function updateProfile() {
 		$data = array("userId" => $this->input->get("userId"),
@@ -361,6 +359,7 @@ class Admin extends CI_Controller {
 					"lName" => $this->input->get("lName"),
 					"gender" => $this->input->get("gender"),
 					"address" => $this->input->get("address"),
+					"updatedBy" => $this->session->userdata["userId"]
 				);
 
 		$this->load->model("Admin_model");

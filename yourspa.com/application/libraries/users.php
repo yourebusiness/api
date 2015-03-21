@@ -175,8 +175,17 @@ class Users extends baseClass {
 		$result = $this->mysqli->query($sql);
 		if ($result->num_rows == 1) {
 			$row = $result->fetch_array(MYSQLI_ASSOC);
-			if (password_verify($data["password"], $row["passwd"]))
-				$returnValue = true;
+			if (password_verify($data["password"], $row["passwd"])) {
+				$stmt = $this->mysqli->prepare("update users set lastLogin=now() where username=?");
+				$stmt->bind_param("s", $data["username"]);
+				if ($stmt->execute())
+					$returnValue = true;
+				else
+					$returnValue = false;
+
+				$stmt->close();
+			}
+				
 		}
 
 		$result->close();		    	
