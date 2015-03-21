@@ -215,6 +215,34 @@ class Company extends baseClass {
 		return true;
 	}
 
+    public function getCompanyInfo($companyId) {
+        if ($companyId == "")
+            return false;
+
+        $arr = array();
+
+        $sql = "select companyName, address, province, city, telNo, website, tin from company where companyId=$companyId";
+        $result = $this->mysqli->query($sql);
+        while ($row = $result->fetch_array(MYSQLI_ASSOC))
+            $arr[] = $row;
+
+        return $arr;
+    }
+
+    public function getProvinceIdByCompanyId($companyId) {
+        if ($companyId == "")
+            return false;
+
+        $arr = array();
+
+        $sql = "select province FROM company where companyId=$companyId";
+        $result = $this->mysqli->query($sql);
+        while ($row = $result->fetch_array(MYSQLI_ASSOC))
+            $arr[] = $row;
+
+        return $arr;
+    }
+
 	public function __destruct() {
 		$this->mysqli->close();
 	}

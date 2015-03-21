@@ -25,6 +25,10 @@ class Admin extends CI_Controller {
 
 		$this->load->view("templates/header", $data);
 		$this->load->view("sessioned/home");
+
+		// we want this to delete after exiting from company profile page.
+		$this->load->helper("cookie");
+		delete_cookie("yourspaFunc_CompanyProfile");
 	}
 
 	public function masseur() {
@@ -427,8 +431,19 @@ class Admin extends CI_Controller {
 		if (password_verify($this->session->userdata["username"], $cookie)) {
 			$headerData["title"] = "Company";
 			$headerData['username'] = $this->username;
+			$data["companyId"] = $this->session->userdata["companyId"];
+			$this->load->model("Api_model");
+			$data["provinces"] = $this->Api_model->getProvince(); // get all province list
+
+			$this->load->model("Admin_model");
+			$provinceId = $this->Admin_model->getProvinceIdByCompanyId($data["companyId"])[0]["province"];
+
+			$data["cities"] = $this->Api_model->getCity($provinceId);
+			//print_r($data["cities"]);
+
+			$data["companyInfo"] = $this->Admin_model->getCompanyInfo($data["companyId"]);
 			$this->load->view("templates/header", $headerData);
-			$this->load->view("sessioned/company_view");
+			$this->load->view("sessioned/company_view", $data);
 		} else {
 			redirect("admin/login?v=companyProfile");
 		}

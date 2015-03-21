@@ -8,6 +8,7 @@ class Admin_model extends CI_Model {
 		$this->load->library("services");
 		$this->load->library("profile");
 		$this->load->library("customer");
+        $this->load->library("company");
 	}
 
 	/* model for masseurs */
@@ -126,6 +127,12 @@ class Admin_model extends CI_Model {
     /* end for customer model */
 
     /* for company profile */
-    //public function 
-    /* enf for company profile */
+    public function getCompanyInfo($companyId) {
+        return $this->company->getCompanyInfo($companyId);
+    }
+
+    public function getProvinceIdByCompanyId($companyId) {
+        return $this->company->getProvinceIdByCompanyId($companyId);
+    }
+    /* end for company profile */
 }

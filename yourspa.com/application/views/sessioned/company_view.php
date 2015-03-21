@@ -74,6 +74,85 @@
 <div class="container-fluid">
     <h4>Company Profile</h4> <hr />
 
+    <div class="col-md-1">
+    </div>
+    <div class="col-md-1">
+    </div>
+    <div class="col-md-8">
+      <div class="alert alert-danger" role="alert">
+        <p>
+          <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+          <span class="sr-only">Error:</span>
+          <span id="errorMessage"></span>
+        </p>                  
+      </div>
+
+      <form id="form" method="get" action="<?php echo base_url("admin/editCompanyProfile"); ?>" class="form-horizontal" role="form">
+        <input type="hidden" value="<?php echo $companyId; ?>" />
+          <div class="form-group">
+            <div class="col-md-4">
+              <input id="company" type="text" class="form-control" placeholder="Company name" value="<?php echo $companyInfo[0]["companyName"]; ?>" />
+            </div>
+              <label class="col-md-8"></label>
+          </div>
+
+          <div class="form-group">
+            <div class="col-md-6">
+              <select class="form-control" id="province" name="province">
+                <option value="0">-- Province --</option>
+                <?php foreach($provinces as $row) { ?>
+                    <option value="<?php echo $row['id']; ?>" <?php echo ($row['id'] == $companyInfo[0]['province']) ? "selected" : ""; ?>><?php echo $row["provinceName"]; ?></option>
+                <?php } ?>
+              </select>
+            </div>
+              <div class="col-md-6">
+                <select class="form-control" id="city" name="city">
+                  <option value="0">-- City --</option>
+                  <?php foreach($cities as $city) { ?>
+                    <option value="<?php echo $city['id']; ?>" <?php echo ($city['id'] == $companyInfo[0]['city']) ? "selected" : ""; ?>><?php echo $city["cityName"]; ?></option>
+                <?php } ?>
+                </select>
+              </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-md-4">
+              <input id="address" type="text" class="form-control" placeholder="Address" value="<?php echo $companyInfo[0]["address"]; ?>" />
+            </div>
+            <div class="col-md-4">
+              <input id="phoneNo" type="text" class="form-control" placeholder="Phone number" value="<?php echo $companyInfo[0]["telNo"]; ?>" />
+            </div>
+            <div class="col-md-4">
+              <input id="tin" type="text" class="form-control" placeholder="TIN" value="<?php echo $companyInfo[0]["tin"]; ?>" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-md-4">
+              <input id="companyWebsite" type="text" class="form-control" placeholder="Company Website" value="<?php echo $companyInfo[0]["website"]; ?>" />
+            </div>
+            <div class="col-md-4">
+            </div>
+            <div class="col-md-4">
+            </div>
+          </div>
+
+          <hr />
+
+          <div class="form-group">
+            <div class="col-md-12">
+              <input type="Submit" class="btn btn-primary" />
+            <input type="button" class="btn btn-default" value="Cancel" onclick="window.location.href='<?php echo base_url("admin"); ?>'" />
+            </div>
+          </div>
+
+      </form>
+
+    </div>
+    <div class="col-md-1">
+    </div>
+    <div class="col-md-1">
+    </div>
 </div>
 
 <!-- All Javascript at the bottom of the page for faster page loading -->
@@ -83,7 +162,7 @@
     
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
     
-    <script src="http://yourspa.com/includes/js/companyProfile.js"></script>
+    <script src="http://yourspa.com/includes/js/company.js"></script>
     
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/0.8.1/mustache.js"></script>
     
