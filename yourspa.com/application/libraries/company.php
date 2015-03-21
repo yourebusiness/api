@@ -132,6 +132,8 @@ class Company extends baseClass {
     	if (!$this->okToAddTelNo($data["phoneNo"]))
     		return false;
 
+        $data["password"] = password_hash($data["password"], PASSWORD_BCRYPT);
+
 		$returnResult = false; // default value
 
 		$sql1 = sprintf("insert into company(companyName, address, province, city, telNo, website, tin, uniqueCode, createDate)
@@ -139,7 +141,7 @@ class Company extends baseClass {
 			$data["company"], $data["address"], $data["province"], $data["city"], $data["phoneNo"], $data["companyWebsite"], $data["tin"], $data["hash"]);
 		$sql2 = "SET @companyId = LAST_INSERT_ID();";
 		$sql3 = sprintf("insert into users(username, passwd, fName, lName, email, gender, createDate, role)
-			values('%s', md5('%s'), '%s', '%s', '%s', '%s', now(), 0);",
+			values('%s', '%s', '%s', '%s', '%s', '%s', now(), 0);",
 			$data["userEmail"], $data["password"], $data["fName"], $data["lName"], $data["userEmail"], $data["gender"]);
 		$sql4 = "SET @userId = LAST_INSERT_ID();";
 		$sql5 = "insert into company_users(companyId, userId, createDate) values(@companyId, @userId, now());";

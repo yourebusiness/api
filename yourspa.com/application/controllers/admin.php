@@ -423,7 +423,8 @@ class Admin extends CI_Controller {
 	/* controller for company profile */
 
 	public function companyProfile() {
-		if ($this->input->cookie("yourspa_login")) {
+		$cookie = $this->input->cookie("yourspaFunc_CompanyProfile");
+		if (password_verify($this->session->userdata["username"], $cookie)) {
 			$headerData["title"] = "Company";
 			$headerData['username'] = $this->username;
 			$this->load->view("templates/header", $headerData);
@@ -442,8 +443,8 @@ class Admin extends CI_Controller {
     }
 
     public function editCompanyProfile() {
-        $this->load->helper("cookie");
-        if ($this->input->cookie("yourspa_companyProfile")) {
+        $cookie = $this->input->cookie("yourspaFunc_CompanyProfile");
+		if (password_verify($this->session->userdata["username"], $cookie)) {
             $data = array();
             $data["companyId"] = $this->input->get("companyId");
 
@@ -499,13 +500,17 @@ class Admin extends CI_Controller {
     	if ($v == "companyProfile") {
     		$this->load->model("Admin_model");
     		if ($this->Admin_model->login($data)) {
-    			$cookie = array(
-				    'name'   => 'yourspa_login',
-				    'value'  => 'value',
-				    'expire' => '600',
-				);
+    			$this->load->helper("cookie");
+    			// we add new session data to know what are we logging into
+    			$cookieValue = password_hash($username, PASSWORD_BCRYPT);
+				$cookie = array(
+					    'name'   => 'yourspaFunc_CompanyProfile',
+					    'value'  => $cookieValue,
+					    'expire' => '600',
+					    'secure' => FALSE
+					);
 
-				$this->input->set_cookie($cookie);
+					$this->input->set_cookie($cookie);
     		}
     	}
     }

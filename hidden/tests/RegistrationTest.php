@@ -12,6 +12,8 @@ class RegistrationTest extends PHPUnit_Framework_Testcase {
 		$this->assertTrue(dropAndReloadDatabase());
 		$this->url = $webvars["SERVER_ROOT"] . "/registration/register";
 
+		$this->assertTrue(mysqlDump());
+
 		$this->assertTrue(insertCommonData());
 	}
 
@@ -77,6 +79,8 @@ class RegistrationTest extends PHPUnit_Framework_Testcase {
 		$this->assertEquals($data["userEmail"], $row["username"]);
 		$this->assertEquals($data["userEmail"], $row["email"]);
 		$this->assertNotNull($row["passwd"]);
+		$this->assertEquals(60, strlen($row["passwd"])); // the password_hash always produce 60 chars
+		$this->assertTrue(password_verify($data["password"], $row["passwd"]));
 		$this->assertEquals(null, $row["address"]);
 		$this->assertEquals(null, $row["lastLogIn"]);
 		$this->assertNotNull($row["createDate"]);
@@ -99,7 +103,7 @@ class RegistrationTest extends PHPUnit_Framework_Testcase {
 		$this->assertNotNull($row['createDate']);
 	}
 
-	public function testEditCompanyProfile() {
+	/* public function testEditCompanyProfile() {
 		$this->testSuccessRegistration();
 
 		global $webvars;
@@ -147,8 +151,8 @@ class RegistrationTest extends PHPUnit_Framework_Testcase {
 		$this->assertEquals($data["companyWebsite"], $row["website"]);
 		$this->assertEquals($data["tin"], $row["tin"]);
 	}
-
-	public function testActivateCompany() {
+	*/
+	/* public function testActivateCompany() {
 		$this->testSuccessRegistration();
 
 		global $webvars;
@@ -176,5 +180,5 @@ class RegistrationTest extends PHPUnit_Framework_Testcase {
 
 		$row = $result->fetch_array(MYSQLI_ASSOC);
 		$this->assertEquals($data["company"], $row["companyName"]);
-	}
+	} */
 }

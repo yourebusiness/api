@@ -14,14 +14,9 @@ class Api_model extends CI_Model {
 		return $query->result_array();
 	}
 
-	public function signIn($data) {
-		$bind_vars = array($data["username"], $data["password"]);
-		$query = "select username, passwd from users where username = ? and passwd = md5(?) and active = 'Y'";
-		$query = $this->db->query($query, $bind_vars);
-		if($query->num_rows())
-			return true;
-		else
-			return false;
+	public function signIn(array $data) {
+		$this->load->library("users");
+		return $this->users->login($data);
 	}
 
 	public function checkUsername($username) {

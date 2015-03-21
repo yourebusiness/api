@@ -1,5 +1,15 @@
 <?php
 
+$schema_file = "/usr/local/database/dev/0schema.sql";
+
+function mysqlDump() {
+	global $schema_file;
+	global $db;
+	exec("mysqldump -h {$db['common_hostname']} -u {$db['common_username']} --password={$db['password']} {$db['common_database']} > $schema_file");
+
+	return true;
+}
+
 function dropAndReloadDatabase() {
 	global $db;
 
@@ -20,7 +30,7 @@ function dropAndReloadDatabase() {
 
 	$dbi->close();
 
-	$schema_file = "/usr/local/database/dev/0schema.sql";
+	global $schema_file;
 	$dbi = new mysqli($db['hostname'], $db['username'], $db['password'], $db['database']);
 	$reset_db = file_get_contents($schema_file);
 	$result = $dbi->multi_query($reset_db);

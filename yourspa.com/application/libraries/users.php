@@ -171,28 +171,17 @@ class Users extends baseClass {
 
     	$returnValue = false;
 
-    	try {
-    		if (!$stmt = $this->mysqli->prepare("select userId from users where username=? and passwd=md5(?)"))
-    			throw new Exception("Error preparing sql.");
-    		if (!$stmt->bind_param("ss", $data["username"], $data["password"]))
-    			throw new Exception("Error binding sql.");
-    		if (!$stmt->execute())
-    			throw new Exception("Error executing sql.");
+		$sql = "select passwd from `users` where username='" . $data["username"] . "'";
+		$result = $this->mysqli->query($sql);
+		if ($result->num_rows == 1) {
+			$row = $result->fetch_array(MYSQLI_ASSOC);
+			if (password_verify($data["password"], $row["passwd"]))
+				$returnValue = true;
+		}
 
-    		$stmt->store_result();
-			if ($stmt->num_rows != 1)
-				$returnResult = false;
-    		else
-    			$returnValue = true;    	
-    	} catch (Exception $e) {
-    		error_log($e->getMessage());
-    		$returnValue = false;
-    	} finally {
-    		$stmt->close();
-    	}
+		$result->close();		    	
 
     	return $returnValue;
-
     }
 
     public function __destruct() {
