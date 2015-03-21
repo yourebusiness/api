@@ -439,7 +439,6 @@ class Admin extends CI_Controller {
 			$provinceId = $this->Admin_model->getProvinceIdByCompanyId($data["companyId"])[0]["province"];
 
 			$data["cities"] = $this->Api_model->getCity($provinceId);
-			//print_r($data["cities"]);
 
 			$data["companyInfo"] = $this->Admin_model->getCompanyInfo($data["companyId"]);
 			$this->load->view("templates/header", $headerData);
@@ -471,14 +470,15 @@ class Admin extends CI_Controller {
             $data["city"] = $this->input->get("city");
             $data["address"] = $this->input->get("address");
             $data["phoneNo"] = $this->input->get("phoneNo");
+            $data["tin"] = $this->input->get("tin");
             $data["companyWebsite"] = $this->input->get("companyWebsite");
-            $data["tin"] = $this->input->get("tin");        
 
             $this->load->model("Register_model");
             if ($this->Register_model->edit($data)) {
-                $data["title"] = "Update Company Profile";
-                $this->load->view("templates/header", $data);
-                $this->load->view("editCompanyProfileSuccess_view");
+                $headerData["title"] = "Update Company Profile";
+    			$headerData['username'] = $this->username;
+                $this->load->view("templates/header", $headerData);
+                $this->load->view("sessioned/editCompanyProfileSuccess_view");
             }
         } else { // load the login page
             $data["title"] = "Update Company Profile";

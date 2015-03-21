@@ -88,10 +88,10 @@
       </div>
 
       <form id="form" method="get" action="<?php echo base_url("admin/editCompanyProfile"); ?>" class="form-horizontal" role="form">
-        <input type="hidden" value="<?php echo $companyId; ?>" />
+        <input type="hidden" name="companyId" value="<?php echo $companyId; ?>" />
           <div class="form-group">
             <div class="col-md-4">
-              <input id="company" type="text" class="form-control" placeholder="Company name" value="<?php echo $companyInfo[0]["companyName"]; ?>" />
+              <input id="company" name="company" type="text" class="form-control" placeholder="Company name" value="<?php echo $companyInfo[0]["companyName"]; ?>" />
             </div>
               <label class="col-md-8"></label>
           </div>
@@ -117,19 +117,19 @@
 
           <div class="form-group">
             <div class="col-md-4">
-              <input id="address" type="text" class="form-control" placeholder="Address" value="<?php echo $companyInfo[0]["address"]; ?>" />
+              <input id="address" name="address" type="text" class="form-control" placeholder="Address" value="<?php echo $companyInfo[0]["address"]; ?>" />
             </div>
             <div class="col-md-4">
-              <input id="phoneNo" type="text" class="form-control" placeholder="Phone number" value="<?php echo $companyInfo[0]["telNo"]; ?>" />
+              <input id="phoneNo" name="phoneNo" type="text" class="form-control" placeholder="Phone number" value="<?php echo $companyInfo[0]["telNo"]; ?>" />
             </div>
             <div class="col-md-4">
-              <input id="tin" type="text" class="form-control" placeholder="TIN" value="<?php echo $companyInfo[0]["tin"]; ?>" />
+              <input id="tin" name="tin" type="text" class="form-control" placeholder="TIN" value="<?php echo $companyInfo[0]["tin"]; ?>" />
             </div>
           </div>
 
           <div class="form-group">
             <div class="col-md-4">
-              <input id="companyWebsite" type="text" class="form-control" placeholder="Company Website" value="<?php echo $companyInfo[0]["website"]; ?>" />
+              <input id="companyWebsite" name="companyWebsite" type="text" class="form-control" placeholder="Company Website" value="<?php echo $companyInfo[0]["website"]; ?>" />
             </div>
             <div class="col-md-4">
             </div>

@@ -78,7 +78,6 @@ $(document).ready(function () {
             type: type,
             data: data,
             success: function (response) {
-                
             },
             error: function() { 
                 alert("Error found on request.");
