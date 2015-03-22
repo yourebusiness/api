@@ -5,7 +5,7 @@ $schema_file = "/usr/local/database/dev/0schema.sql";
 function mysqlDump() {
 	global $schema_file;
 	global $db;
-	exec("mysqldump -h {$db['common_hostname']} -u {$db['common_username']} --password={$db['password']} {$db['common_database']} > $schema_file");
+	exec("mysqldump -h {$db['common_hostname']} -u {$db['common_username']} -p{$db['password']} {$db['common_database']} > $schema_file");
 
 	return true;
 }

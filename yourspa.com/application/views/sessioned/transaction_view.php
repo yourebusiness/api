@@ -75,6 +75,8 @@
     <h3>Transaction</h3> <hr />
 
     <div class="row">
+      <div class="col-sm-2"></div>
+
       <div class="col-sm-8">
         <div class="alert alert-danger alert-block fade in" id="dangerAlert">
             <h4>Error!!!</h4>
@@ -119,6 +121,7 @@
                 <p class="form-control-static">0.00</p>
               </div>
             </div>
+            <hr />
             <div class="form-group">
               <button type="submit" id="save" class="btn btn-primary">Save</button>
               <button type="button" id="cancel" class="btn btn-default" onclick="window.location.href='<?php echo base_url("admin"); ?>'">Cancel</button>
@@ -126,7 +129,7 @@
           </form>
       </div>
 
-      <div class="col-sm-4"></div>
+      <div class="col-sm-2"></div>
     </div>
 </div>
 

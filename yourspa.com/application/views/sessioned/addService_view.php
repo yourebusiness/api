@@ -32,7 +32,8 @@
                 <ul class="dropdown-menu">
                   <li><a tabindex="-1" href="#"></a></li>
                   <li><a href="<?php echo base_url("admin/services"); ?>"><span class="glyphicon glyphicon-list"></span> List of Services</a></li>
-                  <li><a href="<?php echo base_url("admin/addService_view"); ?>"><span class="glyphicon glyphicon-plus-sign"></span> Add Services</a></li>
+                  <?php if ($userRights != 0)
+                  ?><li><a href="<?php echo base_url("admin/addService_view"); ?>"><span class="glyphicon glyphicon-plus-sign"></span> Add Services</a></li>
                 </ul>
             </li>
 
@@ -92,16 +93,24 @@
 
       <form>
         <div class="form-group">
-          <input type="text" class="form-control" id="serviceName" name="serviceName" placeholder="Service name" maxlength="">
+          <input type="text" class="form-control" id="serviceName" name="serviceName" placeholder="Service name" maxlength="120">
         </div>
         <div class="form-group">
-          <input type="text" class="form-control" id="description" name="description" placeholder="Service Description" maxlength="">
+          <textarea class="form-control" id="description" name="description" placeholder="Service Description" rows="4" maxlength="500"></textarea>
         </div>
         <div class="form-group">
-          <input type="text" class="form-control" id="regPrice" name="regPrice" placeholder="Reg. Price" maxlength="">
+          <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
+          <div class="input-group">
+            <div class="input-group-addon">Php</div>
+            <input type="text" class="form-control" id="regPrice" name="regPrice" placeholder="Reg. Price" maxlength="10">
+          </div>
         </div>
         <div class="form-group">
-          <input type="text" class="form-control" id="memberPrice" name="memberPrice" placeholder="Member Price" maxlength="">
+          <label class="sr-only" for="exampleInputAmount">Amount (in dollars)</label>
+          <div class="input-group">
+            <div class="input-group-addon">Php</div>
+            <input type="text" class="form-control" id="memberPrice" name="memberPrice" placeholder="Member Price" maxlength="10">
+          </div>
         </div>
 
         <button id="add-service" type="button" class="btn btn-primary">Submit</button>

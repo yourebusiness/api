@@ -21,7 +21,8 @@ class Admin extends CI_Controller {
 
 	public function index() {
 		$data["title"] = "Welcome";
-		$data["username"] = $this->username;		
+		$data["username"] = $this->username;
+		$data["userRights"] = $this->session->userdata["role"];
 
 		$this->load->view("templates/header", $data);
 		$this->load->view("sessioned/home");
@@ -258,7 +259,8 @@ class Admin extends CI_Controller {
 			$this->load->view("templates/header", $headerData);
 			$this->load->view("sessioned/services_view");
 		} else {
-			echo "Not an administrator.";
+			header("HTTP/1.1 401 Unauthorized.");
+			echo "Unauthorized.<br />Go to <a href='" . base_url("admin") . "''>Home Page</a>";
 		}
 	}
 
@@ -272,10 +274,17 @@ class Admin extends CI_Controller {
 	}
 
 	public function addService_view() {
-		$headerData["title"] = "Add new Services";
-		$headerData["username"] = $this->username;
-		$this->load->view("templates/header", $headerData);
-		$this->load->view("sessioned/addService_view");
+		$data["userRights"] = $this->session->userdata["role"];
+		if ($data["userRights"] == 0) {
+			$headerData["title"] = "Add new Services";
+			$headerData["username"] = $this->username;
+			$data["userRights"] = $this->session->userdata["role"];
+			$this->load->view("templates/header", $headerData);
+			$this->load->view("sessioned/addService_view", $data);
+		} else {
+			header("HTTP/1.1 401 Unauthorized.");
+			echo "Unauthorized.<br />Go to <a href='" . base_url("admin") . "''>Home Page</a>";
+		}
 	}
 
 	private function validateDataForAdd($data) {
@@ -399,6 +408,10 @@ class Admin extends CI_Controller {
 		$headerData['username'] = $this->username;
 		$this->load->view("templates/header", $headerData);
 		$this->load->view("sessioned/transaction_view", $data);
+	}
+
+	public function transact() {
+		
 	}
 
 	/* end for transactions */

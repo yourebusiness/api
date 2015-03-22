@@ -18,25 +18,30 @@
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-globe"></span> Modules <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
-            <li class="dropdown-submenu">
-                <a tabindex="-1" href="#"><span class="glyphicon glyphicon-folder-close"></span> Administrations </a>
-                <ul class="dropdown-menu">
-                  <li><a tabindex="-1" href="#"></a></li>
-                  <li><a href="<?php echo base_url("admin/login") . "?v=companyProfile"; ?>"> Company Profile </a></li>
-                  <li class="divider"></li>
-                  <li><a href="<?php echo base_url("admin/masseur"); ?>"><span class="glyphicon glyphicon-user"></span> Masseurs </a></li>
-                  <li><a href="<?php echo base_url("admin/users"); ?>"><span class="glyphicon glyphicon-star-empty"></span> Users</a></li>
-                  <li class="divider"></li>
-                  <li><a href="<?php echo base_url("admin/customers"); ?>"> Customers</a></li>
-                </ul>
-            </li>
+            <?php
+              if ($userRights == 0) { ?> 
+              <li class="dropdown-submenu">
+                  <a tabindex="-1" href="#"><span class="glyphicon glyphicon-folder-close"></span> Administrations </a>
+                  <ul class="dropdown-menu">
+                    <li><a tabindex="-1" href="#"></a></li>
+                    <li><a href="<?php echo base_url("admin/login") . "?v=companyProfile"; ?>"> Company Profile </a></li>
+                    <li class="divider"></li>
+                    <li><a href="<?php echo base_url("admin/masseur"); ?>"><span class="glyphicon glyphicon-user"></span> Masseurs </a></li>
+                    <li><a href="<?php echo base_url("admin/users"); ?>"><span class="glyphicon glyphicon-star-empty"></span> Users</a></li>
+                    <li class="divider"></li>
+                    <li><a href="<?php echo base_url("admin/customers"); ?>"> Customers</a></li>
+                  </ul>
+              </li> <?php } ?>
             <li class="divider"></li>
             <li class="dropdown-submenu">
                 <a tabindex="-1" href="#"><span class="glyphicon glyphicon-wrench"></span> Services </a>
                 <ul class="dropdown-menu">
                   <li><a tabindex="-1" href="#"></a></li>
                   <li><a href="<?php echo base_url("admin/services"); ?>"><span class="glyphicon glyphicon-list"></span> List of Services</a></li>
-                  <li><a href="<?php echo base_url("admin/addService_view"); ?>"><span class="glyphicon glyphicon-plus-sign"></span> Add Services</a></li>
+                  <?php
+                    if ($userRights == 0) {
+                    ?> <li><a href="<?php echo base_url("admin/addService_view"); ?>"><span class="glyphicon glyphicon-plus-sign"></span> Add Services </a></li>
+                    <?php } ?>
                 </ul>
             </li>
 
