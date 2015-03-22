@@ -23,8 +23,8 @@ class Users extends baseClass {
     	return true;
     }
 
-	public function getAllUsers() {
-		$sql = "select userId,username,fName,midName,lName,address,gender,active,role,trans from users";
+	public function getAllUsersExceptCurrent($currentUserId) {
+		$sql = "select userId,username,fName,midName,lName,address,gender,active,role,trans from users where userId<>$currentUserId";
 		if (!$result = $this->mysqli->query($sql))
 			die ("There's an error running the query [" . $this->mysqli->error() . "]");
 

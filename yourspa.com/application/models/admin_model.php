@@ -35,8 +35,8 @@ class Admin_model extends CI_Model {
 
 
 	/* model for users here */
-	public function getAllUsers() {
-		return $this->users->getAllUsers();
+	public function getAllUsersExceptCurrent($currentUserId) {
+		return $this->users->getAllUsersExceptCurrent($currentUserId);
 	}
 
 	public function usersAdd($data) {

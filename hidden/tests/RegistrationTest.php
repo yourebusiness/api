@@ -6,19 +6,20 @@ require_once(dirname(__FILE__) . "/../../.inc/functions.inc.php");
 
 class RegistrationTest extends PHPUnit_Framework_Testcase {
 	protected $url;
+	private $mysqli;
 
 	protected function setUp() {
 		global $webvars;
-		$this->assertTrue(dropAndReloadDatabase());
 		$this->url = $webvars["SERVER_ROOT"] . "/registration/register";
 
 		$this->assertTrue(mysqlDump());
+		$this->assertTrue(dropAndReloadDatabase());
 
 		$this->assertTrue(insertCommonData());
 	}
 
 	protected function tearDown() {
-		global $db;
+		$this->mysqli->close();
 	}
 
 	public function testSuccessRegistration() {
@@ -49,10 +50,10 @@ class RegistrationTest extends PHPUnit_Framework_Testcase {
 
 		global $db;
 
-		$mysqli = new mysqli($db['hostname'], $db['username'], $db['password'], $db['database']);
+		$this->mysqli = new mysqli($db['hostname'], $db['username'], $db['password'], $db['database']);
 
 		$query = "select * from company";
-		$result = $mysqli->query($query);
+		$result = $this->mysqli->query($query);
 		$this->assertEquals(1, $result->num_rows, "Number of records are not equals to expected in company table.");
 		$row = $result->fetch_array(MYSQLI_ASSOC);
 		$this->assertEquals($data["company"], $row["companyName"], "Company names are not equals.");
@@ -68,10 +69,12 @@ class RegistrationTest extends PHPUnit_Framework_Testcase {
 		$this->assertNotNull($row["createDate"]);
 
 		$query = "select * from users";
-		$result = $mysqli->query($query);
+		$result = $this->mysqli->query($query);
 		$this->assertEquals(1, $result->num_rows, "Number of records are not equals to expected in users table.");
 
 		$row = $result->fetch_array(MYSQLI_ASSOC);
+		$this->assertEquals(1, $row["companyId"]); // This is a 1st record.
+		$this->assertEquals(1, $row["userId"]); // This is a 1st record. From document.documentCode = "USR"
 		$this->assertEquals($data["fName"], $row["fName"]);
 		$this->assertEquals(null, $row["midName"]);
 		$this->assertEquals($data["lName"], $row["lName"]);
@@ -91,16 +94,15 @@ class RegistrationTest extends PHPUnit_Framework_Testcase {
 		$this->assertEquals(0, $row["role"]);
 		$this->assertEquals("N", $row["trans"]);
 
-		$query = "select * from company_users";
-		$result = $mysqli->query($query);
-		$this->assertEquals(1, $result->num_rows, "Number of records are not equals to expected in users table.");
-
-		$row = $result->fetch_array(MYSQLI_ASSOC);
-		// we know that there's only 1 record so we expect company id and user id are both 1.
-		$this->assertEquals(1, $row['id']);
-		$this->assertEquals(1, $row['companyId']);
-		$this->assertEquals(1, $row['userId']);
-		$this->assertNotNull($row['createDate']);
+		$result = $this->mysqli->query("select * from documents");
+		$this->assertEquals(6, $result->num_rows, "Number of records are not equals to expected in documents table.");
+		while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+			if ($row["documentCode"] == "USR")
+				$this->assertEquals(1, $row["lastNo"]);
+			else
+				$this->assertEquals(0, $row["lastNo"]);
+		}
+			
 	}
 
 	/* public function testEditCompanyProfile() {
@@ -137,9 +139,9 @@ class RegistrationTest extends PHPUnit_Framework_Testcase {
 
 		global $db;
 
-		$mysqli = new mysqli($db['hostname'], $db['username'], $db['password'], $db['database']);
+		$this->mysqli = new mysqli($db['hostname'], $db['username'], $db['password'], $db['database']);
 
-		$result = $mysqli->query("select * from company");
+		$result = $this->mysqli->query("select * from company");
 		$this->assertEquals(1, $result->num_rows, "Number of records are not equals to expected in users table.");
 
 		$row = $result->fetch_array(MYSQLI_ASSOC);
@@ -173,9 +175,9 @@ class RegistrationTest extends PHPUnit_Framework_Testcase {
 
 		global $db;
 
-		$mysqli = new mysqli($db['hostname'], $db['username'], $db['password'], $db['database']);
+		$this->mysqli = new mysqli($db['hostname'], $db['username'], $db['password'], $db['database']);
 
-		$result = $mysqli->query("select * from company");
+		$result = $this->mysqli->query("select * from company");
 		$this->assertEquals(1, $result->num_rows, "Number of records are not equals to expected in users table.");
 
 		$row = $result->fetch_array(MYSQLI_ASSOC);

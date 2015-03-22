@@ -140,11 +140,16 @@ class Company extends baseClass {
 			values('%s', '%s', %d, %d, '%s', '%s', '%s', '%s', now());",
 			$data["company"], $data["address"], $data["province"], $data["city"], $data["phoneNo"], $data["companyWebsite"], $data["tin"], $data["hash"]);
 		$sql2 = "SET @companyId = LAST_INSERT_ID();";
-		$sql3 = sprintf("insert into users(username, passwd, fName, lName, email, gender, createDate, role)
-			values('%s', '%s', '%s', '%s', '%s', '%s', now(), 0);",
-			$data["userEmail"], $data["password"], $data["fName"], $data["lName"], $data["userEmail"], $data["gender"]);
-		$sql4 = "SET @userId = LAST_INSERT_ID();";
-		$sql5 = "insert into company_users(companyId, userId, createDate) values(@companyId, @userId, now());";
+		$sql3 = sprintf("insert into users(companyId,userId,username, passwd, fName, lName, email, gender, createDate, role)
+			values(@companyId, 1, '%s', '%s', '%s', '%s', '%s', '%s', now(), 0);",
+			 $data["userEmail"], $data["password"], $data["fName"], $data["lName"], $data["userEmail"], $data["gender"]);
+        $sql4 = "insert into `documents`(companyId, documentCode, documentName, lastNo)
+                    values(@companyId, 'BP', 'BusinessPartners', 0),
+                    (@companyId, 'CU', 'Customers', 0),
+                    (@companyId, 'EM', 'Employees', 0),
+                    (@companyId, 'SVS', 'Services', 0),
+                    (@companyId, 'TRAN', 'Transactions', 0),
+                    (@companyId, 'USR', 'Users', 1);";
 
 		try {
 			$this->mysqli->autocommit(false);
@@ -156,13 +161,11 @@ class Company extends baseClass {
 				throw new Exception("Something went wrong on sql." . "Error: " . $this->mysqli->error);
 			if (!$this->mysqli->query($sql4))
 				throw new Exception("Something went wrong on sql." . "Error: " . $this->mysqli->error);
-			if (!$this->mysqli->query($sql5))
-				throw new Exception("Something went wrong on sql." . "Error: " . $this->mysqli->error);
 			
 			$this->mysqli->commit();
 			$returnResult = true;
 		} catch (Exception $e) {
-			$this->mysqli->rollback();			
+			$this->mysqli->rollback();
 			$returnResult = false;
 		} finally {
 			$this->mysqli->autocommit(true);

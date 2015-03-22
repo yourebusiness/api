@@ -32,11 +32,16 @@ class LoginTest extends PHPUnit_Framework_Testcase {
 			values('%s', '%s', %d, %d, '%s', '%s', '%s', '%s', now());",
 			"ABC Company", "Brgy. Talamban", 25, 48, "3251234", "www.yahoo.com", "01234567891235", $uniqueCode);
 		$sql2 = "SET @companyId = LAST_INSERT_ID();";
-		$sql3 = sprintf("insert into users(username, passwd, fName, lName, email, gender, createDate, role)
-			values('%s', '%s', '%s', '%s', '%s', '%s', now(), 0);",
+		$sql3 = sprintf("insert into users(companyId,userId,username, passwd, fName, lName, email, gender, createDate, role)
+			values(@companyId, 1, '%s', '%s', '%s', '%s', '%s', '%s', now(), 0);",
 			"abc123@yahoo.com", $password, "Justin", "Cruz", "abc123@yahoo.com", "M");
-		$sql4 = "SET @userId = LAST_INSERT_ID();";
-		$sql5 = "insert into company_users(companyId, userId, createDate) values(@companyId, @userId, now());";
+		$sql4 = "insert into `documents`(companyId, documentCode, documentName, lastNo)
+                    values(@companyId, 'BP', 'BusinessPartners', 0),
+                    (@companyId, 'CU', 'Customers', 0),
+                    (@companyId, 'EM', 'Employees', 0),
+                    (@companyId, 'SVS', 'Services', 0),
+                    (@companyId, 'TRAN', 'Transactions', 0),
+                    (@companyId, 'USR', 'Users', 1);";
 
 		try {
 			$this->mysqli->autocommit(false);
@@ -47,8 +52,6 @@ class LoginTest extends PHPUnit_Framework_Testcase {
 			if (!$this->mysqli->query($sql3))
 				throw new Exception("Something went wrong on sql." . "Error: " . $this->mysqli->error);
 			if (!$this->mysqli->query($sql4))
-				throw new Exception("Something went wrong on sql." . "Error: " . $this->mysqli->error);
-			if (!$this->mysqli->query($sql5))
 				throw new Exception("Something went wrong on sql." . "Error: " . $this->mysqli->error);
 			
 			$this->mysqli->commit();
@@ -76,5 +79,9 @@ class LoginTest extends PHPUnit_Framework_Testcase {
 		$result = $this->mysqli->query("select * from users");
 		$row = $result->fetch_array(MYSQLI_ASSOC);
 		$this->assertNotNull($row["lastLogIn"]);
+
+		$result = $this->mysqli->query("select * from ci_sessions");
+		$row = $result->fetch_array(MYSQLI_ASSOC);
+		$this->assertNotEmpty($row["user_data"]);
 	}
 }

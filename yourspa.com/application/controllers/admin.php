@@ -126,9 +126,10 @@ class Admin extends CI_Controller {
 	}
 
 	public function users() {
-		$data["users"] = $this->getAllUsers();
+		$currentUserId = $this->session->userdata["userId"];
+		$data["users"] = $this->getAllUsersExceptCurrent($currentUserId);
 		$this->load->helper("record");
-		$data["userRights"] = checkUserRightsByUserId($this->session->userdata["userId"]);
+		$data["userRights"] = checkUserRightsByUserId($currentUserId);
 		$headerData["title"] = "Users";
 		$headerData['username'] = $this->username;
 		$this->load->view("templates/header", $headerData);

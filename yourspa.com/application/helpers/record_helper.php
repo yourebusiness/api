@@ -5,7 +5,7 @@ if ( ! function_exists('getCompanyIdByUsername')) {
     	$ci =& get_instance();
     	$ci->load->database();
 
-        $query = "select companyId from users join company_users using(userId) where users.username = ?";
+        $query = "select companyId from users where username = ?";
         $query = $ci->db->query($query, array($username));
         if (!$query)
         	return false;
