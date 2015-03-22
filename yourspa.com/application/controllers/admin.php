@@ -57,7 +57,7 @@ class Admin extends CI_Controller {
 	public function masseuradd() {
 		
 		$midName = $this->input->get("midName");
-		if ($midName == null || empty($midName))
+		if ($midName == null || $midName == "")
 			$midName = null;
 
 		$data = array("companyId" => $this->session->userdata["companyId"],
@@ -127,7 +127,8 @@ class Admin extends CI_Controller {
 
 	public function users() {
 		$currentUserId = $this->session->userdata["userId"];
-		$data["users"] = $this->getAllUsersExceptCurrent($currentUserId);
+		$this->load->model("Admin_model");
+		$data["users"] = $this->Admin_model->getAllUsersExceptCurrent($currentUserId);
 		$this->load->helper("record");
 		$data["userRights"] = checkUserRightsByUserId($currentUserId);
 		$headerData["title"] = "Users";

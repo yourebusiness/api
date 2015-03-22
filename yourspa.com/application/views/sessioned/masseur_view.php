@@ -90,16 +90,16 @@
       <tbody>
         <?php foreach($masseurs as $row) { ?>
         <tr>
-          <td><?php echo $row["id"]; ?></td>
+          <td><?php echo $row["employeeId"]; ?></td>
           <td><div data-col="nickname" class="changeable" contenteditable="true" maxlength = "18"><?php echo $row["nickname"]; ?></div></td>
           <td><div data-col="fName" class="changeable" contenteditable="true"><?php echo $row["fName"]; ?></div></td>
           <td><div data-col="midName" class="changeable" contenteditable="true"><?php echo $row["midName"]; ?></div></td>
           <td><div data-col="lName" class="changeable" contenteditable="true"><?php echo $row["lName"]; ?></div></td>
-          <td><a class="masseurchangestatus" href="<?php echo base_url("admin/masseurchangestatus") . "/" . $row["id"] . "/" . $row["active"]; ?>"><?php echo $row["active"]; ?></a></td>
+          <td><a class="masseurchangestatus" href="<?php echo base_url("admin/masseurchangestatus") . "/" . $row["employeeId"] . "/" . $row["active"]; ?>"><?php echo $row["active"]; ?></a></td>
           <td>
             <?php
               if ($row["trans"] == 'N')
-            ?>  <a href="<?php echo base_url("admin/masseurDelete") . "/" . $row["id"]; ?>" class="deleteRecord"><span class="glyphicon glyphicon-trash"></span> Delete </a>
+            ?>  <a href="<?php echo base_url("admin/masseurDelete") . "/" . $row["employeeId"]; ?>" class="deleteRecord"><span class="glyphicon glyphicon-trash"></span> Delete </a>
           </td>
         </tr>
         <?php } ?>

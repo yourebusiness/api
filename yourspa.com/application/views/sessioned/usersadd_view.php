@@ -107,10 +107,10 @@
           <input type="text" class="form-control" id="lName" name="lName" placeholder="Last name" maxlength="30">
         </div>
         <div class="form-group">
-            <textarea rows="3" cols="48" id="address" name="address" placeholder="address" maxlength="300" style="resize: none"></textarea>
+            <textarea rows="3" cols="48" id="address" class="form-control" name="address" placeholder="address" maxlength="300" style="resize: none"></textarea>
         </div>
         <div class="form-group">
-          <select id="gender" name="gender">
+          <select id="gender" name="gender" class="form-control">
             <option value="0" selected>Gender</option>
             <option value="M">Male</option>
             <option value="F">Female</option>
