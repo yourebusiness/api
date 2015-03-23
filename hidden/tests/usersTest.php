@@ -24,7 +24,7 @@ class UsersTest extends PHPUnit_Framework_Testcase {
 		$this->mysqli->close();
 	}
 
-	public function testShowUsers() {
+	public function testAddUsers() {
 		$uniqueCode = generateRandomString();
 		$password = password_hash("pass", PASSWORD_BCRYPT);
 
@@ -77,9 +77,30 @@ class UsersTest extends PHPUnit_Framework_Testcase {
 
 		$this->assertEquals(302, $status_code);	// 302 is a redirection code
 
+		
 		// after the input
+		$data = array("username" => "sfsf@yahoo.com",
+					"password" => "pass",
+					"fName" => "Mark",
+					"midName" => "C",
+					"lName" => "Diaz",
+					"address" => "Philippines",
+					"gender" => "M",
+					"role" => 1,
+					"createdBy" => 1,
+					"companyId" => 1
+				);
+
 		global $webvars;
-		$url = $webvars["SERVER_ROOT"] . "/admin/masseur";
+		$url = $webvars["SERVER_ROOT"] . "/admin/usersAdd?";
+
+		$postData = "";
+		foreach ($data as $key => $value)
+			$postData .= $key . "=" . $value . "&";
+
+		$postData = rtrim($postData, "&");
+		$url .= $postData;
+
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
 		curl_setopt($ch, CURLOPT_COOKIEFILE, "/tmp/cookieFileName");
@@ -88,5 +109,20 @@ class UsersTest extends PHPUnit_Framework_Testcase {
 		$output = curl_exec($ch);
 		$status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		curl_close ($ch);
+
+		$result = $this->mysqli->query("select * from users where username = '{$data['username']}'");
+		$this->assertEquals(1, $result->num_rows);
+		$row = $result->fetch_array(MYSQLI_ASSOC);
+		$this->assertEquals($data["companyId"], $row["companyId"]);
+		$this->assertEquals($data["username"], $row["username"]);
+		$this->assertTrue(password_verify($data["password"], $row["passwd"]));
+		$this->assertEquals($data["fName"], $row["fName"]);
+		$this->assertEquals($data["midName"], $row["midName"]);
+		$this->assertEquals($data["lName"], $row["lName"]);
+		$this->assertEquals($data["address"], $row["address"]);
+		$this->assertEquals($data["gender"], $row["gender"]);
+		$this->assertEquals($data["role"], $row["role"]);
+		$this->assertEquals($data["createdBy"], $row["createdBy"]);
+		$this->assertEquals($data["companyId"], $row["companyId"]);
 	}
 }

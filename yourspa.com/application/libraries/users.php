@@ -31,27 +31,22 @@ class Users extends baseClass {
 		return $result;
 	}
 
-	private function checkDataForAdd(array $data) {
-		$keys = array("username", "password", "fName", "lName", "gender", "role", "createdBy", "companyId");
-
-		foreach ($keys as $key)
-			if (!array_key_exists($key, $data))
-				return false;
-
-		return true;
-	}
 	public function add(array $data) {
-		if (!$this->checkDataForAdd($data))
+		$needles = array("username", "password", "fName", "lName", "gender", "role", "createdBy", "companyId");
+		if (!$this->checkArrayKeyExists($needles, $data))
 			return false;
 
-		$data["email"] = $data["username"]; // because they are the same; For future use.
+		$returnValue = false;
 
-		$sql1 = sprintf("insert into users(username, passwd, fName, midName, lName, email, address, gender, createDate, createdBy, role)
-				values('%s', md5(%s),  '%s',  '%s',  '%s',  '%s',  '%s',  '%s', now(), %d, %d);"
-				, $data['username'], $data['password'], $data['fName'], $data['midName'], $data['lName'], $data['email'], $data['address'], $data['gender']
+		$data["email"] = $data["username"]; // because they are the same; For future use.
+		$password = password_hash($data["password"], PASSWORD_BCRYPT);
+
+		$sql1 = sprintf("SET @userId=(SELECT CAST(lastNo+1 AS char(11)) FROM documents WHERE documentCode='USR' and companyId=%d);", $data["companyId"]);
+		$sql2 = sprintf("insert into users(companyId, userId, username, passwd, fName, midName, lName, email, address, gender, createDate, createdBy, role)
+				values(%d, @userId, '%s', '%s',  '%s',  '%s',  '%s',  '%s',  '%s',  '%s', now(), %d, %d);"
+				, $data["companyId"], $data['username'], $password, $data['fName'], $data['midName'], $data['lName'], $data['email'], $data['address'], $data['gender']
 					, $data['createdBy'], $data['role']);
-		$sql2 = "set @userId = LAST_INSERT_ID();";
-		$sql3 = sprintf("insert into company_users(companyId, userId, createDate) values(%d, @userId, now());", $data["companyId"]);
+		$sql3 = sprintf("Update documents set lastNo=@userId where documentCode='USR' and companyId=%d;", $data["companyId"]);
 
 		try {
 			$this->mysqli->autocommit(false);
@@ -63,28 +58,21 @@ class Users extends baseClass {
 				throw new exception ('Something went wrong on sql.' . "Error: " . $this->mysqli->error);
 
 			$this->mysqli->commit();
-			$this->mysqli->autocommit(true);
-			$this->mysqli->close();
-			return true;
+			$returnValue = true;
 		} catch (exception $e) {
+			$this->mysqli->rollback();			
+			$returnValue = false;
+		} finally {
 			$this->mysqli->autocommit(true);
-			$this->mysqli->rollback();
 			$this->mysqli->close();
-			return false;
-		}		
+		}
+
+		return $returnValue;
 	}
 
-	private function checkDataForEdit(array $data) {
-		$keys = array("username", "fName", "lName", "updatedBy");
-
-		foreach($keys as $key)
-			if (!array_key_exists($key, $data))
-				return false;
-
-		return true;
-	}
 	public function edit(array $data) {
-		if (!$this->checkDataForEdit($data))
+		$needles = array("username", "fName", "lName", "updatedBy");
+		if (!$this->checkArrayKeyExists($needles, $data))
 			return false;
 
 		$data["email"] = $data["username"]; // they are the same.
@@ -120,17 +108,9 @@ class Users extends baseClass {
 		}	
 	}
 
-	private function checkDataForChangeStatus(array $data) {
-		$keys = array("status", "id", "updatedBy");
-
-		foreach ($keys as $key)
-			if (!array_key_exists($key, $data))
-				return false;
-
-		return true;
-	}
 	public function changeStatus(array $data) {
-    	if (!$this->checkDataForChangeStatus($data))
+		$needles = array("status", "id", "updatedBy");
+    	if (!$this->checkArrayKeyExists($needles, $data))
     		return false;
 
 		$query = "update users set `active` = ?, updateDate = now(), updatedBy = ? where userId = ?";
@@ -142,17 +122,9 @@ class Users extends baseClass {
 			return false;
     }
 
-    private function checkDataForChangedRights(array $data) {
-		$keys = array("role", "id", "updatedBy");
-
-		foreach ($keys as $key)
-			if (!array_key_exists($key, $data))
-				return false;
-
-		return true;
-	}
     public function changeRights(array $data) {
-    	if (!$this->checkDataForChangedRights($data))
+    	$needles = array("role", "id", "updatedBy");
+    	if (!$this->checkArrayKeyExists($needles, $data))
     		return false;
 
     	$query = "update users set role = ? where userId = ?";
