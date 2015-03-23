@@ -2,6 +2,9 @@
 
 abstract class baseClass {
 
+	const ERRORNO_EMPTY_VALUE = 4;
+	const ERRORSTR_EMPTY_VALUE = "Data should not be empty string.";
+
 	const ERRORNO_INVALID_PARAMETER = 8;
 	const ERRORSTR_INVALID_PARAMETER = "Invalid passed parameter.";
 

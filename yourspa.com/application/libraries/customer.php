@@ -2,7 +2,7 @@
 
 include "../.inc/globals.inc.php";
 
-class Customer {
+class Customer extends baseClass {
 	private $mysqli;
 
 	public function __construct() {
@@ -13,47 +13,75 @@ class Customer {
 			die("Connection error: " . mysqli_connect_errno() . ": " . mysqli_connect_error());
 	}
 
-	private function checkDataForSearchCustomersDetails(array $data) {
-		$keys = array("searchText", "companyId");
-		foreach($keys as $key)
-			if (!array_key_exists($key, $data))
-				return false;
+	private function checkArrayKeyExists(array $needles, array $haystack) {
+    	foreach ($needles as $needle) {
+    		if (!array_key_exists($needle, $haystack)) {
+    			error_log(parent::ERRORNO_INVALID_PARAMETER . ": " . parent::ERRORSTR_INVALID_PARAMETER);
+    			return false;
+    		}
+    		if ($haystack[$needle] == "") {
+    			error_log(parent::ERRORNO_EMPTY_VALUE . ": " . parent::ERRORSTR_EMPTY_VALUE);
+    			return false;
+    		}
+    	}
 
-		if ($data["companyId"] == "" || $data["searchText"] == "")
-			return false;
+    	return true;
+    }
 
-		return true;
-	}
+    public function getAllCustomersDetails($companyId) {
+		if ($companyId == "" || $companyId < 0)
+			return array();
 
-	public function searchCustomersDetails(array $data) {
-		if (!$this->checkDataForSearchCustomersDetails($data))
-			return false;
-
+		$sql = "select customerId, custType, fName, midName, lName from customer where companyId=?;";
+		$stmt = $this->mysqli->prepare($sql);
+		$stmt->bind_param("i", $companyId);
+		$stmt->execute();
+		$stmt->store_result();
+		$stmt->bind_result($row["customerId"], $row["custType"], $row["fName"], $row["midName"], $row["lName"]);
 		$arr = array();
-		$sql = "select fName, midName, lName from customer where fName like '%" . $data["searchText"] . "%' or midName like '%" . $data["searchText"] . "%' or lName like '%" . $data["searchText"] . "%' and companyId=" . $data["companyId"];
-		$result = $this->mysqli->query($sql);
-		while ($row = $result->fetch_array(MYSQLI_ASSOC))
+		while ($stmt->fetch())
 			$arr[] = $row;
 
 		return $arr;
 	}
 
-	/* we prevent running SQL without complete data */
-	private function checkDataForGetCustomerDetails(array $data) {
-		$keys = array("companyId", "customerId");
-		foreach($keys as $key)
-			if (!array_key_exists($key, $data))
-				return false;
+	public function searchCustomersDetails(array $data) {
+		$needles = array("searchText", "companyId");
+		if (!$this->checkArrayKeyExists($needles, $data))
+			return array();
 
-		if ($data["companyId"] == "" || $data["customerId"] == "")
-			return false;
+		if ($data["companyId"] == "" || $data["searchText"] == "")
+			return array();
 
-		return true;
+		$fName = "%{$data['searchText']}%";		$midName = "%{$data['searchText']}%";		$lName = "%{$data['searchText']}%";
+
+		$sql = "select fName, midName, lName from customer where fName like ? or midName like ? or lName like ? and companyId=?";
+		$stmt = $this->mysqli->prepare($sql);
+		$stmt->bind_param("sssi", $fName, $midName, $lName, $data["companyId"]);
+		$stmt->execute();
+		$stmt->store_result();
+		$stmt->bind_result($row["fName"], $row["midName"], $row["lName"]);
+		$arr = array();
+		while ($stmt->fetch())
+			$arr[] = $row;
+
+		return $arr;
+
+		//$arr = array();
+		//$sql = "select fName, midName, lName from customer where fName like '%" . $data["searchText"] . "%' or midName like '%" . $data["searchText"] . "%' or lName like '%" . $data["searchText"] . "%' and companyId=" . $data["companyId"];
+		//$result = $this->mysqli->query($sql);
+		//while ($row = $result->fetch_array(MYSQLI_ASSOC))
+		//	$arr[] = $row;
+
+		//return $arr;
 	}
 
 	public function getCustomerDetails(array $data) {
-		if (!$this->checkDataForGetCustomerDetails($data))
+		$needles = array("companyId", "customerId");
+		if (!$this->checkArrayKeyExists($needles, $data))
 			return false;
+		if ($data["companyId"] == "" || $data["customerId"] == "")
+			return array();
 
 		$arr = array();
 
@@ -73,20 +101,14 @@ class Customer {
 
 		return $data;
 	}
-	private function checkDataForUpdate(array $data) {
-		$keys = array("companyId", "customerId", "custType", "fName", "lName", "updatedBy");
-		foreach($keys as $key)
-			if (!array_key_exists($key, $data))
-				return false;
 
+	public function update(array $data) {
+		$needles = array("companyId", "customerId", "custType", "fName", "lName", "updatedBy");
+		if (!$this->checkArrayKeyExists($needles, $data))
+			return false;
 		if ($data["companyId"] == "" || $data["customerId"] == "" || $data["custType"] == "")
 			return false;
-
-		return true;
-	}
-	public function update(array $data) {
-		if (!$this->checkDataForUpdate($data))
-			return false;
+		
 		$data = $this->formatDataForUpdate($data);
 
 		$sql = "update customer set custType=?,fName=?,midName=?lName=? where companyId=? and id=?";
@@ -99,43 +121,54 @@ class Customer {
 	}
 
 	private function formatDataForAdd(array $data) {
-		if (!isset($data["midName"]))
-			$data["midName"] = null;
+		if (!isset($data["midName"]) || $data["midName"] == "")
+			$data["midName"] = "NULL";
+		else
+			$data["midName"] = "'{$data["midName"]}'";
 
 		return $data;
 	}
-	private function checkDataForAdd(array $data) {
-		$keys = array("companyId", "custType", "fName", "lName", "createdBy");
-		foreach($keys as $key)
-			if (!array_key_exists($key, $data))
-				return false;
 
-		if ($data["companyId"] == "" || $data["custType"] == "" || $data["fName"] == "" || $data["lName"] == "" || $data["createdBy"] == "")
-			return false;
-
-		return true;
-	}
 	public function add(array $data) {
-		if (!$this->checkDataForAdd($data))
+		$needles = array("companyId", "custType", "fName", "lName", "createdBy");
+		if (!$this->checkArrayKeyExists($needles, $data))
 			return false;
+		if (empty($data["companyId"]) || $data["custType"] == "" || empty($data["fName"]) || empty($data["lName"]) || empty($data["createdBy"]))
+			return false;
+
 		$data = $this->formatDataForAdd($data);
 
-		$sql = "insert into customer(companyId,custType,fName,midName,lName,createdBy,createDate)
-			value(?,?,?,?,?,?,now())";
-		$stmt = $this->mysqli->prepare($sql);
-		$stmt->bind_param("iisssi", $data["companyId"], $data["custType"], $data["fName"], $data["midName"], $data["lName"], $data["createdBy"]);
-		if ($stmt->execute())
-			return false;
-		else
-			return true;
+		$returnValue = false;
+
+		$sql1 = sprintf("SET @customerId=(SELECT CAST(lastNo+1 AS char(11)) FROM documents WHERE documentCode='CU' and companyId=%d);", $data["companyId"]);
+		$sql2 = "insert into customer(companyId,customerId,custType,fName,midName,lName,createdBy,createDate)
+			value({$data["companyId"]}, @customerId, {$data["custType"]}, '{$data["fName"]}', {$data["midName"]}, '{$data["lName"]}', {$data["createdBy"]}, NOW());";
+		$sql3 = sprintf("Update documents set lastNo=@customerId where documentCode='CU' and companyId=%d;", $data["companyId"]);
+
+		try {
+			$this->mysqli->autocommit(false);
+			if (!$this->mysqli->query($sql1))
+				throw new exception ('Something went wrong on sql.' . "Error: " . $this->mysqli->error);
+			if (!$this->mysqli->query($sql2))
+				throw new exception ('Something went wrong on sql.' . "Error: " . $this->mysqli->error);
+			if (!$this->mysqli->query($sql3))
+				throw new exception ('Something went wrong on sql.' . "Error: " . $this->mysqli->error);
+
+			$this->mysqli->commit();
+			$returnValue = true;
+		} catch (exception $e) {
+			error_log($e->getMessage());
+			$this->mysqli->rollback();
+			$returnValue = false;
+		} finally {
+			$this->mysqli->autocommit(true);
+			$this->mysqli->close();
+		}
+
+		return $returnValue;
 	}
 
 	private function checkDataForDelete(array $data) {
-		$keys = array("customerId", "companyId");
-		foreach ($keys as $key)
-			if (!array_key_exists($key, $data))
-				return false;
-
 		if (!is_numeric($data["customerId"]))
 			return false;
 		if ($data["customerId"] < 1)
@@ -148,6 +181,9 @@ class Customer {
 		return true;
 	}
 	public function delete(array $data) {
+		$needles = array("customerId", "companyId");
+		if (!$this->checkArrayKeyExists($needles, $data))
+			return false;
 		if (!$this->checkDataForDelete($data))
 			return false;
 

@@ -412,7 +412,7 @@ class Admin extends CI_Controller {
 		$this->load->view("sessioned/transaction_view", $data);
 	}
 
-	public function transact() {
+	public function addTransaction() {
 		
 	}
 
@@ -432,8 +432,26 @@ class Admin extends CI_Controller {
 	public function customers() {
 		$headerData["title"] = "Customers";
 		$headerData['username'] = $this->username;
+		$companyId = $this->session->userdata["companyId"];
+		$this->load->model("Admin_model");
+		$data["customers"] = $this->Admin_model->getAllCustomersDetails($companyId);
 		$this->load->view("templates/header", $headerData);
-		$this->load->view("sessioned/customers_view");
+		$this->load->view("sessioned/customers_view", $data);
+	}
+
+	public function addCustomer() {
+		$data = array("companyId" => $this->session->userdata["companyId"],
+					"custType" => $this->input->get("custType"),
+					"fName" => $this->input->get("fName"),
+					"midName" => $this->input->get("midName"),
+					"lName" => $this->input->get("lName"),
+					"createdBy" => $this->session->userdata["userId"]
+				);
+		$this->load->model("Admin_model");
+		if ($this->Admin_model->addCustomer($data))
+			return TRUE;
+		else
+			return FALSE;
 	}
 
 	/* end for customer controller */

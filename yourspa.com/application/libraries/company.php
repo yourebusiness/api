@@ -177,11 +177,12 @@ class Company extends baseClass {
     }
 
     private function checkArrayKeyExists(array $needles, array $haystack) {
-    	foreach ($needles as $needle)
-    		if (!array_key_exists($needle, $haystack)) {
-    			error_log(parent::ERRORNO_INVALID_PARAMETER . ": " . parent::ERRORSTR_INVALID_PARAMETER);
-    			return false;
-    		}    			
+    	foreach ($needles as $needle) {
+            if (!array_key_exists($needle, $haystack)) {
+                error_log(parent::ERRORNO_INVALID_PARAMETER . ": " . parent::ERRORSTR_INVALID_PARAMETER);
+                return false;
+            }
+        }
 
     	return true;
     }

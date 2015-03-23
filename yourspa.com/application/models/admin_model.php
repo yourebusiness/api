@@ -109,6 +109,10 @@ class Admin_model extends CI_Model {
     	return $this->customer->searchCustomersDetails($data);
     }
 
+    public function getAllCustomersDetails($companyId) {
+        return $this->customer->getAllCustomersDetails($companyId);
+    }
+
     public function getCustomerDetails($data) {
     	return $this->customer->getCustomerDetails($data);
     }

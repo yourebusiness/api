@@ -72,19 +72,46 @@
 </nav>
 
 <div class="container-fluid">
-    <h4>Customers</h4> <hr />
+  <h4>Customers</h4> <hr />
 
-    <div class="col-md-4">
+  <div class="row">
+    <div class="col-md-1 col-md-offset-1">
+      <button type="button" onclick="" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Add</button>
     </div>
-    <div class="col-md-4">
-      <div class="center-block">
-        Enter name <input type="text" class="form-control" />
-        <button type="button" class="btn btn-primary">Search</button>
+    <div class="col-md-4 col-md-offset-2">
+      <div class="col-md-8">
+        <input type="text" class="form-control" placeholder="Enter text..." />
       </div>
+      <button type="button" class="btn btn-success">Search</button>
     </div>
-    <div class="col-md-4">
-    </div>
-
+  </div>
+  <br />
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Type</th>
+          <th>First Name</th>
+          <th>Middle Name</th>
+          <th>Last Name</th>
+          <th>Active</th>
+          <th></th> <!-- for the edit, delete -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <!-- All Javascript at the bottom of the page for faster page loading -->
