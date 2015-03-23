@@ -12,7 +12,7 @@
                         <div class="modal-subtitle"><small>Enter your username and password</small></div>
                     </div> <!-- end of modal-header -->
                     <div class="modal-body">
-                        <form action="login.html" class="form-horizontal">
+                        <form method="post" action="<?php echo base_url("api/signIn") ?>" class="form-horizontal">
                             <div class="form-group">
                                  <label for="inputEmail" class="col-sm-2 control-label">Email</label>
                                  <div class="col-sm-8">

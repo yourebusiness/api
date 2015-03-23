@@ -21,7 +21,7 @@ $(document).ready(function () {
     });
 
     $('.btn-primary').on('click', function(event) {
-        event.preventDefault();
+        //event.preventDefault();
 
         var styles = {display : "none"},
             that = $('#form'),
@@ -43,35 +43,35 @@ $(document).ready(function () {
             var styles = {display : "block"};
             $('div.alert').css(styles);
             $("div.alert span#errorMessage").html("Invalid company name.");
-            event.preventDefault();
+            //event.preventDefault();
             return;
         }
         if(jQuery.trim(phoneNo).length < 7) {
             var styles = {display : "block"};
             $('div.alert').css(styles);
             $("div.alert span#errorMessage").html("Invalid phone number.");
-            event.preventDefault();
+            //event.preventDefault();
             return;
         }
         if (jQuery.trim(tin).length < 12) {
             var styles = {display : "block"};
             $('div.alert').css(styles);
             $("div.alert span#errorMessage").html("Invalid company TIN.");
-            event.preventDefault();
+            //event.preventDefault();
             return;
         }
         if (jQuery.trim(fName).length < 2) {
             var styles = {display : "block"};
             $('div.alert').css(styles);
             $("div.alert span#errorMessage").html("Invalid First name.");
-            event.preventDefault();
+            //event.preventDefault();
             return;
         }
         if (jQuery.trim(lName).length < 2) {
             var styles = {display : "block"};
             $('div.alert').css(styles);
             $("div.alert span#errorMessage").html("Invalid Last name.");
-            event.preventDefault();
+            //event.preventDefault();
             return;
         }
 
@@ -87,7 +87,7 @@ $(document).ready(function () {
             type: type,
             data: data,
             success: function (response) {
-                
+                console.log("Success.");
             },
             error: function() { 
                 alert("Error found on request.");

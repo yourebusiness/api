@@ -57,7 +57,12 @@ class Registration extends CI_Controller {
             $data["title"] = "Registration";
             $this->load->view("templates/header", $data);
             $this->load->view("register_success");
-    	}
+
+            return TRUE;
+    	} else {
+            redirect(base_url("registration/view"));
+            return FALSE;
+        }
 	}
 
     private function sendEmail($email, $hash) {

@@ -24,7 +24,7 @@ class Company extends baseClass {
 		if ($stmt->num_rows < 1)
 			$returnResult = true;
 		else {
-			throw new Exception(parent::ERRORNO_DB_VALUE_EXISTS . ": " . parent::ERRORSTR_DB_VALUE_EXISTS . ": telNo.");
+			error_log(parent::ERRORNO_DB_VALUE_EXISTS . ": " . parent::ERRORSTR_DB_VALUE_EXISTS . ": telNo.");
     		return false;
 		}    			
 
@@ -40,7 +40,7 @@ class Company extends baseClass {
     	if ($stmt->num_rows < 1)
     		$returnResult = true;
     	else {
-    		throw new Exception(parent::ERRORNO_DB_VALUE_EXISTS . ": " . parent::ERRORSTR_DB_VALUE_EXISTS . ": TIN.");
+    		error_log(parent::ERRORNO_DB_VALUE_EXISTS . ": " . parent::ERRORSTR_DB_VALUE_EXISTS . ": TIN.");
     		return false;
     	}
 
@@ -56,7 +56,7 @@ class Company extends baseClass {
     	if ($stmt->num_rows < 1)
     		$returnResult = true;
     	else {
-    		throw new Exception(parent::ERRORNO_DB_VALUE_EXISTS . ": " . parent::ERRORSTR_DB_VALUE_EXISTS . ": uniqueCode.");
+    		error_log(parent::ERRORNO_DB_VALUE_EXISTS . ": " . parent::ERRORSTR_DB_VALUE_EXISTS . ": uniqueCode.");
     		return false;
     	}
 
@@ -77,16 +77,13 @@ class Company extends baseClass {
 		if ($stmt->num_rows < 1)
 			$returnResult = true;
 		else {
-			throw new Exception(parent::ERRORNO_DB_VALUE_EXISTS . ": " . parent::ERRORSTR_DB_VALUE_EXISTS . ": username/email.");
+			error_log(parent::ERRORNO_DB_VALUE_EXISTS . ": " . parent::ERRORSTR_DB_VALUE_EXISTS . ": username/email.");
     		return false;
 		}
 
 		return $returnResult;
 	}
 	private function checkDataForAdd(array $data) {
-        foreach ($data as $key => $value)
-        	if (trim($value) == "")
-        		return false;
         if (strlen($data["tin"]) < 12)
         	return false;
         if (!in_array($data["gender"], array("M", "F")))
@@ -96,12 +93,16 @@ class Company extends baseClass {
     }
     private function okToAddCompany(array $data) {
     	$returnResult = false;
-    	if (isset($data["companyWebsite"])) {
+    	if (isset($data["companyWebsite"]) && $data["companyWebsite"] != "") {
     		$stmt = $this->mysqli->prepare("select companyId from company where companyName=? or website=?");
     		$stmt->bind_param("ss", $data["company"], $data["companyWebsite"]);
     	} else {
-    		$stmt = $this->mysqli->prepare("select companyId from company where companyName=?");
-    		$stmt->bind_param("s", $data["company"]);
+            if (isset($data["company"]) && $data["company"] != "") {
+                $stmt = $this->mysqli->prepare("select companyId from company where companyName=?");
+                $stmt->bind_param("s", $data["company"]);
+            } else {
+                return false; // $data["company"] should be set and not empty
+            }
     	}
 
     	$stmt->execute();
@@ -109,8 +110,8 @@ class Company extends baseClass {
     	if ($stmt->num_rows < 1)
     		$returnResult = true;
     	else {
-    		throw new Exception(parent::ERRORNO_DB_VALUE_EXISTS . ": " . parent::ERRORSTR_DB_VALUE_EXISTS . ": Existing company name or website.");
-    		return false;
+    		error_log(parent::ERRORNO_DB_VALUE_EXISTS . ": " . parent::ERRORSTR_DB_VALUE_EXISTS . ": Existing company name or website.");
+    		$returnResult = false;
     	}
 
     	return $returnResult;
@@ -165,6 +166,7 @@ class Company extends baseClass {
 			$this->mysqli->commit();
 			$returnResult = true;
 		} catch (Exception $e) {
+            error_log($e->getMessage());
 			$this->mysqli->rollback();
 			$returnResult = false;
 		} finally {
@@ -177,7 +179,7 @@ class Company extends baseClass {
     private function checkArrayKeyExists(array $needles, array $haystack) {
     	foreach ($needles as $needle)
     		if (!array_key_exists($needle, $haystack)) {
-    			throw new Exception(parent::ERRORNO_INVALID_PARAMETER . ": " . parent::ERRORSTR_INVALID_PARAMETER);
+    			error_log(parent::ERRORNO_INVALID_PARAMETER . ": " . parent::ERRORSTR_INVALID_PARAMETER);
     			return false;
     		}    			
 
@@ -192,13 +194,13 @@ class Company extends baseClass {
 
     	$sql = "update company set companyName=?, province=?, city=?, address=?, telNo=?, tin=?, website=? where companyId=?";
     	if (!$stmt = $this->mysqli->prepare($sql))
-            throw new Exception("Error preparing sql");            
+            error_log("Error preparing sql");            
     	if (!$stmt->bind_param("siissssi", $data["company"], $data["province"], $data["city"], $data["address"], $data["phoneNo"], $data["tin"], $data["companyWebsite"], $data["companyId"]))
-           throw new Exception("Error binding sql.");
+           error_log("Error binding sql.");
     	if ($stmt->execute())
     		$returnResult = true;
         else
-            throw new Exception("Error executing sql.");
+            error_log("Error executing sql.");
 
     	return $returnResult;
     }    

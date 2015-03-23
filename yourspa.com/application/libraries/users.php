@@ -16,7 +16,7 @@ class Users extends baseClass {
 	private function checkArrayKeyExists(array $needles, array $haystack) {
     	foreach ($needles as $needle)
     		if (!array_key_exists($needle, $haystack)) {
-    			throw new Exception(parent::ERRORNO_INVALID_PARAMETER . ": " . parent::ERRORSTR_INVALID_PARAMETER);
+    			error_log(parent::ERRORNO_INVALID_PARAMETER . ": " . parent::ERRORSTR_INVALID_PARAMETER);
     			return false;
     		}    			
 
@@ -102,6 +102,7 @@ class Users extends baseClass {
 			$this->mysqli->autocommit(true);
 			return true;
 		} catch (exception $e) {
+			error_log($e->getMessage());
 			$this->mysqli->autocommit(true);
 			$this->mysqli->rollback();
 			return false;

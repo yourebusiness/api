@@ -1,5 +1,7 @@
 <?php
 
+include_once "../.inc/globals.inc.php";
+
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT
@@ -18,7 +20,8 @@
  * NOTE: If you change these, also change the error_reporting() code below
  *
  */
-	define('ENVIRONMENT', 'development');
+	global $settings;
+	define('ENVIRONMENT', $settings["ENVIRONMENT"]);
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING
