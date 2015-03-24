@@ -66,15 +66,10 @@
   </div><!-- /.container-fluid -->
 </nav>
 
-<br>
-
-<div class="container">
+<div class="container-fluid">
+  <h4>Add Customer</h4> <hr />
   <div class="row">
-    <div class="col-sm-4">
-    </div>
-
-    <div class="col-sm-4">
-
+    <div class="col-md-6 col-md-offset-3">
       <div class="alert alert-success alert-block fade in" id="successAlert">
         <h4>Success!!!</h4>
         <p>New record has been successfully added.</p>
@@ -82,26 +77,40 @@
 
       <div class="alert alert-danger alert-block fade in" id="dangerAlert">
         <h4>Error!!!</h4>
-        <p>Username, password, first/last names, gender, role are must fields.</p>
+        <p>First and last names are must fields.</p>
       </div>
 
-      <p>Fill-out the form below to create new system user.</p>
-
-      <form>
+      <form id="form" class="form-horizontal" role="form" method="get" action="<?php echo base_url("admin/addCustomer"); ?>">
         <div class="form-group">
-          <input type="text" class="form-control" id="username" name="username" placeholder="username" maxlength="30">
-        </div>
-        <div class="form-group">
-          <input type="radio" name="role" value="0"> Administrator&nbsp; &nbsp; 
-          <input type="radio" name="role" value="1" checked> User
+          <div class="radio">
+            <label class="radio-inline">
+              <input type="radio" id="CustType" name="custType" value="1" checked />Member
+            </label>
+            <label class="radio-inline">
+              <input type="radio" id="CustType" name="custType" value="0" />Guest
+            </label>
+          </div>
         </div>
 
-        <button id="add-user" type="button" class="btn btn-primary">Submit</button>
-        <button id="cancel" type="button" class="btn btn-default" onclick="window.location.href='<?php echo base_url("admin/users"); ?>'">Cancel</button>
+        <div class="form-group">
+          <div class="col-md-4">
+            <input class="form-control" type="text" id="fName" name="fName" placeholder="First name" maxlength="30" />
+          </div>
+          <div class="col-md-4">
+            <input class="form-control" type="text" id="midName" name="midName" placeholder="Middle name" maxlength="30" />
+          </div>
+          <div class="col-md-4">
+            <input class="form-control" type="text" id="lName" name="lName" placeholder="Last name" maxlength="30" />
+          </div>
+        </div>
+
+        <hr />
+
+        <div class="form-group">
+          <button id="addCustomer" class="btn btn-primary" type="submit">Submit</button>
+          <button class="btn btn-default" type="button" onclick="window.location.href='<?php echo base_url("admin/customers"); ?>'">Cancel</button>
+        </div>
       </form>
-    </div>
-
-    <div class="col-sm-4">
     </div>
   </div>
 </div>
@@ -113,7 +122,7 @@
     <!-- Bootstrap JS -->
     <script src="../../../bootstrap/js/bootstrap.min.js"></script>
     <!-- Custom JS -->
-    <script src="../../../includes/js/users.js"></script>
+    <script src="../../../includes/js/customer.js"></script>
     
 </body>
 </html>

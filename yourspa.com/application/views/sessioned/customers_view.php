@@ -76,7 +76,7 @@
 
   <div class="row">
     <div class="col-md-1 col-md-offset-1">
-      <button type="button" onclick="" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Add</button>
+      <button type="button" onclick="window.location.href='<?php echo base_url("admin/addCustomer_view"); ?>'" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Add</button>
     </div>
     <div class="col-md-4 col-md-offset-2">
       <div class="col-md-8">

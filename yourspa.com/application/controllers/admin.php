@@ -439,6 +439,13 @@ class Admin extends CI_Controller {
 		$this->load->view("sessioned/customers_view", $data);
 	}
 
+	public function addCustomer_view() {
+		$headerData["title"] = "AddCustomers";
+		$headerData['username'] = $this->username;
+		$this->load->view("templates/header", $headerData);
+		$this->load->view("sessioned/addCustomer_view");
+	}
+
 	public function addCustomer() {
 		$data = array("companyId" => $this->session->userdata["companyId"],
 					"custType" => $this->input->get("custType"),
