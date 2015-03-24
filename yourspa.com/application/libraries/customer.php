@@ -130,7 +130,6 @@ class Customer extends baseClass {
 	}
 
 	public function add(array $data) {
-		file_put_contents("/tmp/customer.txt", print_r($data, TRUE));
 		$needles = array("companyId", "custType", "fName", "lName", "createdBy");
 		if (!$this->checkArrayKeyExists($needles, $data))
 			return false;

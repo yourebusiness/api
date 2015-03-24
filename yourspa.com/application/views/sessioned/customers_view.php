@@ -121,7 +121,7 @@
     
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
     
-    <script src="http://yourspa.com/includes/js/customers.js"></script>
+    <script src="http://yourspa.com/includes/js/customer.js"></script>
     
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/0.8.1/mustache.js"></script>
     

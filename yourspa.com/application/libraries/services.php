@@ -2,7 +2,7 @@
 
 include "../.inc/globals.inc.php";
 
-class Services {
+class Services extends baseClass {
 	private $mysqli;
 
 	public function __construct() {
@@ -12,6 +12,17 @@ class Services {
 		if ($this->mysqli->connect_errno)
 			die("Connection error: " . mysqli_connect_errno() . ": " . mysqli_connect_error());
 	}
+
+	private function checkArrayKeyExists(array $needles, array $haystack) {
+    	foreach ($needles as $needle) {
+    		if (!array_key_exists($needle, $haystack)) {
+    			error_log(parent::ERRORNO_INVALID_PARAMETER . ": " . parent::ERRORSTR_INVALID_PARAMETER);
+    			return false;
+    		}
+    	}
+
+    	return true;
+    }
 
 	public function getAllServices() {
 		$sql = "select id,serviceName,description
@@ -73,11 +84,12 @@ class Services {
 			$this->mysqli->commit();
 			$returnResult = true;
 		} catch (Exception $e) {
+			error_log($e->getMessage());
 			$this->mysqli->rollback();
+			$returnResult = false;
+		} finally {
+			$this->mysqli->autocommit(true);
 		}
-
-		$this->mysqli->autocommit(true);
-		$this->mysqli->close();
 		
 		return $returnResult;
 	}
@@ -103,23 +115,35 @@ class Services {
 		return $arr;
 	}
 
-	private function checkDataForAdd(array $data) {
-		$keys = array("serviceName", "description", "regPrice", "memberPrice", "createdBy");
-		foreach ($keys as $key)
-			if (!array_key_exists($key, $data))
-				return false;
+	private function formatDataForAdd(array $data) {
+		if (!isset($data["description"]) || empty($data["description"]))
+			$data["description"] = "NULL";
+		else
+			$data["description"] = "'{$data["description"]}'";
 
-		return true;
+		return $data;
 	}
 
 	public function add(array $data) {
-		$sql1 = sprintf("insert into services(serviceName, description) values('%s', '%s');", 
-				$data["serviceName"], $data["description"]);
-		$sql2 = "set @serviceId = LAST_INSERT_ID();";
-		$sql3 = sprintf("insert into pricelist(serviceId, pricelistCode, `price`, createDate, createdBy) values(@serviceId, 0, %g, now(), %d);"
+		$needles = array("companyId", "serviceName", "regPrice", "memberPrice", "createdBy");
+		if (!$this->checkArrayKeyExists($needles, $data))
+			return false;
+
+		$data = $this->formatDataForAdd($data);
+
+		file_put_contents("/tmp/services.txt", print_r($data, TRUE));
+
+		$returnResult = false;
+
+		$sql1 = sprintf("SET @serviceId=(SELECT CAST(lastNo+1 AS char(11)) FROM documents WHERE documentCode='SVS' and companyId=%d);", $data["companyId"]);
+		$sql2 = "insert into services(companyId, serviceId, serviceName, description, createdBy, createDate)
+				values({$data["companyId"]}, @serviceId, '{$data["serviceName"]}', {$data["description"]}, {$data["createdBy"]}, NOW());";
+		$sql3 = "SET @id = LAST_INSERT_ID();";
+		$sql4 = sprintf("insert into pricelist(serviceId, pricelistCode, `price`, createDate, createdBy) values(@id, 0, %g, now(), %d);"
 			, $data["regPrice"], $data["createdBy"]);
-		$sql4 = sprintf("insert into pricelist(serviceId, pricelistCode, price, createDate, createdBy) values(@serviceId, 1, %g, now(), %d);"
+		$sql5 = sprintf("insert into pricelist(serviceId, pricelistCode, `price`, createDate, createdBy) values(@serviceId, 1, %g, now(), %d);"
 			, $data["memberPrice"], $data["createdBy"]);
+		$sql6 = sprintf("Update documents set lastNo=@serviceId where documentCode='SVS' and companyId=%d;", $data["companyId"]);
 
 		try {
 			$this->mysqli->autocommit(false);
@@ -131,17 +155,22 @@ class Services {
 				throw new exception ('Something went wrong on sql.' . "Error: " . $this->mysqli->error);
 			if (!$this->mysqli->query($sql4))
 				throw new exception ('Something went wrong on sql.' . "Error: " . $this->mysqli->error);
+			if (!$this->mysqli->query($sql5))
+				throw new exception ('Something went wrong on sql.' . "Error: " . $this->mysqli->error);
+			if (!$this->mysqli->query($sql6))
+				throw new exception ('Something went wrong on sql.' . "Error: " . $this->mysqli->error);
 
 			$this->mysqli->commit();
-			$this->mysqli->autocommit(true);
-			$this->mysqli->close();
-			return true;
+			$returnResult = true;
 		} catch (exception $e) {
-			$this->mysqli->autocommit(true);
+			error_log($e->getMessage());
 			$this->mysqli->rollback();
-			$this->mysqli->close();
-			return false;
+			$returnResult = false;
+		} finally {
+			$this->mysqli->autocommit(true);
 		}
+
+		return $returnResult;
 	}
 
 	private function checkDataForEdit(array $data) {
@@ -160,6 +189,8 @@ class Services {
 	public function edit(array $data) {
 		if (!$this->checkDataForEdit($data))
 			return false;
+
+		$returnResult = false;
 
 		$data["serviceName"] = $this->escapeCharacters($data["serviceName"]);
 		$data["description"] = $this->escapeCharacters($data["description"]);
@@ -189,17 +220,16 @@ class Services {
 				throw new Exception("Something went wrong on sql." . "Error: " . $this->mysqli->error);
 
 			$this->mysqli->commit();
-			$this->mysqli->autocommit(true);
-			$this->mysqli->close();
-
-			return true;
+			$returnResult = true;
 		} catch (Exception $e) {
+			error_log($e->getMessage());
 			$this->mysqli->rollback();
+			$returnResult = false;
+		} finally {
 			$this->mysqli->autocommit(true);
-
-			$this->mysqli->close();
-			return false;
 		}
+
+		return $returnResult;
 	}
 
 	public function __destruct() {

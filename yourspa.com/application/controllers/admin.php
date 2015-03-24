@@ -289,27 +289,30 @@ class Admin extends CI_Controller {
 		}
 	}
 
-	private function validateDataForAdd($data) {
-		if ($data["serviceName"] == "" || $data["description"] == "" || $data["regPrice"] == "" || $data["memberPrice"] == "" || $data["createdBy"] == "")
+	private function checkDataForAdd($data) {
+		if (empty($data["serviceName"]) || $data["regPrice"] == "" || $data["memberPrice"] == "" || empty($data["createdBy"]))
 			return false;
 
 		return true;
 	}
 
 	public function addService() {
-		$this->load->helper("record");
-		$data = array("serviceName" => $this->input->get("serviceName"),
+		$data = array("companyId" => $this->session->userdata["companyId"],
+					"serviceName" => $this->input->get("serviceName"),
 					"description" => $this->input->get("description"),
 					"regPrice" => $this->input->get("regPrice"),
 					"memberPrice" => $this->input->get("memberPrice"),
 					"createdBy" => $this->session->userdata["userId"]
 				);
 
-		if (!$this->validateDataForAdd($data))
+		if (!$this->checkDataForAdd($data))
 			return false;
 		
 		$this->load->model("Admin_model");
-		$this->Admin_model->addService($data);
+		if (!$this->Admin_model->addService($data))
+			return FALSE;
+		else
+			return TRUE;
 	}
 
 	private function getServiceDetailById($id) {
@@ -459,6 +462,13 @@ class Admin extends CI_Controller {
 			return TRUE;
 		else
 			return FALSE;
+	}
+
+	public function searchCustomers($searchText = "") {
+		header("Content-type: application/json");
+		//if ($searchText == "")
+
+
 	}
 
 	/* end for customer controller */
