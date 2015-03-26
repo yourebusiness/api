@@ -146,22 +146,26 @@ class Company extends baseClass {
 			 $data["userEmail"], $data["password"], $data["fName"], $data["lName"], $data["userEmail"], $data["gender"]);
         $sql4 = "insert into `documents`(companyId, documentCode, documentName, lastNo)
                     values(@companyId, 'BP', 'BusinessPartners', 0),
-                    (@companyId, 'CU', 'Customers', 0),
+                    (@companyId, 'CU', 'Customers', 1),
                     (@companyId, 'EM', 'Employees', 0),
                     (@companyId, 'SVS', 'Services', 0),
                     (@companyId, 'TRAN', 'Transactions', 0),
                     (@companyId, 'USR', 'Users', 1);";
+        $sql5 = "insert into customer(companyId, customerId, custType, fName, midName, lName, active, createdBy, createDate)
+                values(@companyId, 1, 0, 'Guest', 'Guest', 'Guest', 'Y', 1, now());";
 
 		try {
 			$this->mysqli->autocommit(false);
 			if (!$this->mysqli->query($sql1))
-				throw new Exception("Something went wrong on sql." . "Error: " . $this->mysqli->error);
+				throw new Exception("Error: " . $this->mysqli->error . ". SQL: $sql1.");
 			if (!$this->mysqli->query($sql2))
-				throw new Exception("Something went wrong on sql." . "Error: " . $this->mysqli->error);
+				throw new Exception("Error: " . $this->mysqli->error . ". SQL: $sql2.");
 			if (!$this->mysqli->query($sql3))
-				throw new Exception("Something went wrong on sql." . "Error: " . $this->mysqli->error);
+				throw new Exception("Error: " . $this->mysqli->error . ". SQL: $sql3.");
 			if (!$this->mysqli->query($sql4))
-				throw new Exception("Something went wrong on sql." . "Error: " . $this->mysqli->error);
+				throw new Exception("Error: " . $this->mysqli->error . ". SQL: $sql4.");
+            if (!$this->mysqli->query($sql5))
+                throw new Exception("Error: " . $this->mysqli->error . ". SQL: $sql5.");
 			
 			$this->mysqli->commit();
 			$returnResult = true;

@@ -14,6 +14,8 @@ class transactions {
 			die("Connection error: " . mysqli_connect_errno() . ": " . mysqli_connect_error());
 	}
 
+	
+
 	public function __destruct() {
         $this->mysqli->close();
     }

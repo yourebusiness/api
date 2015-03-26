@@ -16,6 +16,9 @@ class RegistrationTest extends PHPUnit_Framework_Testcase {
 		$this->assertTrue(dropAndReloadDatabase());
 
 		$this->assertTrue(insertCommonData());
+
+		global $db;
+		$this->mysqli = new mysqli($db['hostname'], $db['username'], $db['password'], $db['database']);
 	}
 
 	protected function tearDown() {
@@ -47,10 +50,6 @@ class RegistrationTest extends PHPUnit_Framework_Testcase {
 		curl_close ($ch);
 
 		$this->assertEquals(200, $status_code);	// should be status code 200 OK
-
-		global $db;
-
-		$this->mysqli = new mysqli($db['hostname'], $db['username'], $db['password'], $db['database']);
 
 		$query = "select * from company";
 		$result = $this->mysqli->query($query);
@@ -98,6 +97,8 @@ class RegistrationTest extends PHPUnit_Framework_Testcase {
 		$this->assertEquals(6, $result->num_rows, "Number of records are not equals to expected in documents table.");
 		while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
 			if ($row["documentCode"] == "USR")
+				$this->assertEquals(1, $row["lastNo"]);
+			elseif ($row["documentCode"] == "CU")
 				$this->assertEquals(1, $row["lastNo"]);
 			else
 				$this->assertEquals(0, $row["lastNo"]);

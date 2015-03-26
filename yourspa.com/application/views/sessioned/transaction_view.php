@@ -83,7 +83,6 @@
             <p>All fields must be provided.</p>
           </div>
           <form class="form-horizontal" method="post">
-            <input type="hidden" id="userId" name="userId" value="<?php echo $userId; ?>" />
             <div class="form-group">
               <label for="" class="col-sm-1">Masseur</label>
               <div class="col-sm-3">

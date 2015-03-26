@@ -2,6 +2,8 @@
 
 class Admin extends CI_Controller {
 	private $username = "";
+	private $userId = 0;
+	private $companyId = 0;
 
 	public function __construct() {
 		parent::__construct();
@@ -10,6 +12,7 @@ class Admin extends CI_Controller {
 			redirect(site_url("api/signin"));
 		else {
 			$this->username = $this->session->userdata["username"];
+			$this->userId = $this->session->userdata["userId"];
 			$this->companyId = $this->session->userdata["companyId"];
 		}
 	}
@@ -408,15 +411,38 @@ class Admin extends CI_Controller {
 	/* transaction functions */
 
 	public function transactions() {
-		$data["userId"] = $this->session->userdata["userId"];
+		$this->load->model("Subscription_model");
+		$subscription = $this->Subscription_model->withActiveSubscription($this->companyId);
+		
 		$headerData["title"] = "Transactions";
 		$headerData['username'] = $this->username;
 		$this->load->view("templates/header", $headerData);
-		$this->load->view("sessioned/transaction_view", $data);
+		if ($subscription)
+			$this->load->view("sessioned/transaction_view");
+		else
+			$this->load->view("sessioned/alertSubscription_view");
 	}
 
 	public function addTransaction() {
-		
+		$data = array("serviceId" => $this->input->get("serviceId"),
+			"serviceName" => $this->input->get("serviceName"),
+			"customerId" => $this->input->get("customerId"),
+			"customerName" => $this->input->get("customerName"),
+			"employeeId" => $this->input->get("employeeId"),
+			"price" => $this->input->get("price"),
+			"discount" => $this->input->get("discount"),
+			"total" => $this->input->get("total"),
+			"createdBy" => $this->userId,
+			"remarks" => $this->input->get("remarks"),
+			);
+
+		file_put_contents("/tmp/transactions_admin.txt", print_r($data, TRUE));
+
+		$this->load->model("Transactions_model");
+		if ($this->Transactions_model->add($data))
+			return TRUE;
+		else
+			return FALSE;
 	}
 
 	/* end for transactions */

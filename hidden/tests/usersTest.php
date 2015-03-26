@@ -104,8 +104,7 @@ class UsersTest extends PHPUnit_Framework_Testcase {
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
 		curl_setopt($ch, CURLOPT_COOKIEFILE, "/tmp/cookieFileName");
-		curl_setopt($ch, CURLOPT_URL, $url);
-		
+		curl_setopt($ch, CURLOPT_URL, $url);		
 		$output = curl_exec($ch);
 		$status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		curl_close ($ch);

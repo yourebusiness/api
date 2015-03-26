@@ -131,8 +131,6 @@ class Services extends baseClass {
 
 		$data = $this->formatDataForAdd($data);
 
-		file_put_contents("/tmp/services.txt", print_r($data, TRUE));
-
 		$returnResult = false;
 
 		$sql1 = sprintf("SET @serviceId=(SELECT CAST(lastNo+1 AS char(11)) FROM documents WHERE documentCode='SVS' and companyId=%d);", $data["companyId"]);
