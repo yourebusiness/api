@@ -4,7 +4,7 @@ require_once(dirname(__FILE__) . "/../../.inc/globals.inc.php");
 require_once(dirname(__FILE__) . "/../../.inc/shared.inc.php");
 require_once(dirname(__FILE__) . "/../../.inc/functions.inc.php");
 
-class TransactionsTest extends PHPUnit_Framework_Testcase {
+class SubscriptionTest extends PHPUnit_Framework_Testcase {
 	private $mysqli;
 
 	protected function setUp() {
@@ -22,7 +22,7 @@ class TransactionsTest extends PHPUnit_Framework_Testcase {
 		$this->mysqli->close();
 	}
 
-	public function testAddTransaction() {
+	public function testAddSubscription() {
 		$uniqueCode = generateRandomString();
 		$password = password_hash("pass", PASSWORD_BCRYPT);
 
@@ -46,22 +46,20 @@ class TransactionsTest extends PHPUnit_Framework_Testcase {
 		try {
 			$this->mysqli->autocommit(false);
 			if (!$this->mysqli->query($sql1))
-				throw new Exception("Something went wrong on sql." . "Error: " . $this->mysqli->error);
+				throw new Exception("Error: " . $this->mysqli->error . ". SQL: $sql1.");
 			if (!$this->mysqli->query($sql2))
-				throw new Exception("Something went wrong on sql." . "Error: " . $this->mysqli->error);
+				throw new Exception("Error: " . $this->mysqli->error . ". SQL: $sql2.");
 			if (!$this->mysqli->query($sql3))
-				throw new Exception("Something went wrong on sql." . "Error: " . $this->mysqli->error);
+				throw new Exception("Error: " . $this->mysqli->error . ". SQL: $sql3.");
 			if (!$this->mysqli->query($sql4))
-				throw new Exception("Something went wrong on sql." . "Error: " . $this->mysqli->error);
+				throw new Exception("Error: " . $this->mysqli->error . ". SQL: $sql4.");
 			if (!$this->mysqli->query($sql5))
-				throw new Exception("Something went wrong on sql." . "Error: " . $this->mysqli->error);
+				throw new Exception("Error: " . $this->mysqli->error . ". SQL: $sql5.");
 			
 			$this->mysqli->commit();
-			$returnResult = TRUE;
 		} catch (Exception $e) {
 			error_log($e->getMessage());
 			$this->mysqli->rollback();
-			$returnResult = false;
 		} finally {
 			$this->mysqli->autocommit(TRUE);
 		}
@@ -93,7 +91,6 @@ class TransactionsTest extends PHPUnit_Framework_Testcase {
 		$this->assertEquals(1, $result->num_rows);
 
 		// let's add employee aka Masseur
-
 		$sql1 = "SET @employeeId=(SELECT CAST(lastNo+1 AS char(11)) FROM documents WHERE documentCode='EM' and companyId=1);";
         $sql2 = "insert into employee(employeeId, companyId, nickname, fName, midName, lName, createDate, createdBy)
                     values(@employeeId, 1, 'Mike', 'Michael', NULL, 'De la cruz', now(), 1);";
@@ -130,43 +127,46 @@ class TransactionsTest extends PHPUnit_Framework_Testcase {
 		try {
 			$this->mysqli->autocommit(false);
 			if (!$this->mysqli->query($sql1))
-				throw new exception ('Something went wrong on sql.' . "Error: " . $this->mysqli->error);
+				throw new exception ("Error: " . $this->mysqli->error . ". SQL: $sql1.");
 			if (!$this->mysqli->query($sql2))
-				throw new exception ('Something went wrong on sql.' . "Error: " . $this->mysqli->error);
+				throw new exception ("Error: " . $this->mysqli->error . ". SQL: $sql2.");
 			if (!$this->mysqli->query($sql3))
-				throw new exception ('Something went wrong on sql.' . "Error: " . $this->mysqli->error);
+				throw new exception ("Error: " . $this->mysqli->error . ". SQL: $sql3.");
 			if (!$this->mysqli->query($sql4))
-				throw new exception ('Something went wrong on sql.' . "Error: " . $this->mysqli->error);
+				throw new exception ("Error: " . $this->mysqli->error . ". SQL: $sql4.");
 			if (!$this->mysqli->query($sql5))
-				throw new exception ('Something went wrong on sql.' . "Error: " . $this->mysqli->error);
+				throw new exception ("Error: " . $this->mysqli->error . ". SQL: $sql5.");
 			if (!$this->mysqli->query($sql6))
-				throw new exception ('Something went wrong on sql.' . "Error: " . $this->mysqli->error);
+				throw new exception ("Error: " . $this->mysqli->error . ". SQL: $sql6.");
 
 			$this->mysqli->commit();
-			$returnResult = true;
 		} catch (exception $e) {
 			error_log($e->getMessage());
 			$this->mysqli->rollback();
-			$returnResult = false;
 		} finally {
 			$this->mysqli->autocommit(true);
 		}
 
+		// add payment types
+		$sql = "INSERT INTO payment(paymentName, intervalInMonths, amt) VALUES('1 Month', 1, 500),
+					('2 Months', 2, 1000), ('4 Months', 4, 2000);";
+		$stmt = $this->mysqli->prepare($sql);
+		$stmt->execute();
+
+		$sql = "SELECT * FROM payment";
+		$result = $this->mysqli->query($sql);
+		$this->assertEquals(3, $result->num_rows);
+
+
 		// after the inputs
 		global $webvars;
 
-		$url = $webvars["SERVER_ROOT"] . "/admin/addTransaction?";
-		$data = array("serviceId" => 1,
-			"serviceName" => "SHIATSU",
-			"customerId" => 1,
-			"customerName" => "MARIA",
-			"employeeId" => 1,
-			"price" => 100.00,
-			"discount" => 0.00,
-			"total" => 100,
-			"createdBy" => 1,
-			"remarks" => "This is remarks 1.",
-			);
+		$url = $webvars["SERVER_ROOT"] . "/admin/addSubscription?";
+		$data = array("companyId" => 1,
+					"paymentId" => 1,
+					"stripeToken" => "sk_test_BQokikJOvBiI2HlWgH4olfQ2",
+					"createdBy" => 1
+				);
 
 		$getData = "";
 		foreach ($data as $key => $value)
@@ -183,25 +183,12 @@ class TransactionsTest extends PHPUnit_Framework_Testcase {
 		$status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		curl_close ($ch);
 
-		$result = $this->mysqli->query("SELECT * FROM transactions");
-		$this->assertEquals(1, $result->num_rows);
-		$row = $result->fetch_array(MYSQLI_ASSOC);
-		$this->assertEquals(1, $row["id"]);
-		$this->assertEquals($data["serviceId"], $row["serviceId"]);
-		$this->assertEquals($data["serviceName"], $row["serviceName"]);
-		$this->assertEquals($data["customerId"], $row["customerId"]);
-		$this->assertEquals($data["customerName"], $row["customerName"]);
-		$this->assertEquals($data["employeeId"], $row["employeeId"]);
-		$this->assertEquals($data["price"], $row["price"]);
-		$this->assertEquals($data["discount"], $row["discount"]);
-		$this->assertEquals($data["total"], $row["total"]);
-
-		$percentInDecimal = ($data["discount"] / 100);
-		$x = (1 - $percentInDecimal);
-		$total = ($data["total"] * $x);
-		$this->assertEquals($total, $row["total"]);
-
+		$query = $this->mysqli->query("SELECT * FROM company_payment");
+		$this->assertEquals(1, $query->num_rows);
+		$row = $query->fetch_array(MYSQLI_ASSOC);
+		$this->assertEquals($data["companyId"], $row["companyId"]);
+		$this->assertEquals($data["paymentId"], $row["paymentId"]);
+		$this->assertEquals($data["stripeToken"], $row["stripeToken"]);
 		$this->assertEquals($data["createdBy"], $row["createdBy"]);
-		$this->assertEquals($data["remarks"], $row["remarks"]);
 	}
 }

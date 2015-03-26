@@ -75,17 +75,17 @@
     <h3>Transaction</h3> <hr />
 
     <div class="row">
-      <div class="col-sm-2"></div>
+      <div class="col-md-2"></div>
 
-      <div class="col-sm-8">
+      <div class="col-md-8">
         <div class="alert alert-danger alert-block fade in" id="dangerAlert">
             <h4>Error!!!</h4>
             <p>All fields must be provided.</p>
           </div>
           <form class="form-horizontal" method="post">
             <div class="form-group">
-              <label for="" class="col-sm-1">Masseur</label>
-              <div class="col-sm-3">
+              <label for="" class="col-md-1">Masseur</label>
+              <div class="col-md-3">
                 <select id="masseur" name="masseur" class="form-control">
                   <option value="0">-- select --</option>
                 </select>
@@ -93,8 +93,17 @@
               * <p></p>
             </div>
             <div class="form-group">
-              <label for="" class="col-sm-1"> Service</label>
-              <div class="col-sm-5">
+              <label for="" class="col-md-1"> Service</label>
+              <div class="col-md-5">
+                <select id="masseur" name="masseur" class="form-control">
+                  <option value="0">-- select --</option>
+                </select>
+              </div>
+              * <p></p>
+            </div>
+            <div class="form-group">
+              <label for="" class="col-md-2"> Customer </label>
+              <div class="col-md-5">
                 <select id="masseur" name="masseur" class="form-control">
                   <option value="0">-- select --</option>
                 </select>
@@ -103,20 +112,20 @@
             </div>
             <hr />
             <div class="form-group">
-              <label href="" class="col-sm-2">Total</label>
-              <div class="col-sm-5">
+              <label href="" class="col-md-2">Total</label>
+              <div class="col-md-5">
                 <p class="form-control-static">0.00</p>
               </div>
             </div>
             <div class="form-group">
-              <label href="" class="col-sm-2">Amount Paid</label>
-              <div class="col-sm-4">
+              <label href="" class="col-md-2">Amount Paid</label>
+              <div class="col-md-4">
                 <input type="text" class="form-control" />
               </div>
             </div>
             <div class="form-group">
-              <label href="" class="col-sm-2">Change</label>
-              <div class="col-sm-5">
+              <label href="" class="col-md-2">Change</label>
+              <div class="col-md-5">
                 <p class="form-control-static">0.00</p>
               </div>
             </div>
@@ -128,7 +137,7 @@
           </form>
       </div>
 
-      <div class="col-sm-2"></div>
+      <div class="col-md-2"></div>
     </div>
 </div>
 

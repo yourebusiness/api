@@ -4,6 +4,7 @@ class Admin extends CI_Controller {
 	private $username = "";
 	private $userId = 0;
 	private $companyId = 0;
+	private $role = "-1";	//enum("0, 1")
 
 	public function __construct() {
 		parent::__construct();
@@ -14,6 +15,7 @@ class Admin extends CI_Controller {
 			$this->username = $this->session->userdata["username"];
 			$this->userId = $this->session->userdata["userId"];
 			$this->companyId = $this->session->userdata["companyId"];
+			$this->role = $this->session->userdata["role"];
 		}
 	}
 
@@ -408,14 +410,32 @@ class Admin extends CI_Controller {
 		$this->load->view("sessioned/changePassword_view", $data);
 	}
 
+	/* Subscription methods */
+	
+	public function addSubscription() {
+		$data = array("companyId" => 1,
+					"paymentId" => 1,
+					"stripeToken" => "sk_test_BQokikJOvBiI2HlWgH4olfQ2",
+					"createdBy" => 1
+				);
+		$this->load->model("Subscription_model");
+		if (!$this->Subscription_model->add($data))
+			return FALSE;
+		else
+			return TRUE;
+	}
+
+	/* End for subscription methods*/
+
 	/* transaction functions */
 
 	public function transactions() {
-		$this->load->model("Subscription_model");
-		$subscription = $this->Subscription_model->withActiveSubscription($this->companyId);
+		$this->load->model("Transactions_model");
+		$subscription = $this->Transactions_model->withActiveSubscription($this->companyId);
 		
 		$headerData["title"] = "Transactions";
-		$headerData['username'] = $this->username;
+		$headerData["username"] = $this->username;
+		$headerData["userRights"] = $this->role;
 		$this->load->view("templates/header", $headerData);
 		if ($subscription)
 			$this->load->view("sessioned/transaction_view");
@@ -424,7 +444,8 @@ class Admin extends CI_Controller {
 	}
 
 	public function addTransaction() {
-		$data = array("serviceId" => $this->input->get("serviceId"),
+		$data = array("companyId" => $this->companyId,
+			"serviceId" => $this->input->get("serviceId"),
 			"serviceName" => $this->input->get("serviceName"),
 			"customerId" => $this->input->get("customerId"),
 			"customerName" => $this->input->get("customerName"),
@@ -435,8 +456,6 @@ class Admin extends CI_Controller {
 			"createdBy" => $this->userId,
 			"remarks" => $this->input->get("remarks"),
 			);
-
-		file_put_contents("/tmp/transactions_admin.txt", print_r($data, TRUE));
 
 		$this->load->model("Transactions_model");
 		if ($this->Transactions_model->add($data))
