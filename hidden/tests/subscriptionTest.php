@@ -9,9 +9,8 @@ class SubscriptionTest extends PHPUnit_Framework_Testcase {
 
 	protected function setUp() {
 		global $webvars;
-		$this->assertTrue(dropAndReloadDatabase());
-
 		$this->assertTrue(mysqlDump());
+		$this->assertTrue(dropAndReloadDatabase());
 		$this->assertTrue(insertCommonData());
 
 		global $db;

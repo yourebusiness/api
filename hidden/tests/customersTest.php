@@ -12,8 +12,8 @@ class CustomersTest extends PHPUnit_Framework_Testcase {
 		global $webvars;
 		$this->url = $webvars["SERVER_ROOT"] . "/api/signIn";
 
-		$this->assertTrue(mysqlDump());
 		$this->assertTrue(dropAndReloadDatabase());
+		$this->assertTrue(mysqlDump());
 		$this->assertTrue(insertCommonData());
 
 		global $db;

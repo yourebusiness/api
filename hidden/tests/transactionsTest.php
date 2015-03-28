@@ -7,11 +7,9 @@ require_once(dirname(__FILE__) . "/../../.inc/functions.inc.php");
 class TransactionsTest extends PHPUnit_Framework_Testcase {
 	private $mysqli;
 
-	protected function setUp() {
-		global $webvars;
-		$this->assertTrue(dropAndReloadDatabase());
-
+	protected function setUp() {		
 		$this->assertTrue(mysqlDump());
+		$this->assertTrue(dropAndReloadDatabase());
 		$this->assertTrue(insertCommonData());
 
 		global $db;
@@ -225,7 +223,7 @@ class TransactionsTest extends PHPUnit_Framework_Testcase {
 		$this->assertEquals($data["remarks"], $row["remarks"]);
 	}
 
-	/* public function testAddTransactionExpiredSubscription() {
+	public function testAddTransactionExpiredSubscription() {
 		$uniqueCode = generateRandomString();
 		$password = password_hash("pass", PASSWORD_BCRYPT);
 
@@ -408,5 +406,5 @@ class TransactionsTest extends PHPUnit_Framework_Testcase {
 
 		$result = $this->mysqli->query("SELECT * FROM transactions");
 		$this->assertEquals(0, $result->num_rows);
-	} */
+	}
 }

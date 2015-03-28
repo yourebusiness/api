@@ -10,9 +10,9 @@ class EmployeeTest extends PHPUnit_Framework_Testcase {
 
 	protected function setUp() {
 		global $webvars;
-		$this->assertTrue(dropAndReloadDatabase());
 		$this->url = $webvars["SERVER_ROOT"] . "/api/signIn";
 
+		$this->assertTrue(dropAndReloadDatabase());
 		$this->assertTrue(mysqlDump());
 		$this->assertTrue(insertCommonData());
 

@@ -453,6 +453,9 @@ class Admin extends CI_Controller {
 	}
 
 	public function addTransaction() {
+		$remarks = $this->input->get("remarks");
+		( ! isset($remarks)) ? $remarks = NULL : $remarks;
+
 		$data = array("companyId" => $this->companyId,
 			"serviceId" => $this->input->get("serviceId"),
 			"serviceName" => $this->input->get("serviceName"),
@@ -463,7 +466,7 @@ class Admin extends CI_Controller {
 			"discount" => 0, // we don't support this one yet
 			"total" => $this->input->get("price"), // we don't support discount yet for now
 			"createdBy" => $this->userId,
-			"remarks" => "", // we don't support this one yet
+			"remarks" => $remarks, // we don't support this one yet
 			);
 
 		$this->load->model("Transactions_model");

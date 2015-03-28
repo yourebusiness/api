@@ -14,7 +14,6 @@ class RegistrationTest extends PHPUnit_Framework_Testcase {
 
 		$this->assertTrue(mysqlDump());
 		$this->assertTrue(dropAndReloadDatabase());
-
 		$this->assertTrue(insertCommonData());
 
 		global $db;
