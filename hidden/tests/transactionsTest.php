@@ -225,7 +225,7 @@ class TransactionsTest extends PHPUnit_Framework_Testcase {
 		$this->assertEquals($data["remarks"], $row["remarks"]);
 	}
 
-	public function testAddTransactionExpiredSubscription() {
+	/* public function testAddTransactionExpiredSubscription() {
 		$uniqueCode = generateRandomString();
 		$password = password_hash("pass", PASSWORD_BCRYPT);
 
@@ -355,7 +355,7 @@ class TransactionsTest extends PHPUnit_Framework_Testcase {
 			$this->mysqli->autocommit(true);
 		}
 
-		/* add payment types */
+		// add payment types
 		$sql = "INSERT INTO payment(paymentName, intervalInMonths, amt) VALUES('1 Month', 1, 500),
 					('2 Months', 2, 1000), ('4 Months', 4, 2000);";
 		$stmt = $this->mysqli->prepare($sql);
@@ -365,7 +365,7 @@ class TransactionsTest extends PHPUnit_Framework_Testcase {
 		$result = $this->mysqli->query($sql);
 		$this->assertEquals(3, $result->num_rows);
 
-		/* add company_payment */
+		// add company_payment
 		date_default_timezone_set('Asia/Manila');
 		$date = new DateTime(date("Y-m-d H:i:s"));
 		$date->sub(new DateInterval("P1M"));
@@ -408,5 +408,5 @@ class TransactionsTest extends PHPUnit_Framework_Testcase {
 
 		$result = $this->mysqli->query("SELECT * FROM transactions");
 		$this->assertEquals(0, $result->num_rows);
-	}
+	} */
 }

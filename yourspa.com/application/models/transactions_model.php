@@ -46,14 +46,6 @@ class Transactions_model extends baseClass2 {
 			log_message("error", "Price is not a number.");
 			return FALSE;
 		}
-		if (is_nan($data["total"])) {
-			log_message("error", "Total is not a number.");
-			return FALSE;
-		}
-		if (is_nan($data["discount"])) {
-			log_message("error", "Discount is not a number.");
-			return FALSE;
-		}
 
 		return TRUE;
 	}

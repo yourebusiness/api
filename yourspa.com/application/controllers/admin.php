@@ -436,9 +436,18 @@ class Admin extends CI_Controller {
 		$headerData["title"] = "Transactions";
 		$headerData["username"] = $this->username;
 		$headerData["userRights"] = $this->role;
+
+		$this->load->model("Employee_model");
+		$this->load->model("Customers_model");
+		$this->load->model("Services_model");
+		$data["masseurs"] = $this->Employee_model->getMasseurNamesByCompanyId($this->companyId);
+		$data["services"] = $this->Services_model->getServicesByCompanyId($this->companyId);
+		$data["customers"] = $this->Customers_model->getCustomersByCompanyId($this->companyId);
+		$data["companyId"] = $this->companyId;
+
 		$this->load->view("templates/header", $headerData);
 		if ($subscription)
-			$this->load->view("sessioned/transaction_view");
+			$this->load->view("sessioned/transaction_view", $data);
 		else
 			$this->load->view("sessioned/alertSubscription_view");
 	}
@@ -451,10 +460,10 @@ class Admin extends CI_Controller {
 			"customerName" => $this->input->get("customerName"),
 			"employeeId" => $this->input->get("employeeId"),
 			"price" => $this->input->get("price"),
-			"discount" => $this->input->get("discount"),
-			"total" => $this->input->get("total"),
+			"discount" => 0, // we don't support this one yet
+			"total" => $this->input->get("price"), // we don't support discount yet for now
 			"createdBy" => $this->userId,
-			"remarks" => $this->input->get("remarks"),
+			"remarks" => "", // we don't support this one yet
 			);
 
 		$this->load->model("Transactions_model");
@@ -462,6 +471,28 @@ class Admin extends CI_Controller {
 			return TRUE;
 		else
 			return FALSE;
+	}
+
+	public function getPriceForCustomer() {
+		$data = array("serviceId" => $this->input->get("serviceId"),
+					"customerId" => $this->input->get("customerId"),
+					"companyId" => $this->companyId,
+				);
+		
+		$this->load->helper("record");
+		header("Content-type: application/json");
+		$price = getPriceForCustomer($data);
+		if ($price === FALSE)
+			$price = "0.00";
+
+		echo json_encode($price);
+	}
+
+	public function successaddtransaction() {
+		$headerData["title"] = "Transactions";
+		$headerData["username"] = $this->username;
+		$this->load->view("templates/header", $headerData);
+		$this->load->view("sessioned/successAddTransaction_view");
 	}
 
 	/* end for transactions */

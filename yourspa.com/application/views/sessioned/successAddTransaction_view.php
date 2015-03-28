@@ -72,83 +72,8 @@
 </nav>
 
 <div class="container">
-    <h3>Transaction</h3> <hr />
-
-    <div class="row">
-      <div class="col-md-2"></div>
-
-      <div class="col-md-8">
-        <div class="alert alert-danger alert-block fade in" id="dangerAlert">
-            <h4>Error!!!</h4>
-            <p>All fields must be provided.</p>
-          </div>
-          <form id="form" class="form-horizontal" method="get" action="<?php echo base_url("admin/addTransaction"); ?>">
-            <input type="hidden" name="companyId" id="companyId" value="<?php echo $companyId; ?>" />
-            <div class="form-group">
-              <label for="" class="col-md-1">Masseur</label>
-              <div class="col-md-3">
-                <select id="masseur" name="masseur" class="form-control">
-                  <option value="0">-- select --</option>
-                  <?php foreach($masseurs as $masseur): ?>
-                    <option value="<?php echo $masseur["id"] ?>"><?php echo $masseur["nickname"]; ?></option>
-                  <?php endforeach; ?>
-                </select>
-              </div>
-              * <p></p>
-            </div>
-            <div class="form-group">
-              <label for="" class="col-md-1"> Service</label>
-              <div class="col-md-5">
-                <select id="services" name="services" class="form-control">
-                  <option value="0">-- select --</option>
-                  <?php foreach($services as $service): ?>
-                    <option value="<?php echo $service["id"]; ?>"><?php echo $service["serviceName"]; ?></option>
-                  <?php endforeach; ?>
-                </select>
-              </div>
-              * <p></p>
-            </div>
-            <div class="form-group">
-              <label for="" class="col-md-2"> Customer </label>
-              <div class="col-md-5">
-                <select id="customers" name="customers" class="form-control">
-                  <option value="0">-- select --</option>
-                  <?php foreach($customers as $customer): ?>
-                    <option value="<?php echo $customer["id"]; ?>"><?php echo $customer["customerName"]; ?></option>
-                  <?php endforeach; ?>
-                </select>
-              </div>
-              * <p></p>
-            </div>
-            <hr />
-            <div class="form-group">
-              <label href="" class="col-md-2">Price (Php)</label>
-              <div class="col-md-5">
-                <p class="form-control-static" id="price">0.00</p>
-              </div>
-            </div>
-            <div class="form-group">
-              <label href="" class="col-md-2">Amount Paid</label>
-              <div class="col-md-4">
-                <input type="text" class="form-control" id="amountPaid" name="amountPaid" />
-              </div>
-            </div>
-            <div class="form-group">
-              <label href="" class="col-md-2">Change</label>
-              <div class="col-md-5">
-                <p class="form-control-static" id="change">0.00</p>
-              </div>
-            </div>
-            <hr />
-            <div class="form-group">
-              <button type="button" id="save" class="btn btn-primary">Save</button>
-              <button type="button" id="cancel" class="btn btn-default" onclick="window.location.href='<?php echo base_url("admin"); ?>'">Cancel</button>
-            </div>
-          </form>
-      </div>
-
-      <div class="col-md-2"></div>
-    </div>
+  <h3>Adding has been successful.</h3>
+  <p>Add another transaction? <a href="<?php echo base_url("admin/transactions"); ?>">Yes</a> / <a href="<?php echo base_url("admin"); ?>">No</a></p>
 </div>
 
 <!-- All Javascript at the bottom of the page for faster page loading -->
