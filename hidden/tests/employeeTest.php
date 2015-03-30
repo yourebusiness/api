@@ -42,6 +42,8 @@ class EmployeeTest extends PHPUnit_Framework_Testcase {
                     (@companyId, 'SVS', 'Services', 0),
                     (@companyId, 'TRAN', 'Transactions', 0),
                     (@companyId, 'USR', 'Users', 1);";
+        $sql5 = "insert into customer(companyId, customerId, custType, fName, midName, lName, active, createdBy, createDate)
+                values(@companyId, 1, 0, 'Guest', 'Guest', 'Guest', 'Y', 1, now());";
 
 		try {
 			$this->mysqli->autocommit(false);
@@ -52,6 +54,8 @@ class EmployeeTest extends PHPUnit_Framework_Testcase {
 			if (!$this->mysqli->query($sql3))
 				throw new Exception("Something went wrong on sql." . "Error: " . $this->mysqli->error);
 			if (!$this->mysqli->query($sql4))
+				throw new Exception("Something went wrong on sql." . "Error: " . $this->mysqli->error);
+			if (!$this->mysqli->query($sql5))
 				throw new Exception("Something went wrong on sql." . "Error: " . $this->mysqli->error);
 			
 			$this->mysqli->commit();

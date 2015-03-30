@@ -102,6 +102,9 @@ class RegistrationTest extends PHPUnit_Framework_Testcase {
 			else
 				$this->assertEquals(0, $row["lastNo"]);
 		}
+
+		$result = $this->mysqli->query("SELECT * FROM customer");
+		$this->assertEquals(1, $result->num_rows);
 			
 	}
 

@@ -42,6 +42,8 @@ class CustomersTest extends PHPUnit_Framework_Testcase {
                     (@companyId, 'SVS', 'Services', 0),
                     (@companyId, 'TRAN', 'Transactions', 0),
                     (@companyId, 'USR', 'Users', 1);";
+        $sql5 = "insert into customer(companyId, customerId, custType, fName, midName, lName, active, createdBy, createDate)
+                values(@companyId, 1, 0, 'Guest', 'Guest', 'Guest', 'Y', 1, now());";
 
 		try {
 			$this->mysqli->autocommit(false);
@@ -52,6 +54,8 @@ class CustomersTest extends PHPUnit_Framework_Testcase {
 			if (!$this->mysqli->query($sql3))
 				throw new Exception("Something went wrong on sql." . "Error: " . $this->mysqli->error);
 			if (!$this->mysqli->query($sql4))
+				throw new Exception("Something went wrong on sql." . "Error: " . $this->mysqli->error);
+			if (!$this->mysqli->query($sql5))
 				throw new Exception("Something went wrong on sql." . "Error: " . $this->mysqli->error);
 			
 			$this->mysqli->commit();
@@ -100,11 +104,15 @@ class CustomersTest extends PHPUnit_Framework_Testcase {
 		curl_close ($ch);
 
 		$result = $this->mysqli->query("select * from customer");
-		$this->assertEquals(1, $result->num_rows);
+		$this->assertEquals(2, $result->num_rows);
 		$row = $result->fetch_array(MYSQLI_ASSOC);
 		$this->assertEquals($data["companyId"], $row["companyId"]);
 		$this->assertEquals(1, $row["customerId"]);
 		$this->assertEquals($data["custType"], $row["custType"]);
+
+		$result = $this->mysqli->query("select * from customer where id = 2");
+		$this->assertEquals(1, $result->num_rows);
+		$row = $result->fetch_array(MYSQLI_ASSOC);
 		$this->assertEquals($data["fName"], $row["fName"]);
 		$this->assertNull($row["midName"]);
 		$this->assertEquals($data["lName"], $row["lName"]);
