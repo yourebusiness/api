@@ -66,14 +66,6 @@ class Customer extends baseClass {
 			$arr[] = $row;
 
 		return $arr;
-
-		//$arr = array();
-		//$sql = "select fName, midName, lName from customer where fName like '%" . $data["searchText"] . "%' or midName like '%" . $data["searchText"] . "%' or lName like '%" . $data["searchText"] . "%' and companyId=" . $data["companyId"];
-		//$result = $this->mysqli->query($sql);
-		//while ($row = $result->fetch_array(MYSQLI_ASSOC))
-		//	$arr[] = $row;
-
-		//return $arr;
 	}
 
 	public function getCustomerDetails(array $data) {

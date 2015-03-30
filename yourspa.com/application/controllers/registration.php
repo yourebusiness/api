@@ -8,11 +8,15 @@ class Registration extends CI_Controller {
 		if (!file_exists('application/views/' . $page . '.php'))
 			show_404();
 
+        session_start();
+        include_once "includes/captcha/simple-php-captcha.php";
+        $_SESSION['captcha'] = simple_php_captcha();
+
 		$this->load->model("Api_model");
 		$data["province"] = $this->Api_model->getProvince();
-		$data['title'] = "Register";
-		$this->load->view('templates/header', $data);
-		$this->load->view($page);
+		$headerData['title'] = "Register";
+		$this->load->view("templates/header", $headerData);
+		$this->load->view($page, $data);
 		$this->load->view('templates/footer');
 	}
 
@@ -20,7 +24,7 @@ class Registration extends CI_Controller {
     	return substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $length);
 	}
 
-    private function checkPWAndConfirmPW(array $data) {
+    private function _checkPWAndConfirmPW(array $data) {
         if ($data["password"] !== $data["confirmPassword"])
             return false;
 
@@ -32,8 +36,13 @@ class Registration extends CI_Controller {
         $data["password"] = $this->input->post("password");
         $data["confirmPassword"] = $this->input->post("confirmPassword");
 
-        if (!$this->checkPWAndConfirmPW($data))
+        if (!$this->_checkPWAndConfirmPW($data))
             return false;
+
+        $sessionCaptcha = strtolower($_SESSION['captcha']['code']);
+        $postCaptcha = strtolower($this->input->post("captcha"));
+        if ($sessionCaptcha !== $postCaptcha)
+            return FALSE;
 
         $data["company"] = $this->input->post("company");
         $data["province"] = $this->input->post("province");
@@ -47,9 +56,10 @@ class Registration extends CI_Controller {
         $data["gender"] = $this->input->post("gender");
         $data["userEmail"] = $this->input->post("userEmail");
         $data["hash"] = $this->generateRandomString();
+        $data["captcha"] = $sessionCaptcha;
 
-        $this->load->model("Register_model");
-    	if ($this->Register_model->add($data)) {
+        $this->load->model("Company_model");
+    	if ($this->Company_model->add($data)) {
             global $settings;
             if ($settings["sendEmail"])
                 $this->sendEmail($data["userEmail"], $data["hash"]);

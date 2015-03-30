@@ -78,7 +78,9 @@ class Transactions_model extends baseClass2 {
 		$this->db->trans_complete();
 
 		if ($this->db->trans_status() === FALSE) {
-			log_message("error", "Error running sql query in " . __METHOD__ . "()");
+			$msg = $this->db->_error_number();
+			$num = $this->db->_error_message();
+			log_message("error", "Error running sql query in " . __METHOD__ . "(). ($num) $msg)");
 			return FALSE;
 		}
 

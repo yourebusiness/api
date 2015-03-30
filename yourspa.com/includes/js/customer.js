@@ -1,4 +1,28 @@
 $(document).ready(function() {
+	var $customers = $('#customers');
+	var companyId = $('#companyId').val();
+
+	var customersTemplate = $('#customers-template').html();
+
+	function customersList(customer) {
+		$customers.append(Mustache.render(customersTemplate, customer));
+	}
+
+	$.ajax({
+		type: 'GET',
+		url: 'http://yourspa.com/admin/getAllCustomersByCompanyId',
+		data: {companyId: companyId},
+		success: function(customers) {
+			$.each(customers, function(i, customer) {
+				customersList(customer);
+			});
+		},
+		error: function() {
+			alert("Error loading customers.");
+		}
+	});
+
+	// listener for the add customer
 	$('#addCustomer').on('click', function(event) {
 		$('#dangerAlert').slideUp();
 		$('#successAlert').slideUp();

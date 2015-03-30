@@ -446,6 +446,19 @@ class Admin extends CI_Controller {
 		$data["companyId"] = $this->companyId;
 
 		$this->load->view("templates/header", $headerData);
+		if (empty($data["masseurs"])) {
+			$this->load->view("sessioned/masseuradd_view");
+			return;
+		}
+		if (empty($data["services"])) {
+			$this->load->view("sessioned/addService_view");
+			return;
+		}
+		if (empty($data["customers"])) {
+			$this->load->view("sessioned/addCustomer_view");
+			return;
+		}
+
 		if ($subscription)
 			$this->load->view("sessioned/transaction_view", $data);
 		else
@@ -502,21 +515,20 @@ class Admin extends CI_Controller {
 
 	/* controller for customer */
 
-	public function getCustomersDetails() {
-		$searchText = $this->input->get("searchText");
-		$companyId = $this->session->userdata["companyId"];
-		$data = array("companyId" => $companyId, "searchText" => $searchText);
-		$this->load->model("Admin_model");
+	public function getAllCustomersByCompanyId() {
+		$companyId = $this->input->get("companyId");
+		$this->load->model("Customers_model");
+		$customersList = $this->Customers_model->getAllCustomersByCompanyId($companyId);
+
 		header("Content-type: application/json");
-		echo json_encode($this->Admin_model->searchCustomersDetails($data));
+		echo json_encode($customersList);
 	}
 
 	public function customers() {
 		$headerData["title"] = "Customers";
 		$headerData['username'] = $this->username;
 		$companyId = $this->session->userdata["companyId"];
-		$this->load->model("Admin_model");
-		$data["customers"] = $this->Admin_model->getAllCustomersDetails($companyId);
+		$data["companyId"] = $companyId;
 		$this->load->view("templates/header", $headerData);
 		$this->load->view("sessioned/customers_view", $data);
 	}
@@ -536,8 +548,8 @@ class Admin extends CI_Controller {
 					"lName" => $this->input->get("lName"),
 					"createdBy" => $this->session->userdata["userId"]
 				);
-		$this->load->model("Admin_model");
-		if ($this->Admin_model->addCustomer($data))
+		$this->load->model("Customers_model");
+		if ($this->Customers_model->add($data))
 			return TRUE;
 		else
 			return FALSE;
@@ -563,12 +575,12 @@ class Admin extends CI_Controller {
 			$this->load->model("Api_model");
 			$data["provinces"] = $this->Api_model->getProvince(); // get all province list
 
-			$this->load->model("Admin_model");
-			$provinceId = $this->Admin_model->getProvinceIdByCompanyId($data["companyId"])[0]["province"];
+			$this->load->model("Company_model");
+			$provinceId = $this->Company_model->getProvinceIdByCompanyId($data["companyId"])[0]["province"];
 
 			$data["cities"] = $this->Api_model->getCity($provinceId);
 
-			$data["companyInfo"] = $this->Admin_model->getCompanyInfo($data["companyId"]);
+			$data["companyInfo"] = $this->Company_model->getCompanyInfo($data["companyId"]);
 			$this->load->view("templates/header", $headerData);
 			$this->load->view("sessioned/company_view", $data);
 		} else {
@@ -591,7 +603,7 @@ class Admin extends CI_Controller {
             $data["companyId"] = $this->input->get("companyId");
 
             if (!$this->assertEqualCompanyId($data["companyId"]))
-                return false;
+                return FALSE;
 
             $data["company"] = $this->input->get("company");
             $data["province"] = $this->input->get("province");
@@ -601,12 +613,10 @@ class Admin extends CI_Controller {
             $data["tin"] = $this->input->get("tin");
             $data["companyWebsite"] = $this->input->get("companyWebsite");
 
-            $this->load->model("Register_model");
-            if ($this->Register_model->edit($data)) {
-                $headerData["title"] = "Update Company Profile";
-    			$headerData['username'] = $this->username;
-                $this->load->view("templates/header", $headerData);
-                $this->load->view("sessioned/editCompanyProfileSuccess_view");
+            $this->load->model("Company_model");
+            if ($this->Company_model->edit($data)) {
+            	delete_cookie("yourspaFunc_CompanyProfile");
+            	return TRUE;
             }
         } else { // load the login page
             $data["title"] = "Update Company Profile";

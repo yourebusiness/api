@@ -23,7 +23,7 @@
 
                 <div class="navbar-collapse collapse" id="collapsable_menu" role="navigation">
                     <ul class="nav navbar-nav">
-                        <li><a href="http://yourspa.com">Home</a></li>
+                        <li><a href="<?php echo base_url(); ?>">Home</a></li>
                         <li><a href="#">Services</a></li>
                         <li><a href="#">Customers</a></li>
                         <li><a href="<?php echo base_url("aboutus/view"); ?>">About Us</a></li>
@@ -154,6 +154,17 @@
                         </div>
                     </div> <!-- end of form-group -->
 
+                    <h5>Captcha</h5> <hr>
+
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            <img src="<?php echo base_url($_SESSION['captcha']['image_src']); ?>" />
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" placeholder="Enter captcha here" />
+                        </div>
+                    </div> <!-- end of form-group -->
+
                     <div class="form-group">
                         <hr>
                         <div class="pull-right">
@@ -161,7 +172,6 @@
                             <button type="button" class="btn btn-default" onclick="window.location.href='<?php echo base_url(); ?>'">Cancel</button>
                         </div>
                     </div> <!-- end of form-group -->
-
                 </form> <!-- endo of form registration -->
 
             </div> <!-- first half of col-sm-6 -->

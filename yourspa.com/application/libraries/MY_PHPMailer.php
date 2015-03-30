@@ -2,6 +2,6 @@
 
 class MY_PHPMailer {
 	public function My_PHPMailer() {
-        include_once "PHPMailer-master/PHPMailerAutoload.php";
+        include_once "PHPMailer/PHPMailerAutoload.php";
     }
 }

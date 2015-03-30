@@ -95,7 +95,7 @@
             <td class="amount">{{regPrice}}</td>
             <td>{{memberPrice}}</td>
             <td>
-              <button type="button" class="btn btn-warning btn-xs" onclick="window.location.href='http://yourspa.com/admin/editService_view' + '?id=' + {{id}} ">&nbsp; Edit &nbsp; </button>
+              <button type="button" class="btn btn-warning btn-xs" onclick="window.location.href='<?php echo base_url("admin/editService_view"); ?>' + '?id=' + {{id}} ">&nbsp; Edit &nbsp; </button>
               <button data-id="{{id}}" type="button" class="btn btn-danger btn-xs remove">Delete</button>
             </td>
           </tr>

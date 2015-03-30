@@ -13,7 +13,7 @@ $(document).ready(function(){
 			$dangerAlert.slideDown();
 			return;
 		}
-		if (jQuery.trim($password.val()).length < 5) {
+		if (jQuery.trim($password.val()).length < 4) {
 			$dangerAlert.slideDown();
 			return;
 		}

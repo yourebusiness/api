@@ -80,7 +80,9 @@
   </div><!-- /.container-fluid -->
 </nav>
 
-<h3>Please subscribe.</h3>
+<div class="container">
+  <h3>Please subscribe.</h3>
+</div>
 
 <!-- All Javascript at the bottom of the page for faster page loading -->
     

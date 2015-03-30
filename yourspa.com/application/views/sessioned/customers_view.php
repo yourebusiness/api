@@ -71,7 +71,7 @@
   </div><!-- /.container-fluid -->
 </nav>
 
-<div class="container-fluid">
+<div class="container">
   <h4>Customers</h4> <hr />
 
   <div class="row">
@@ -86,6 +86,8 @@
     </div>
   </div>
   <br />
+
+  <input type="hidden" name="companyId" id="companyId" value="<?php echo $companyId; ?>" />
   <div class="table-responsive">
     <table class="table table-bordered table-hover">
       <thead>
@@ -99,16 +101,21 @@
           <th></th> <!-- for the edit, delete -->
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
+      <tbody id="customers">
+        <script type="text/javascript" id="customers-template">
+          <tr>
+            <td>{{customerId}}</td>
+            <td>{{custType}}</td>
+            <td>{{fName}}</td>
+            <td>{{midName}}</td>
+            <td>{{lName}}</td>
+            <td>{{active}}</td>
+            <td>
+              <button type="button" class="btn btn-warning btn-xs" onclick="window.location.href='<?php echo base_url("admin/editCustomer_view"); ?>' + '?id=' + {{customerId}} ">&nbsp; Edit &nbsp; </button>
+              <button data-id="{{customerId}}" type="button" class="btn btn-danger btn-xs remove">Delete</button>
+            </td>
+          </tr>
+        </script>
       </tbody>
     </table>
   </div>
