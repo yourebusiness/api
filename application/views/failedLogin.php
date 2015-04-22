@@ -2,10 +2,10 @@
 	<div class="container">
 		<div class="container" id="socialMedia">
                 <ul class="nav navbar-nav pull-right">
-                    <li><a href="#"><img src="../../../images/facebook.png"></a></li>
-                    <li><a href="#"><img src="../../../images/twitter.png"></a></li>
-                    <li><a href="#"><img src="../../../images/googlePlus.png"></a></li>
-                    <li><a href="#"><img src="../../../images/linkedin.png"></a></li>
+                    <li><a href="#"><img src="<?php echo base_url(); ?>images/facebook.png"></a></li>
+                    <li><a href="#"><img src="<?php echo base_url(); ?>images/twitter.png"></a></li>
+                    <li><a href="#"><img src="<?php echo base_url(); ?>images/googlePlus.png"></a></li>
+                    <li><a href="#"><img src="<?php echo base_url(); ?>images/linkedin.png"></a></li>
                 </ul>
         </div> <!-- end of container -->
 
@@ -19,20 +19,20 @@
                         <span class="icon-bar"></span>
                     </button>
 
-                    <a href="http://yourspa.com" class="navbar-brand"><img src="../../../images/spa_logo.png" alt="Go to Home page"></a>
+                    <a href="<?php echo site_url(); ?>" class="navbar-brand"><img src="<?php echo base_url(); ?>images/spa_logo.png" alt="Go to Home page"></a>
                 </div> <!-- end of navbar-header -->
 
                 <div class="navbar-collapse collapse" id="collapsable_menu" role="navigation">
                     <ul class="nav navbar-nav">
-                        <li><a href="http://yourspa.com">Home</a></li>
+                        <li><a href="<?php echo site_url(); ?>">Home</a></li>
                         <li><a href="#">Services</a></li>
                         <li><a href="#">Customers</a></li>
-                        <li><a href="<?php echo base_url('aboutus/view'); ?>">About Us</a></li>
+                        <li><a href="<?php echo site_url('aboutus/view'); ?>">About Us</a></li>
                     </ul>
 
                     <ul class="nav navbar-nav pull-right">
                         <li class="disabled"><a href="#" role="button"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-                        <li class="active"><a href="<?php echo base_url("registration/view"); ?>"><span class="glyphicon glyphicon-registration-mark"></span> Register</a></li>
+                        <li class="active"><a href="<?php echo site_url("registration/view"); ?>"><span class="glyphicon glyphicon-registration-mark"></span> Register</a></li>
                     </ul>
                 </div> <!-- end of navbar-collapse collapse -->
             </div> <!-- end container -->
@@ -49,7 +49,7 @@
                         <h3 class="panel-title">Login</h3>
                     </div>
                     <div class="panel-body">
-                        <form method="post" action="<?php echo base_url("api/signin"); ?>">
+                        <form method="post" action="<?php echo site_url("api/signin"); ?>">
                             <div class="form-group">
                                 <label for="username">Email</label>
                                 <input type="email" class="form-control" id="username" name="username" placeholder="username">
@@ -93,10 +93,10 @@
     <!-- All Javascript at the bottom of the page for faster page loading -->
     
     <!-- If no online access, fallback to our hardcoded version of jQuery -->
-    <script>window.jQuery || document.write('<script src="../includes/js/jquery-1.11.2.min.js"><\/script>')</script>
+    <script>window.jQuery || document.write('<script src="<?php echo base_url(); ?>includes/js/jquery-1.11.2.min.js"><\/script>')</script>
     
     <!-- Bootstrap JS -->
-    <script src="../bootstrap/js/bootstrap.min.js"></script>
+    <script src="<?php echo base_url(); ?>bootstrap/js/bootstrap.min.js"></script>
     
 </body>
 </html>

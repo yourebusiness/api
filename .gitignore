@@ -9,3 +9,4 @@ phpunit.phar
 *.sql
 readme.txt
 .htaccess
+exercises/

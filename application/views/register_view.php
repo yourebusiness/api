@@ -1,10 +1,10 @@
     <div class="container">
         <div class="container" id="socialMedia">
                 <ul class="nav navbar-nav pull-right">
-                    <li><a href="#"><img src="../../../images/facebook.png"></a></li>
-                    <li><a href="#"><img src="../../../images/twitter.png"></a></li>
-                    <li><a href="#"><img src="../../../images/googlePlus.png"></a></li>
-                    <li><a href="#"><img src="../../../images/linkedin.png"></a></li>
+                    <li><a href="#"><img src="images/facebook.png"></a></li>
+                    <li><a href="#"><img src="images/twitter.png"></a></li>
+                    <li><a href="#"><img src="images/googlePlus.png"></a></li>
+                    <li><a href="#"><img src="images/linkedin.png"></a></li>
                 </ul>
         </div> <!-- end of container -->
 
@@ -18,15 +18,15 @@
                         <span class="icon-bar"></span>
                     </button>
 
-                    <a href="<?php echo base_url("welcome"); ?>" class="navbar-brand"><img src="../../../images/spa_logo.png" alt="Go to Home page"></a>
+                    <a href="<?php echo site_url("welcome"); ?>" class="navbar-brand"><img src="images/spa_logo.png" alt="Go to Home page"></a>
                 </div> <!-- end of navbar-header -->
 
                 <div class="navbar-collapse collapse" id="collapsable_menu" role="navigation">
                     <ul class="nav navbar-nav">
-                        <li><a href="<?php echo base_url(); ?>">Home</a></li>
+                        <li><a href="<?php echo site_url(); ?>">Home</a></li>
                         <li><a href="#">Services</a></li>
                         <li><a href="#">Customers</a></li>
-                        <li><a href="<?php echo base_url("aboutus/view"); ?>">About Us</a></li>
+                        <li><a href="<?php echo site_url("aboutus/view"); ?>">About Us</a></li>
                     </ul>
 
                     <ul class="nav navbar-nav pull-right">
@@ -54,7 +54,7 @@
 
                 <?php $this->load->library("form_validation"); ?>
 
-                <form class="form-horizontal" id="form" method="post" action="<?php echo base_url('registration/register'); ?>">
+                <form class="form-horizontal" id="form" method="post" action="<?php echo site_url('registration/register'); ?>">
                     <div class="form-group registerSubGroup">
                         <label class="col-sm-3 control-label" for="company">Company name</label>
                         <div class="col-sm-9">
@@ -158,7 +158,7 @@
 
                     <div class="form-group">
                         <div class="col-md-4">
-                            <img src="<?php echo base_url($_SESSION['captcha']['image_src']); ?>" />
+                            <img src="<?php echo site_url($_SESSION['captcha']['image_src']); ?>" />
                         </div>
                         <div class="col-md-4">
                             <input type="text" class="form-control" placeholder="Enter captcha here" />
@@ -169,7 +169,7 @@
                         <hr>
                         <div class="pull-right">
                             <button type="submit" class="btn btn-primary">Submit</button>
-                            <button type="button" class="btn btn-default" onclick="window.location.href='<?php echo base_url(); ?>'">Cancel</button>
+                            <button type="button" class="btn btn-default" onclick="window.location.href='<?php echo site_url(); ?>'">Cancel</button>
                         </div>
                     </div> <!-- end of form-group -->
                 </form> <!-- endo of form registration -->

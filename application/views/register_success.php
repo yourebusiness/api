@@ -12,7 +12,7 @@
                         <div class="modal-subtitle"><small>Enter your username and password</small></div>
                     </div> <!-- end of modal-header -->
                     <div class="modal-body">
-                        <form method="post" action="<?php echo base_url("api/signIn") ?>" class="form-horizontal">
+                        <form method="post" action="<?php echo site_url("api/signIn") ?>" class="form-horizontal">
                             <div class="form-group">
                                  <label for="inputEmail" class="col-sm-2 control-label">Email</label>
                                  <div class="col-sm-8">
@@ -72,12 +72,12 @@
                         <li><a href="http://yourspa.com">Home</a></li>
                         <li><a href="#">Services</a></li>
                         <li><a href="#">Customers</a></li>
-                        <li><a href="<?php echo base_url('aboutus/view'); ?>">About Us</a></li>
+                        <li><a href="<?php echo site_url('aboutus/view'); ?>">About Us</a></li>
                     </ul>
 
                     <ul class="nav navbar-nav pull-right">
                         <li><a href="#myModal" role="button" data-toggle="modal"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-                        <li class="active"><a href="<?php echo base_url("registration/view"); ?>"><span class="glyphicon glyphicon-registration-mark"></span> Register</a></li>
+                        <li class="active"><a href="<?php echo site_url("registration/view"); ?>"><span class="glyphicon glyphicon-registration-mark"></span> Register</a></li>
                     </ul>
                 </div> <!-- end of navbar-collapse collapse -->
             </div> <!-- end container -->

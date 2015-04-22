@@ -10,16 +10,16 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         
         <!-- Bootstrap CSS -->
-        <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet">
-        <link href="../includes/css/bootstrap-glyphicons.css" rel="stylesheet">
+        <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="includes/css/bootstrap-glyphicons.css" rel="stylesheet">
 
         <link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
         
         <!-- Custom CSS -->
-        <link href="../includes/css/styles.css" rel="stylesheet">
+        <link href="includes/css/styles.css" rel="stylesheet">
         
         <!-- Include Modernizr in the head, before any other Javascript -->
-        <script src="../includes/js/modernizr-2.6.2.min.js"></script>
+        <script src="includes/js/modernizr-2.6.2.min.js"></script>
         
     </head>
     <body>
@@ -73,10 +73,10 @@
 
         <div class="container" id="socialMedia">
             <ul class="nav navbar-nav pull-right">
-                <li><a href="#"><img src="../../../images/facebook.png"></a></li>
-                <li><a href="#"><img src="../../../images/twitter.png"></a></li>
-                <li><a href="#"><img src="../../../images/googlePlus.png"></a></li>
-                <li><a href="#"><img src="../../../images/linkedin.png"></a></li>
+                <li><a href="#"><img src="images/facebook.png"></a></li>
+                <li><a href="#"><img src="images/twitter.png"></a></li>
+                <li><a href="#"><img src="images/googlePlus.png"></a></li>
+                <li><a href="#"><img src="images/linkedin.png"></a></li>
             </ul>
         </div> <!-- end of container -->
 
@@ -90,7 +90,7 @@
                         <span class="icon-bar"></span>
                     </button>
 
-                    <a href="<?php site_url("welcome"); ?>" class="navbar-brand"><img src="../../../images/spa_logo.png" alt="Go to Home page"></a>
+                    <a href="<?php site_url("welcome"); ?>" class="navbar-brand"><img src="images/spa_logo.png" alt="Go to Home page"></a>
                 </div> <!-- end of navbar-header -->
 
                 <div class="navbar-collapse collapse" id="collapsable_menu" role="navigation">
@@ -164,13 +164,13 @@
     <script src="http://code.jquery.com/jquery.js"></script>
     
     <!-- If no online access, fallback to our hardcoded version of jQuery -->
-    <script>window.jQuery || document.write('<script src="../../../includes/js/jquery-1.11.2.min.js"><\/script>')</script>
+    <script>window.jQuery || document.write('<script src="includes/js/jquery-1.11.2.min.js"><\/script>')</script>
     
     <!-- Bootstrap JS -->
-    <script src="../../../bootstrap/js/bootstrap.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
     
     <!-- Custom JS -->
-    <script src="../../../includes/js/script.js"></script>
+    <script src="includes/js/script.js"></script>
     
     </body>
 </html>
