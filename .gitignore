@@ -8,3 +8,4 @@ user_guide/
 phpunit.phar
 *.sql
 readme.txt
+.htaccess

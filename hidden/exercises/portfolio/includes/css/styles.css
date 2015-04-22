@@ -1,0 +1,117 @@
+/* --------------------------------------
+   Layout
+   -------------------------------------- */
+.about {
+	position: relative;
+	top: 667px;
+	background-color: blue;
+	width: 100%;
+}
+
+.bg-slideshows {
+	z-index: -2;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	background-size: cover;
+}
+
+.bg-image {
+	background-color: black;
+	background-size: cover;
+  	background-position: center;
+  	background-attachment: scroll;
+  	background-repeat: no-repeat;
+  	overflow: hidden;
+	position: absolute;
+  	top: 0;
+  	left: 0;
+  	width: 100%;
+  	height: 100%;
+}
+
+.overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: -1;
+	width: 100%;
+	height: 100%;
+	background-color: black;
+	opacity: 0.75;
+}
+
+/* --------------------------------------
+   Typography
+   -------------------------------------- */
+
+body {
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizelegibility;
+}
+
+
+/* --------------------------------------
+   Navbar
+   -------------------------------------- */
+
+  
+   
+/* --------------------------------------
+   Carousel
+   -------------------------------------- */
+
+
+/* --------------------------------------
+   Global Styles
+   -------------------------------------- */
+.main-content {
+	color: white;
+}
+
+
+.quote_word {
+	font-family: Oswald;
+	width: 400px;
+}
+
+.quote1 {
+	position: relative;
+	top: 220px;
+	left: 100px;
+}
+
+.quote2 {
+	position: absolute;
+	top: 260px;
+	right: 0;
+}
+
+@media (min-width: 480px) {
+
+}
+
+/* Small devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+
+}
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: 979px) {
+	.welcome {
+		font-size: 10em;
+		margin-bottom: 0;
+		font-family: Dancing Script; 
+	}
+}
+
+/* Large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+	.welcome {
+		font-size: 10em;
+		margin-bottom: 0;
+		font-family: Dancing Script; 
+	}
+}
