@@ -20,7 +20,7 @@ class Company_model extends baseClass2 {
     	if ($count < 1)
 			return TRUE;
 		else {
-			error_log(parent::ERRORNO_DB_VALUE_EXISTS . ": " . parent::ERRORSTR_DB_VALUE_EXISTS . ": Tel no: $telNo");
+			log_message("error", parent::ERRORNO_DB_VALUE_EXISTS . ": " . parent::ERRORSTR_DB_VALUE_EXISTS . ": Tel no: $telNo");
     		return FALSE;
 		}    			
     }
@@ -38,7 +38,7 @@ class Company_model extends baseClass2 {
     	if ($count < 1)
 			return TRUE;
 		else {
-			error_log(parent::ERRORNO_DB_VALUE_EXISTS . ": " . parent::ERRORSTR_DB_VALUE_EXISTS . ": TIN: $tin.");
+			log_message("error", parent::ERRORNO_DB_VALUE_EXISTS . ": " . parent::ERRORSTR_DB_VALUE_EXISTS . ": TIN: $tin.");
     		return FALSE;
 		}
     }
@@ -56,13 +56,14 @@ class Company_model extends baseClass2 {
     	if ($count < 1)
 			return TRUE;
 		else {
-			error_log(parent::ERRORNO_DB_VALUE_EXISTS . ": " . parent::ERRORSTR_DB_VALUE_EXISTS . ": Hash: $hash.");
+			log_message("error", parent::ERRORNO_DB_VALUE_EXISTS . ": " . parent::ERRORSTR_DB_VALUE_EXISTS . ": Hash: $hash.");
     		return FALSE;
 		}
     }
 	// username or email should not exist
 	private function okToAddUsername($username) { // note: username = email
-		if ($username == "")
+		$username = trim($username);
+        if ($username == "")
 			return FALSE;
 
 		$query = $this->db->query("select userId from users where username = ? or email = ?", array($username, $username));
@@ -77,7 +78,7 @@ class Company_model extends baseClass2 {
     	if ($count < 1)
 			return TRUE;
 		else {
-			error_log(parent::ERRORNO_DB_VALUE_EXISTS . ": " . parent::ERRORSTR_DB_VALUE_EXISTS . ": username: $username.");
+			log_message("error", parent::ERRORNO_DB_VALUE_EXISTS . ": " . parent::ERRORSTR_DB_VALUE_EXISTS . ": username: $username.");
     		return FALSE;
 		}
 	}
@@ -115,7 +116,7 @@ class Company_model extends baseClass2 {
     	if ($count < 1)
 			return TRUE;
 		else {
-			error_log(parent::ERRORNO_DB_VALUE_EXISTS . ": " . parent::ERRORSTR_DB_VALUE_EXISTS . ": username: $username.");
+			log_message("error", parent::ERRORNO_DB_VALUE_EXISTS . ": " . parent::ERRORSTR_DB_VALUE_EXISTS . ": Company name: " . $data['company']);
     		return FALSE;
 		}
     }
@@ -127,8 +128,8 @@ class Company_model extends baseClass2 {
     		return FALSE;
     	if ( ! $this->okToAddUsername($data["userEmail"]))
     		return FALSE;
-    	if ( ! $this->okToAddCompany($data))
-    		return FALSE;
+    	//if ( ! $this->okToAddCompany($data))
+    	//	return FALSE;
     	if ( ! $this->okToAddTIN($data["tin"]))
     		return FALSE;
     	if ( ! $this->okToAddUniqueCode($data["hash"]))
@@ -151,7 +152,7 @@ class Company_model extends baseClass2 {
                     (@companyId, 'TRAN', 'Transactions', 0),
                     (@companyId, 'USR', 'Users', 1);";
         $sql5 = "insert into customer(companyId, customerId, custType, fName, midName, lName, active, createdBy, createDate)
-                values(@companyId, 1, 0, 'Guest', 'Guest', 'Guest', 'Y', 1, now());";
+                values(@companyId, 1, 0, 'Guest', 'Guest', 'Guest', 'Y', NULL, now());";
 
 		$this->db->trans_start();
 		$this->db->query($sql1, array($data["company"], $data["address"], $data["province"], $data["city"], $data["phoneNo"], $data["companyWebsite"], $data["tin"], $data["hash"], $data["captcha"]));

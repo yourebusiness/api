@@ -1,10 +1,10 @@
     <div class="container">
         <div class="container" id="socialMedia">
                 <ul class="nav navbar-nav pull-right">
-                    <li><a href="#"><img src="images/facebook.png"></a></li>
-                    <li><a href="#"><img src="images/twitter.png"></a></li>
-                    <li><a href="#"><img src="images/googlePlus.png"></a></li>
-                    <li><a href="#"><img src="images/linkedin.png"></a></li>
+                    <li><a href="#"><img src="<?php echo base_url(); ?>images/facebook.png"></a></li>
+                    <li><a href="#"><img src="<?php echo base_url(); ?>images/twitter.png"></a></li>
+                    <li><a href="#"><img src="<?php echo base_url(); ?>images/googlePlus.png"></a></li>
+                    <li><a href="#"><img src="<?php echo base_url(); ?>images/linkedin.png"></a></li>
                 </ul>
         </div> <!-- end of container -->
 
@@ -18,7 +18,7 @@
                         <span class="icon-bar"></span>
                     </button>
 
-                    <a href="<?php echo site_url("welcome"); ?>" class="navbar-brand"><img src="images/spa_logo.png" alt="Go to Home page"></a>
+                    <a href="<?php echo base_url(); ?>" class="navbar-brand"><img src="<?php echo base_url(); ?>images/spa_logo.png" alt="Go to Home page"></a>
                 </div> <!-- end of navbar-header -->
 
                 <div class="navbar-collapse collapse" id="collapsable_menu" role="navigation">
@@ -84,9 +84,9 @@
                     </div> <!-- end of form-group -->
 
                     <div class="form-group registerSubGroup">
-                        <label class="col-sm-3 control-label" for="address">Bldg/St/Dist</label>
+                        <label class="col-sm-3 control-label" for="address">Address</label>
                         <div class="col-sm-9">
-                            <input class="form-control" type="text" id="address" name="address" placeholder="Bldg/St/Dist">
+                            <input class="form-control" type="text" id="address" name="address" placeholder="Address">
                         </div>
                     </div> <!-- end of form-group -->
 
@@ -134,7 +134,7 @@
                         <label class="col-sm-3 control-label" for="gender">Gender</label>
                         <div class="col-sm-9">
                             <select class="form-control" id="gender" name="gender">
-                                <option>-- select --</option>
+                                <option value="0">-- select --</option>
                                 <option value="M">Male</option>
                                 <option value="F">Female</option>
                             </select>
@@ -158,10 +158,10 @@
 
                     <div class="form-group">
                         <div class="col-md-4">
-                            <img src="<?php echo site_url($_SESSION['captcha']['image_src']); ?>" />
+                            <img src="<?php echo base_url($_SESSION['captcha']['image_src']); ?>" />
                         </div>
                         <div class="col-md-4">
-                            <input type="text" class="form-control" placeholder="Enter captcha here" />
+                            <input id="captcha" name="captcha" type="text" class="form-control" autocomplete="off" placeholder="Enter captcha here" />
                         </div>
                     </div> <!-- end of form-group -->
 

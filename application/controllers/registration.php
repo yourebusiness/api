@@ -36,9 +36,10 @@ class Registration extends CI_Controller {
         $data["password"] = $this->input->post("password");
         $data["confirmPassword"] = $this->input->post("confirmPassword");
 
-        if (!$this->_checkPWAndConfirmPW($data))
+        if ( ! $this->_checkPWAndConfirmPW($data))
             return false;
 
+        session_start();
         $sessionCaptcha = strtolower($_SESSION['captcha']['code']);
         $postCaptcha = strtolower($this->input->post("captcha"));
         if ($sessionCaptcha !== $postCaptcha)
@@ -67,11 +68,8 @@ class Registration extends CI_Controller {
             $data["title"] = "Registration";
             $this->load->view("templates/header", $data);
             $this->load->view("register_success");
-
-            return TRUE;
     	} else {
-            redirect(base_url("registration/view"));
-            return FALSE;
+            redirect(site_url("registration/view"));
         }
 	}
 

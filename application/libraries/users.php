@@ -63,9 +63,6 @@ class Users extends baseClass {
 		} catch (exception $e) {
 			$this->mysqli->rollback();			
 			$returnValue = false;
-		} finally {
-			$this->mysqli->autocommit(true);
-			$this->mysqli->close();
 		}
 
 		return $returnValue;
