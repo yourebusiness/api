@@ -72,7 +72,7 @@
 </nav>
 
 <div class="container-fluid">
-    <h4>Login</h4> <hr />
+    <h4>Log-in</h4> <hr />
     <div class="col-md-4">
     </div>
     <div class="col-md-4">

@@ -78,7 +78,7 @@ $(document).ready(function () {
             type: type,
             data: data,
             success: function (response) {
-                window.location.href='http://yourspa.com/admin';
+                window.location.href='http://yourspa.com/index.php/admin';
             },
             error: function() { 
                 alert("Error found on request.");

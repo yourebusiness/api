@@ -82,7 +82,7 @@
           <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
           <span class="sr-only">Error:</span>
           <span id="errorMessage"></span>
-        </p>                  
+        </p>
       </div>
 
       <form id="form" method="get" action="<?php echo site_url("admin/editCompanyProfile"); ?>" class="form-horizontal" role="form">

@@ -58,6 +58,26 @@ if ( ! function_exists('checkUserRightsByUserId')) {
     }
 }
 
+if ( ! function_exists('getRecordsForLoginByUsername')) {
+    function getRecordsForLoginByUsername($username) {
+        $ci =& get_instance();
+        $ci->load->database();
+
+        $query = "select companyId, userId, role, uniqueCode FROM users JOIN company USING(companyId) WHERE username = ?";
+        $query = $ci->db->query($query, $username);
+        if (!$query)
+            return FALSE;
+        else {
+            if ($query->num_rows() < 0)
+                return FALSE;
+            else
+                $row = $query->row_array();
+
+            return $row;
+        }
+    }
+}
+
 if ( ! function_exists('getPriceForCustomer')) {
     function getPriceForCustomer(array $data) {
         $ci =& get_instance();

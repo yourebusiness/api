@@ -124,8 +124,5 @@ $(function () {
                 value = that.val();
                 data[name] = value;
         });
-
-        
-
     });
 });

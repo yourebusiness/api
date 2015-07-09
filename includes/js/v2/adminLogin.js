@@ -1,21 +1,20 @@
 $(document).ready(function(){
 
-	$('#signin').on('click', function(event) {
+	$('#login').on('click', function(event) {
 		event.preventDefault();
-		$('#dangerAlert').slideUp();
 
+		var action = $("#adminLogin").attr("action");
 		$username = $('#username');
-		$password = $('#password');
-		
-		$dangerAlert = $('#dangerAlert');
+		$password = $('#password');		
+		$alert = $('.alert');
 
 		if (jQuery.trim($username.val()).length < 5) {
-			$dangerAlert.slideDown();
-			return;
+			$alert.slideDown();
+			return false;
 		}
 		if (jQuery.trim($password.val()).length < 4) {
-			$dangerAlert.slideDown();
-			return;
+			$alert.slideDown();
+			return false;
 		}
 
 		var data = {
@@ -24,18 +23,17 @@ $(document).ready(function(){
 			v: "companyProfile",
 		};
 
-
 		$.ajax({
 			type: 'POST',
-			url: 'http://yourspa.com/index.php/admin/checkLogin',
+			url: action,
 			data: data,
 			success: function(response) {
 				window.location.href = 'http://yourspa.com/index.php/admin/companyProfile';
 			},
 			error: function() {
-				console.log("Error.");
+				window.location.href = 'http://yourspa.com/index.php/admin/adminLogin?v=companyProfile';
+				console.log("Error has occured.");
 			}
 		});
-	});
-	
+	});	
 });

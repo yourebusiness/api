@@ -25,12 +25,14 @@ class Admin extends CI_Controller {
 	}
 
 	public function index() {
-		$data["title"] = "Welcome";
+		$data["title"] = "Your Spa";
 		$data["username"] = $this->username;
 		$data["userRights"] = $this->session->userdata["role"];
 
-		$this->load->view("templates/header", $data);
-		$this->load->view("sessioned/home");
+		//$this->load->view("templates/header4", $data);
+		//$this->load->view("sessioned/home2");
+		$this->load->view("templates/v2/header", $data);
+		$this->load->view("sessioned/v2/home");
 
 		// we want this to delete after exiting from company profile page.
 		$this->load->helper("cookie");
@@ -558,8 +560,6 @@ class Admin extends CI_Controller {
 	public function searchCustomers($searchText = "") {
 		header("Content-type: application/json");
 		//if ($searchText == "")
-
-
 	}
 
 	/* end for customer controller */
@@ -583,8 +583,10 @@ class Admin extends CI_Controller {
 			$data["companyInfo"] = $this->Company_model->getCompanyInfo($data["companyId"]);
 			$this->load->view("templates/header", $headerData);
 			$this->load->view("sessioned/company_view", $data);
+			/*$this->load->view("templates/v2/header", $headerData);
+			$this->load->view("sessioned/v2/companyProfile_view", $data);*/
 		} else {
-			redirect("admin/login?v=companyProfile");
+			redirect("admin/adminLogin?v=companyProfile");
 		}
 	}
 
@@ -596,11 +598,19 @@ class Admin extends CI_Controller {
         return true;
     }
 
+    private function assertEqualsCompanyUniqueCode($uniqueCode) {
+    	if ($uniqueCode !== $this->session->userdata["uniqueCode"])
+    		return FALSE;
+
+    	return TRUE;
+    }
+
     public function editCompanyProfile() {
         $cookie = $this->input->cookie("yourspaFunc_CompanyProfile");
 		if (password_verify($this->session->userdata["username"], $cookie)) {
             $data = array();
-            $data["companyId"] = $this->input->get("companyId");
+            $data["companyId"] = $this->input->get("comId");
+            $data["uniqueCode"] = $this->input->get("uniqCod");
 
             if (!$this->assertEqualCompanyId($data["companyId"]))
                 return FALSE;
@@ -626,12 +636,14 @@ class Admin extends CI_Controller {
 
     }
 
-    public function login() {
+    public function adminLogin() {
     	if ($this->input->get("v") == "companyProfile") {
-    		$headerData["title"] = "Login";
+    		$headerData["title"] = "Your Spa - Login Company";
     		$headerData['username'] = $this->username;
-	        $this->load->view("templates/header", $headerData);
-	        $this->load->view("sessioned/login");
+	        // $this->load->view("templates/header", $headerData);
+	        // $this->load->view("sessioned/login");
+	        $this->load->view("templates/v2/header", $headerData);
+	        $this->load->view("sessioned/v2/adminLogin_view");
     	}        
     }
 
@@ -651,19 +663,18 @@ class Admin extends CI_Controller {
     	
     	$data = array("username" => $username, "password" => $this->input->post("password"));
     	if ($v == "companyProfile") {
-    		$this->load->model("Admin_model");
-    		if ($this->Admin_model->login($data)) {
+    		 $this->load->model("Admin_model");
+    		if ($this->Admin_model->login($data)) {    			
     			$this->load->helper("cookie");
-    			// we add new session data to know what are we logging into
-    			$cookieValue = password_hash($username, PASSWORD_BCRYPT);
-				$cookie = array(
-					    'name'   => 'yourspaFunc_CompanyProfile',
-					    'value'  => $cookieValue,
-					    'expire' => '600',
-					    'secure' => FALSE
-					);
+    			
+    			$hashed_password = password_hash($username, PASSWORD_BCRYPT);
 
-					$this->input->set_cookie($cookie);
+    			// we add new session data to know what are we logging into
+				$cookie = array('name'   => 'yourspaFunc_CompanyProfile',
+					    'value'  => $hashed_password,
+					    'expire' => '300', // 5 minutes
+					    'secure' => FALSE);
+				$this->input->set_cookie($cookie);
     		}
     	}
     }
