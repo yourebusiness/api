@@ -7,7 +7,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: "GET",
-            url:"http://yourspa.com/api/getCity/" + provinceId,
+            url:"http://yourspa.com/index.php/api/getCity/" + provinceId,
             success:function(data) {
                 var json = jQuery.parseJSON(data);
                 $.each(json, function (i, obj) {
@@ -20,8 +20,13 @@ $(document).ready(function () {
         });
     });
 
+    var companyError = addressError = phoneNoError = tinError = false;
+
     $('.btn-primary').on('click', function(event) {
         event.preventDefault();
+
+        // let's clean up the error on click to refresh it
+        
 
         var styles = {display : "none"},
             that = $('#form'),
@@ -31,38 +36,53 @@ $(document).ready(function () {
 
         $('div.alert').css(styles);
 
-        var company = $('#company').val();
-        var address = $('#address').val();
-        var phoneNo = $('#phoneNo').val();
-        var companyWebsite = $('#companyWebsite').val();
-        var tin = $('#tin').val();
+        var $company = $('#company'),
+            $address = $('#address'),
+            $phoneNo = $('#phoneNo'),
+            $companyWebsite = $('#companyWebsite'),
+            $tin = $('#tin');
 
-        if(jQuery.trim(company).length < 2 ) {
-            var styles = {display : "block"};
-            $('div.alert').css(styles);
-            $("div.alert span#errorMessage").html("Invalid company name.");
-            event.preventDefault();
+        if(jQuery.trim($company.val()).length < 2 ) {
+            $company.parent().parent().addClass("has-error has-feedback");
+            if (!companyError) {
+                $company.after('<span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>');
+                $company.after('<span id="inputError2Status" class="sr-only">(error)</span>');
+                companyError = true;
+            }
+
             return;
         }
-        if(jQuery.trim(address).length < 2 ) {
-            var styles = {display : "block"};
-            $('div.alert').css(styles);
-            $("div.alert span#errorMessage").html("Invalid address name.");
-            event.preventDefault();
+
+        if(jQuery.trim($address.val()).length < 2 ) {
+            $address.parent().parent().addClass("has-error has-feedback");
+            if (!addressError) {
+                $address.after('<span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>');
+                $address.after('<span id="inputError2Status" class="sr-only">(error)</span>');
+                addressError = true;
+            }
+
             return;
         }
-        if(jQuery.trim(phoneNo).length < 7) {
-            var styles = {display : "block"};
-            $('div.alert').css(styles);
-            $("div.alert span#errorMessage").html("Invalid phone number.");
-            event.preventDefault();
+
+        if(jQuery.trim($phoneNo.val()).length < 7) {
+            $phoneNo.parent().parent().addClass("has-error has-feedback");
+            if (!phoneNoError) {
+                $phoneNo.after('<span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>');
+                $phoneNo.after('<span id="inputError2Status" class="sr-only">(error)</span>');
+                phoneNoError = true;
+            }
+
             return;
         }
-        if (jQuery.trim(tin).length < 12) {
-            var styles = {display : "block"};
-            $('div.alert').css(styles);
-            $("div.alert span#errorMessage").html("Invalid company TIN.");
-            event.preventDefault();
+
+        if (jQuery.trim($tin.val()).length > 0 && jQuery.trim($tin.val()).length != 12) {
+            $tin.parent().parent().addClass("has-error has-feedback");
+            if (!tinError) {
+                $tin.after('<span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>');
+                $tin.after('<span id="inputError2Status" class="sr-only">(error)</span>');
+                tinError = true;
+            }
+
             return;
         }
 
@@ -81,9 +101,15 @@ $(document).ready(function () {
                 window.location.href='http://yourspa.com/index.php/admin';
             },
             error: function() { 
-                alert("Error found on request.");
+                console.log("Error found on request.");
             }
         });
 
+    });
+
+    jQuery.fn.extend({
+        removeadminLoginCookie: function() {
+            $.cookie('yourspaFunc_CompanyProfile', null, {path: '/'});
+        }
     });
 });

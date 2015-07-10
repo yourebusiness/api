@@ -79,7 +79,7 @@
 							<h2 class="panel-title">Log-in to enter</h2>
 						</div>
 						<div class="panel-body">
-							<form method="post" action="<?php echo site_url("admin/checkLogin"); ?>" id="adminLogin">
+							<form method="post" action="<?=site_url("admin/checkLogin");?>" id="adminLogin">
 								<div class="form-group">
 									<input type="email" class="form-control" placeholder="Email" name="username" id="username" />
 								</div>

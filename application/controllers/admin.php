@@ -571,7 +571,10 @@ class Admin extends CI_Controller {
 		if (password_verify($this->session->userdata["username"], $cookie)) {
 			$headerData["title"] = "Company";
 			$headerData['username'] = $this->username;
+			
 			$data["companyId"] = $this->session->userdata["companyId"];
+			$data["uniqueCode"] = $this->session->userdata["uniqueCode"];
+
 			$this->load->model("Api_model");
 			$data["provinces"] = $this->Api_model->getProvince(); // get all province list
 
@@ -579,12 +582,11 @@ class Admin extends CI_Controller {
 			$provinceId = $this->Company_model->getProvinceIdByCompanyId($data["companyId"])[0]["province"];
 
 			$data["cities"] = $this->Api_model->getCity($provinceId);
-
 			$data["companyInfo"] = $this->Company_model->getCompanyInfo($data["companyId"]);
-			$this->load->view("templates/header", $headerData);
-			$this->load->view("sessioned/company_view", $data);
-			/*$this->load->view("templates/v2/header", $headerData);
-			$this->load->view("sessioned/v2/companyProfile_view", $data);*/
+			/*$this->load->view("templates/header", $headerData);
+			$this->load->view("sessioned/company_view", $data);*/
+			$this->load->view("templates/v2/header", $headerData);
+			$this->load->view("sessioned/v2/companyProfile_view", $data);
 		} else {
 			redirect("admin/adminLogin?v=companyProfile");
 		}
@@ -607,6 +609,9 @@ class Admin extends CI_Controller {
 
     public function editCompanyProfile() {
         $cookie = $this->input->cookie("yourspaFunc_CompanyProfile");
+        if (!$cookie)
+        	redirect("admin/adminLogin?v=companyProfile");
+
 		if (password_verify($this->session->userdata["username"], $cookie)) {
             $data = array();
             $data["companyId"] = $this->input->get("comId");
@@ -614,6 +619,8 @@ class Admin extends CI_Controller {
 
             if (!$this->assertEqualCompanyId($data["companyId"]))
                 return FALSE;
+            if (!$this->assertEqualsCompanyUniqueCode($data["uniqueCode"]))
+            	return FALSE;
 
             $data["company"] = $this->input->get("company");
             $data["province"] = $this->input->get("province");

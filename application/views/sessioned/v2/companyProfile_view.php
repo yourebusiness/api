@@ -61,17 +61,81 @@
 	</div> <!-- sidebar -->
 
 	<div id="page-wrapper">
-		<div class="panel panel-default" style="width: 600px; margin-top: 30px;">
+		<div class="panel panel-default" style="width: 700px; margin-top: 30px;">
 			<div class="panel-heading">
 				<h3 class="panel-title">Company Profile</h3>
 			</div>
 			<div class="panel-body">
-				<form id="form" method="get" action="<?php echo site_url("admin/editCompanyProfile"); ?>" class="form-horizontal" role="form">
-					<input type="hidden" name="comId" value="<?php echo $companyId; ?>" />
-					<input type="hidden" name="uniqCod" value="<?=$uniqueCode; ?>" />
+				<form id="form" method="get" action="<?=site_url("admin/editCompanyProfile"); ?>" class="form-horizontal" role="form">
+					<input type="hidden" name="comId" value="<?=$companyId;?>" />
+					<input type="hidden" name="uniqCod" value="<?=$uniqueCode;?>" />
+
+					<div class="form-group">
+						<label for="company" class="col-sm-3 control-label">Company name </label>
+						<div class="col-sm-9">
+							<input type="text" id="company" name="company" class="form-control" value="<?=$companyInfo[0]["companyName"]; ?>" placeholder="Company name" maxlength="40" aria-describedby="inputError2Status" />
+						</div>
+					</div>
+					<div class="form-group">
+			            <div class="col-sm-6">
+			            	<label for="province" class="control-label col-sm-3">Province</label>
+							<div class="col-sm-9">
+								<select class="form-control" id="province" name="province">
+									<option value="0">-- Province --</option>
+									<?php foreach($provinces as $row) { ?>
+									    <option value="<?=$row['id'];?>" <?php echo ($row['id'] == $companyInfo[0]['province']) ? "selected" : ""; ?>><?php echo $row["provinceName"]; ?></option>
+									<?php } ?>
+								</select>
+							</div>
+			            </div>
+			            <div class="col-sm-6">
+			            	<label for="city" class="control-label col-sm-2">City</label>
+							<div class="col-sm-10">
+								<select id="city" name="city" class="form-control">
+									<option value="0">-- City --</option>
+									<?php foreach($cities as $city) { ?>
+										<option value="<?php echo $city['id']; ?>" <?php echo ($city['id'] == $companyInfo[0]['city']) ? "selected" : ""; ?>><?php echo $city["cityName"]; ?></option>
+									<?php } ?>
+								</select>
+							</div>
+			            </div>
+			        </div>
+			        <div class="form-group">
+			        	<div class="col-sm-6">
+			        		<label for="address" class="control-label col-sm-3">Address</label>
+				            <div class="col-sm-9">
+				            	<input id="address" name="address" type="text" class="form-control" placeholder="Address" value="<?=$companyInfo[0]["address"]; ?>" />
+				            </div>
+			        	</div>
+			        	<div class="col-sm-6">
+			        		<label for="phoneNo" class="control-label col-sm-3">Phone number</label>
+			        		<div class="col-sm-9">
+			        			<input id="phoneNo" name="phoneNo" type="text" class="form-control" placeholder="Phone number" value="<?=$companyInfo[0]["telNo"]; ?>" />
+			        		</div>
+			        	</div>
+			        </div>
+			        <div class="form-group">
+			        	<div class="col-sm-6">
+			            	<label for="tin" class="control-label col-sm-3">TIN</label>
+			            	<div class="col-sm-9">
+			            		<input id="tin" name="tin" type="text" class="form-control" placeholder="TIN" value="<?=$companyInfo[0]["tin"]; ?>" />
+			            	</div>
+			            </div>
+			        	<div class="col-sm-6">
+			        		<label for="companyWebsite" class="control-label col-sm-3">Website </label>
+			        		<div class="col-sm-9">
+			        			<input id="companyWebsite" name="companyWebsite" class="form-control" type="text" placeholder="Company Website" value="<?=$companyInfo[0]["website"]; ?>" />
+			        		</div>
+			        	</div>
+			        </div>
 				</form>
+			</div> <!-- end panel-body -->
+
+			<div class="panel-footer">
+				<input type="Submit" class="btn btn-primary" />
+			    <input type="button" class="btn btn-default" value="Cancel" onclick="window.location.href='<?php echo site_url("admin"); ?>'" />
 			</div>
-		</div>
+		</div> <!-- end panel -->
 	</div> <!-- end of page-wrapper -->
 
 </div><!-- end of #wrapper -->
@@ -80,7 +144,9 @@
 <!-- If no online access, fallback to our hardcoded version of jQuery -->
 <script>window.jQuery || document.write('<script src="https://code.jquery.com/jquery-1.11.2.min.js"><\/script>')</script>    
 <!-- Bootstrap JS -->
-<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>    
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+<script src="http://yourspa.com/includes/js/company.js"></script>
 
 <script src="http://cdnjs.cloudflare.com/ajax/libs/metisMenu/2.0.2/metisMenu.min.js"></script>
 
