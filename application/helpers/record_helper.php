@@ -21,6 +21,26 @@ if ( ! function_exists('getRecordsForLoginByUsername')) {
     }
 }
 
+if ( ! function_exists('checkUserRightsByUserId')) {        
+    function checkUserRightsByUserId($userId) {        
+        $ci =& get_instance();     
+        $ci->load->database();     
+       
+        $query = "select role from users where userId = ?";        
+        $query = $ci->db->query($query, $userId);      
+        if (!$query)       
+            return false;      
+        else {     
+            if ($query->num_rows() <= 0)       
+                return false;      
+            else       
+                $row = $query->row_array();
+            
+            return $row["role"];       
+        }      
+    }      
+}
+
 if ( ! function_exists('getPriceForCustomer')) {
     function getPriceForCustomer(array $data) {
         $ci =& get_instance();

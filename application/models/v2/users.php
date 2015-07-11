@@ -1,7 +1,6 @@
 <?php
-/* CI_Model_2 will now be the extended model not the CI_model to make error centralized. */
 
-class baseClass2 extends CI_Model {
+class Users extends CI_Model {
 	
 	const ERRORNO_EMPTY_VALUE = 4;
 	const ERRORSTR_EMPTY_VALUE = "Data should not be empty string.";
@@ -26,4 +25,10 @@ class baseClass2 extends CI_Model {
 
     	return true;
     }
+
+	public function getAllUsersExceptCurrent($currentUserId) {
+		$query = "select userId,username,fName,midName,lName,address,gender,active,role,trans from users where userId <> ?";
+		$query = $this->db->query($query, array($currentUserId));
+		return $query->result_array();
+	}
 }

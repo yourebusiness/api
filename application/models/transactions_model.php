@@ -1,6 +1,6 @@
 <?php
 
-class Transactions_model extends baseClass2 {
+class Transactions_model extends CI_Model_2 {
 	const WITH_SUBSCRIPTION = TRUE;
 	const NO_SUBSCRIPTION = FALSE;
 	

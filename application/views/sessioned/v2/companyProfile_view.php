@@ -17,7 +17,7 @@
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <?php echo $username; ?><span class="caret"></span></a>
 						<ul class="dropdown-menu">
 							<li><a href="#"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
-							<li><a href="#"><span class="glyphicon glyphicon-log-out"></span> Log-out</a></li>
+							<li><a href="<?=site_url('api/logout');?>"><span class="glyphicon glyphicon-log-out"></span> Log-out</a></li>
 						</ul>
 					</li>
 				</ul>
@@ -70,13 +70,13 @@
 					<input type="hidden" name="comId" value="<?=$companyId;?>" />
 					<input type="hidden" name="uniqCod" value="<?=$uniqueCode;?>" />
 
-					<div class="form-group">
+					<div class="form-group form-group-sm">
 						<label for="company" class="col-sm-3 control-label">Company name </label>
 						<div class="col-sm-9">
 							<input type="text" id="company" name="company" class="form-control" value="<?=$companyInfo[0]["companyName"]; ?>" placeholder="Company name" maxlength="40" aria-describedby="inputError2Status" />
 						</div>
 					</div>
-					<div class="form-group">
+					<div class="form-group form-group-sm">
 			            <div class="col-sm-6">
 			            	<label for="province" class="control-label col-sm-3">Province</label>
 							<div class="col-sm-9">
@@ -100,7 +100,7 @@
 							</div>
 			            </div>
 			        </div>
-			        <div class="form-group">
+			        <div class="form-group form-group-sm">
 			        	<div class="col-sm-6">
 			        		<label for="address" class="control-label col-sm-3">Address</label>
 				            <div class="col-sm-9">
@@ -108,13 +108,13 @@
 				            </div>
 			        	</div>
 			        	<div class="col-sm-6">
-			        		<label for="phoneNo" class="control-label col-sm-3">Phone number</label>
-			        		<div class="col-sm-9">
+			        		<label for="phoneNo" class="control-label col-sm-4">Phone no.</label>
+			        		<div class="col-sm-8">
 			        			<input id="phoneNo" name="phoneNo" type="text" class="form-control" placeholder="Phone number" value="<?=$companyInfo[0]["telNo"]; ?>" />
 			        		</div>
 			        	</div>
 			        </div>
-			        <div class="form-group">
+			        <div class="form-group form-group-sm">
 			        	<div class="col-sm-6">
 			            	<label for="tin" class="control-label col-sm-3">TIN</label>
 			            	<div class="col-sm-9">
@@ -139,19 +139,16 @@
 	</div> <!-- end of page-wrapper -->
 
 </div><!-- end of #wrapper -->
-<!-- All Javascript at the bottom of the page for faster page loading -->
     
 <!-- If no online access, fallback to our hardcoded version of jQuery -->
 <script>window.jQuery || document.write('<script src="https://code.jquery.com/jquery-1.11.2.min.js"><\/script>')</script>    
-<!-- Bootstrap JS -->
+
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
-<script src="http://yourspa.com/includes/js/company.js"></script>
+<script src="http://yourspa.com/includes/js/v2/company.js"></script>
 
 <script src="http://cdnjs.cloudflare.com/ajax/libs/metisMenu/2.0.2/metisMenu.min.js"></script>
-
 <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/v2/metisMenuSettings.js"></script>
-
 <script type="text/javascript">
 	$(function() {
 		var first_li_tag = $(".sidebar .nav li").first();

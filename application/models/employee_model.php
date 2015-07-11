@@ -1,6 +1,6 @@
 <?php
 
-class Employee_model extends baseClass2 {
+class Employee_model extends CI_Model_2 {
 	
 	public function __construct() {
 		parent::__construct();

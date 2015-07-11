@@ -127,9 +127,19 @@ class Admin extends CI_Controller {
 
 
 	/* controller for users */
+
 	private function getAllUsers() {
 		$this->load->model("Admin_model");
 		return $this->Admin_model->getAllUsers();
+	}
+
+	public function getAllUsersExceptCurrent() {
+		$currentUserId = $this->session->userdata["userId"];
+		$this->load->model("v2/Users");
+		$users = $this->Users->getAllUsersExceptCurrent($currentUserId);
+
+		header('Content-type: application/json');
+		echo json_encode($users);
 	}
 
 	public function users() {
@@ -140,8 +150,10 @@ class Admin extends CI_Controller {
 		$data["userRights"] = checkUserRightsByUserId($currentUserId);
 		$headerData["title"] = "Users";
 		$headerData['username'] = $this->username;
-		$this->load->view("templates/header", $headerData);
-		$this->load->view("sessioned/users_view", $data);
+		// $this->load->view("templates/header", $headerData);
+		// $this->load->view("sessioned/users_view", $data);
+		$this->load->view("templates/v2/header", $headerData);
+	    $this->load->view("sessioned/v2/users_view", $data);
 	}
 
 	public function usersAdd_view() {
@@ -583,8 +595,6 @@ class Admin extends CI_Controller {
 
 			$data["cities"] = $this->Api_model->getCity($provinceId);
 			$data["companyInfo"] = $this->Company_model->getCompanyInfo($data["companyId"]);
-			/*$this->load->view("templates/header", $headerData);
-			$this->load->view("sessioned/company_view", $data);*/
 			$this->load->view("templates/v2/header", $headerData);
 			$this->load->view("sessioned/v2/companyProfile_view", $data);
 		} else {
@@ -600,6 +610,7 @@ class Admin extends CI_Controller {
         return true;
     }
 
+    // we have to avoid hacking here also.
     private function assertEqualsCompanyUniqueCode($uniqueCode) {
     	if ($uniqueCode !== $this->session->userdata["uniqueCode"])
     		return FALSE;
@@ -619,6 +630,7 @@ class Admin extends CI_Controller {
 
             if (!$this->assertEqualCompanyId($data["companyId"]))
                 return FALSE;
+
             if (!$this->assertEqualsCompanyUniqueCode($data["uniqueCode"]))
             	return FALSE;
 
@@ -638,17 +650,14 @@ class Admin extends CI_Controller {
         } else { // load the login page
             $data["title"] = "Update Company Profile";
             $this->load->view("templates/header", $data);
-            $this->load->view("sessioned/login");
+            $this->load->view("sessioned/v2/adminLogin");
         }
-
     }
 
     public function adminLogin() {
     	if ($this->input->get("v") == "companyProfile") {
     		$headerData["title"] = "Your Spa - Login Company";
     		$headerData['username'] = $this->username;
-	        // $this->load->view("templates/header", $headerData);
-	        // $this->load->view("sessioned/login");
 	        $this->load->view("templates/v2/header", $headerData);
 	        $this->load->view("sessioned/v2/adminLogin_view");
     	}        

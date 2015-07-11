@@ -25,7 +25,7 @@
 		</div> <!-- container-fluid -->
 	</nav>
 
-  	<div class="navbar-default sidebar" role="navigation">
+	<div class="navbar-default sidebar" role="navigation">
 		<div class="sidebar-nav navbar-collapse">
 			<ul class="nav in" id="menu">
 				<li>
@@ -33,7 +33,7 @@
 					<ul class="nav nav-second-level collapse" aria-expanded="false">
 						<li><a href="<?php echo site_url("admin/adminLogin") . "?v=companyProfile"; ?>"> Company Profile</a></li>
 						<li><a href="#"> Massuers</a></li>
-						<li><a href="<?=site_url("admin/users"); ?>"> Users</a></li>
+						<li class="active"><a href="<?=site_url("admin/users"); ?>"> Users</a></li>
 					</ul>
 				</li>
 				<li>
@@ -60,14 +60,33 @@
 		</div>
 	</div>
 
+	<div id="page-wrapper">
+		<div class="yui3-skin-sam">
+		    <span class="yui3-tabview" id="table-users-list"></span>
+		</div>
+	</div>
+
 </div><!-- end of #wrapper -->
     
 <!-- If no online access, fallback to our hardcoded version of jQuery -->
 <script>window.jQuery || document.write('<script src="https://code.jquery.com/jquery-1.11.2.min.js"><\/script>')</script>    
-<!-- Bootstrap JS -->
-<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+<script src="http://yui.yahooapis.com/3.18.1/build/yui/yui-min.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>includes/js/v2/users.js"></script>
+
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>    
 
 <script src="http://cdnjs.cloudflare.com/ajax/libs/metisMenu/2.0.2/metisMenu.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/v2/metisMenuSettings.js"></script>
+<script type="text/javascript">
+	$(function() {
+		var first_li_tag = $(".sidebar .nav li").first();
+		first_li_tag.addClass("active");
+
+		var last_i_tag = $(".sidebar .nav li a").first().children(":last");
+		last_i_tag.removeClass("fa-plus");
+		last_i_tag.addClass("fa-minus");
+	});
+</script>
 </body>
 </html>

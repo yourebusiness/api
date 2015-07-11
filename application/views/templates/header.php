@@ -15,10 +15,6 @@
         <link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
         
         <!-- Custom CSS -->
-        <link href="<?php echo base_url(); ?>includes/css/styles.css" rel="stylesheet">
-        
-        <!-- Include Modernizr in the head, before any other Javascript -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
-        
+        <link href="<?php echo base_url(); ?>includes/css/styles.css" rel="stylesheet">        
     </head>
     <body>

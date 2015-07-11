@@ -17,7 +17,7 @@
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <?php echo $username; ?><span class="caret"></span></a>
 						<ul class="dropdown-menu">
 							<li><a href="#"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
-							<li><a href="#"><span class="glyphicon glyphicon-log-out"></span> Log-out</a></li>
+							<li><a href="<?=site_url('api/logout');?>"><span class="glyphicon glyphicon-log-out"></span> Log-out</a></li>
 						</ul>
 					</li>
 				</ul>
@@ -33,7 +33,7 @@
 					<ul class="nav nav-second-level collapse" aria-expanded="false">
 						<li class="active"><a href="<?php echo site_url("admin/adminLogin") . "?v=companyProfile"; ?>"> Company Profile</a></li>
 						<li><a href="#"> Massuers</a></li>
-						<li><a href="#"> Users</a></li>
+						<li><a href="<?=site_url("admin/users"); ?>"> Users</a></li>
 					</ul>
 				</li>
 				<li>
@@ -61,9 +61,8 @@
 	</div>
 
 	<div id="page-wrapper">
-		<div class="container-fluid">
+		<div class="container-fluid" style="margin-top: 30px;">
 			<div class="row">
-				<h4>Log-in</h4>
 				<div class="col-md-4 col-md-offset-3">
 					
 					<div class="alert alert-danger" role="alert" id=>
