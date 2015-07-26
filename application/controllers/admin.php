@@ -29,8 +29,6 @@ class Admin extends CI_Controller {
 		$data["username"] = $this->username;
 		$data["userRights"] = $this->session->userdata["role"];
 
-		//$this->load->view("templates/header4", $data);
-		//$this->load->view("sessioned/home2");
 		$this->load->view("templates/v2/header", $data);
 		$this->load->view("sessioned/v2/home");
 
@@ -134,26 +132,26 @@ class Admin extends CI_Controller {
 	}
 
 	public function getAllUsersExceptCurrent() {
-		$currentUserId = $this->session->userdata["userId"];
-		$this->load->model("v2/Users");
-		$users = $this->Users->getAllUsersExceptCurrent($currentUserId);
-
-		header('Content-type: application/json');
-		echo json_encode($users);
+		if ($this->role == 0) {
+			$this->load->model("Users");
+			$users = $this->Users->getAllUsersExceptCurrent($this->userId);
+			$this->output
+				->set_content_type('application/json')
+				->set_output(json_encode($users));
+		}
 	}
 
 	public function users() {
-		$currentUserId = $this->session->userdata["userId"];
-		$this->load->model("Admin_model");
-		$data["users"] = $this->Admin_model->getAllUsersExceptCurrent($currentUserId);
-		$this->load->helper("record");
-		$data["userRights"] = checkUserRightsByUserId($currentUserId);
-		$headerData["title"] = "Users";
+		$headerData["title"] = "Users list";
 		$headerData['username'] = $this->username;
-		// $this->load->view("templates/header", $headerData);
-		// $this->load->view("sessioned/users_view", $data);
-		$this->load->view("templates/v2/header", $headerData);
-	    $this->load->view("sessioned/v2/users_view", $data);
+
+		if ($this->role == 0) {
+			$this->load->view("templates/v2/header2", $headerData);
+	    	$this->load->view("sessioned/v2/users_view");
+	    } else {
+	    	$this->output->set_status_header('401');
+	    	$this->load->view("sessioned/401Unauthorized.php");
+		}
 	}
 
 	public function usersAdd_view() {
@@ -595,7 +593,7 @@ class Admin extends CI_Controller {
 
 			$data["cities"] = $this->Api_model->getCity($provinceId);
 			$data["companyInfo"] = $this->Company_model->getCompanyInfo($data["companyId"]);
-			$this->load->view("templates/v2/header", $headerData);
+			$this->load->view("templates/v2/header2", $headerData);
 			$this->load->view("sessioned/v2/companyProfile_view", $data);
 		} else {
 			redirect("admin/adminLogin?v=companyProfile");
@@ -658,7 +656,7 @@ class Admin extends CI_Controller {
     	if ($this->input->get("v") == "companyProfile") {
     		$headerData["title"] = "Your Spa - Login Company";
     		$headerData['username'] = $this->username;
-	        $this->load->view("templates/v2/header", $headerData);
+	        $this->load->view("templates/v2/header2", $headerData);
 	        $this->load->view("sessioned/v2/adminLogin_view");
     	}        
     }

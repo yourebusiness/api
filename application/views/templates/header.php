@@ -11,8 +11,6 @@
         <!-- Bootstrap CSS -->
         <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
         <link href="<?php echo base_url(); ?>includes/css/bootstrap-glyphicons.css" rel="stylesheet">
-
-        <link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
         
         <!-- Custom CSS -->
         <link href="<?php echo base_url(); ?>includes/css/styles.css" rel="stylesheet">        

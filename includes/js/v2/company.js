@@ -1,5 +1,8 @@
 $(document).ready(function () {
-    $("#province").change(function() {
+    $province = $("#province");
+    $city = $("#city");
+
+    $province.change(function() {
         $("#city").find("option").remove().end().append('<option value="0">-- City --</option>');
 
         var provinceId = $("#province").val();
@@ -16,11 +19,11 @@ $(document).ready(function () {
             },
             error: function() {
                 console.log("Error.");
-            }
+            },
         });
     });
 
-    var companyError = addressError = phoneNoError = tinError = false;
+    var companyError = provinceError = city = addressError = phoneNoError = tinError = false;
 
     $('.btn-primary').on('click', function(event) {
         event.preventDefault();
@@ -49,6 +52,22 @@ $(document).ready(function () {
                 $company.after('<span id="inputError2Status" class="sr-only">(error)</span>');
                 companyError = true;
             }
+
+            return;
+        }
+
+        if ($province.val() < 1) {
+            $province.parent().parent().addClass("has-error has-feedback");
+            if (!provinceError)
+                provinceError = true;
+
+            return;
+        }
+
+        if ($city.val() < 1) {
+            $city.parent().parent().addClass("has-error has-feedback");
+            if (!cityError)
+                cityError = true;
 
             return;
         }

@@ -8,7 +8,7 @@ class Api extends CI_Controller {
 
 	public function signIn() {
 		$this->load->library("form_validation");
-		$this->form_validation->set_rules("username", "Username", "trim|required");
+		$this->form_validation->set_rules("username", "Username", "trim|required|valid_email|xss_clean");
 		$this->form_validation->set_rules("password", "Password", "trim|required");
 
 		$data = array("username" => $this->input->post("username"),

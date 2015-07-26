@@ -1,71 +1,73 @@
 <div id="wrapper">
-	<nav class="navbar navbar-default" style="margin-bottom: 0">
-		<div class="container-fluid">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-					<span class="sr-only">Toggle Navigation</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-				<a href="<?php echo site_url('admin'); ?>" class="navbar-brand"><img src="../../../images/spa_logo.png"></a>
-			</div>
+	<!-- the whole menu bar -->
+        <nav class="navbar navbar-default">
+            <div class="myContainer">
+                <div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+						<span class="sr-only">Toggle Navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a href="<?=site_url('admin'); ?>" class="navbar-brand"><img src="../../../images/spa_logo.png"></a>
+				</div>
 
-			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-				<ul class="nav navbar-nav navbar-right">
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <?php echo $username; ?><span class="caret"></span></a>
-						<ul class="dropdown-menu">
-							<li><a href="#"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
-							<li><a href="<?=site_url('api/logout');?>"><span class="glyphicon glyphicon-log-out"></span> Log-out</a></li>
-						</ul>
-					</li>
-				</ul>
-			</div> <!-- #bs-example-navbar-collapse-1 ->
-		</div> <!-- container-fluid -->
-	</nav>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="menu-nav menubar-right">
+                        <li>
+                            <a href="#"><i class="fa fa-user"></i> <?=$username;?> <span class="down-arrow">&#9660;</span></a>
+                            <ul class="sub-menu">
+                                <li><a href="#"><i class="fa fa-user-md"></i> Profile</a></li>
+                                <li><a href="<?=site_url('api/logout'); ?>"><i class="fa fa-sign-out"></i> Log-out</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div> <!-- container -->
+        </nav> <!-- menubar -->
 
-  	<div class="navbar-default sidebar" role="navigation">
-		<div class="sidebar-nav navbar-collapse">
-			<ul class="nav in" id="menu">
-				<li>
-					<a href="#"><i class="fa fa-dashboard fa-fw"></i> Administration <i class="fa fa-plus"></i></a>
-					<ul class="nav nav-second-level collapse" aria-expanded="false">
-						<li class="active"><a href="<?php echo site_url("admin/adminLogin") . "?v=companyProfile"; ?>"> Company Profile</a></li>
-						<li><a href="#"> Massuers</a></li>
-						<li><a href="<?=site_url("admin/users"); ?>"> Users</a></li>
-					</ul>
-				</li>
-				<li>
-					<a href="#"><i class="fa fa-car"></i> Services <i class="fa fa-plus"></i></a>
-			          <ul class="nav nav-second-level collapse" aria-expanded="false">
-			            <li><a href="#"> List of Services</a></li>
-			            <li><a href="#"> Add Service</a></li>
-			          </ul>
-				</li>
-		        <li>
-		          <a href="#"><i class="fa fa-money"></i> Transactions <i class="fa fa-plus"></i></a>
-		          <ul class="nav nav-second-level collapse" aria-expanded="false">
-		            <li><a href="#"> Add New Transaction</a></li>
-		          </ul>
-		        </li>
-		        <li>
-		          <a href="#"><i class="fa fa-bar-chart"></i> Reports <i class="fa fa-plus"></i></a>
-		          <ul class="nav nav-second-level collapse" aria-expanded="false">
-		            <li><a href="#"> Per Masseur</a></li>
-		            <li><a href="#"> Per Service</a></li>
-		          </ul>
-		        </li>
-			</ul> <!-- end of id=menu -->
-		</div> <!-- sidebar-nav navbar-collapse -->
-	</div>
-
-	<div id="page-wrapper">
+        <!-- the left side menu -->
+        <div class="sidebar-default sidebar" role="navigation">
+            <div class="sidebar-nav sidebar-collapse">
+                <ul class="nav in" id="menu">
+                    <li class="active">
+                        <a href="#"><i class="fa fa-dashboard fa-fw"></i> Administration <i class="fa fa-minus"></i></a>
+                        <ul class="nav nav-second-level collapse in" aria-expanded="false">
+                            <li class="active"><a href="<?=site_url("admin/adminLogin") . "?v=companyProfile"; ?>"> Company Profile</a></li>
+                            <li><a href="#"> Massuers</a></li>
+                            <li><a href="<?=site_url('admin/users'); ?>"> Users</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-car"></i> Services <i class="fa fa-plus"></i></a>
+                        <ul class="nav nav-second-level collapse" aria-expanded="false">
+                            <li><a href="#"> List of Services</a></li>
+                            <li><a href="#"> Add Service</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-money"></i> Transactions <i class="fa fa-plus"></i></a>
+                        <ul class="nav nav-second-level collapse" aria-expanded="false">
+                            <li><a href="#"> Add New Transaction</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-bar-chart"></i> Reports <i class="fa fa-plus"></i></a>
+                        <ul class="nav nav-second-level collapse" aria-expanded="false">
+                            <li><a href="#"> Per Masseur</a></li>
+                            <li><a href="#"> Per Service</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div> <!-- end of the left side menu -->
+	
+	<div id="page-wrapper"> <!-- the content -->
 		<div class="container-fluid" style="margin-top: 30px;">
 			<div class="row">
 				<div class="col-md-4 col-md-offset-3">
 					
-					<div class="alert alert-danger" role="alert" id=>
+					<div class="alert alert-danger" role="alert" id="alert">
 						<p>
 						  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 						  <span class="sr-only">Error:</span>
@@ -109,15 +111,5 @@
 
 <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/v2/adminLogin.js"></script>
 
-<script type="text/javascript">
-	$(function() {
-		var first_li_tag = $(".sidebar .nav li").first();
-		first_li_tag.addClass("active");
-
-		var last_i_tag = $(".sidebar .nav li a").first().children(":last");
-		last_i_tag.removeClass("fa-plus");
-		last_i_tag.addClass("fa-minus");
-	});
-</script>
 </body>
 </html>
