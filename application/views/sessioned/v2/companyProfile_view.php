@@ -135,7 +135,7 @@
 				</div> <!-- end panel-body -->
 
 				<div class="panel-footer">
-					<input type="Submit" class="btn btn-primary" />
+					<input type="Submit" class="btn btn-primary" value="Save" />
 				    <input type="button" class="btn btn-default" value="Cancel" onclick="window.location.href='<?php echo site_url("admin"); ?>'" />
 				</div>
 			</div> <!-- end panel -->

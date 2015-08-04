@@ -13,6 +13,6 @@
         <link href="<?php echo base_url(); ?>includes/css/bootstrap-glyphicons.css" rel="stylesheet">
         
         <!-- Custom CSS -->
-        <link href="<?php echo base_url(); ?>includes/css/styles.css" rel="stylesheet">
+        <!-- <link href="<?php echo base_url(); ?>includes/css/styles.css" rel="stylesheet"> -->
     </head>
     <body>

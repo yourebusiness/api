@@ -63,13 +63,13 @@
                     <span class="icon-bar"></span>
                 </button>
 
-                <a href="<?php echo site_url("welcome"); ?>" class="navbar-brand"><img src="../../../images/spa_logo.png" alt="Go to Home page"></a>
+                <a href="<?php echo site_url(); ?>" class="navbar-brand"><img src="../../../images/spa_logo.png" alt="Go to Home page"></a>
 
             </div> <!-- end of navbar-header -->
 
             <div class="navbar-collapse collapse" id="collapsable_menu" role="navigation">
                 <ul class="nav navbar-nav">
-                    <li><a href="<?php echo site_url("welcome/index"); ?>">Home</a></li>
+                    <li><a href="<?php echo site_url(); ?>">Home</a></li>
                     <li><a href="#">Services</a></li>
                     <li><a href="#">Customers</a></li>
                     <li><a href="<?php echo site_url('aboutus/view'); ?>">About Us</a></li>

@@ -15,6 +15,6 @@
         <link href="<?php echo base_url(); ?>includes/css/admin-sidebar.css" rel="stylesheet">
         <link href="<?php echo base_url(); ?>includes/css/admin-menu.css" rel="stylesheet">
 
-        <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
     </head>
     <body>

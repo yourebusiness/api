@@ -27,7 +27,7 @@ class Users extends CI_Model {
     }
 
 	public function getAllUsersExceptCurrent($currentUserId) {
-		$query = "select userId,username,fName,midName,lName,address,gender,active,role,trans from users where userId <> ?";
+		$query = "select userId,username,fName,midName,lName,gender,active,role from users where userId <> ?";
 		$query = $this->db->query($query, array($currentUserId));
 		return $query->result_array();
 	}

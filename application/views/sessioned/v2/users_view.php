@@ -63,11 +63,38 @@
 
         <div id="main-content">
             <div class="row">
-                <div class="yui3-skin-sam">
-                    <div id="users-table"></div>
+                <div class="panel panel-success">
+                    <div class="panel-heading">List of users</div>
+                    <div class="panel-body">
+                        <div class="yui3-skin-sam">
+                            <div id="users-table"></div>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addUser">Add</button> <button class="btn btn-primary btn-sm">Download</button>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- add modal -->
+        <div class="modal fade" id="addUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Add new user</h4>
+                    </div>
+                    <div class="modal-body">
+                        Modal body here...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary btn-sm">Save</button>
+                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- end for add modal -->
         
     </div> <!-- end for wrapper -->
 
@@ -78,27 +105,9 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/metisMenu/2.0.2/metisMenu.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/v2/metisMenuSettings.js"></script>
 
+    <!-- yui3 -->
+    <script src="http://yui.yahooapis.com/3.18.1/build/yui/yui-min.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/v2/users.js"></script>
 
-    <script src="http://yui.yahooapis.com/3.18.1/build/yui/yui-min.js"></script>
-    <script type="text/javascript">
-		YUI().use('node', 'datatable', function (Y) {
-			var data = [
-			    { id: "ga-3475", name: "gadget",   price: "$6.99", cost: "$5.99" },
-			    { id: "sp-9980", name: "sprocket", price: "$3.75", cost: "$3.25" },
-			    { id: "wi-0650", name: "widget",   price: "$4.25", cost: "$3.75" }
-			];
-
-			var table = new Y.DataTable({
-			    columns: ["id", "name", "price"],
-			    data: data,
-
-			    // Optionally configure your table with a caption
-			    caption: "List of users",
-			});
-
-			table.render("#users-table");
-		});	
-	</script>
     </body>
 </html>
