@@ -1,7 +1,7 @@
 <?php
-/* CI_Model_2 will now be the extended model not the CI_model to make error centralized. */
+/* My_model will now be the extended model not the CI_model to make error centralized. */
 
-class baseClass2 extends CI_Model {
+class My_model extends CI_Model {
 	
 	const ERRORNO_EMPTY_VALUE = 4;
 	const ERRORSTR_EMPTY_VALUE = "Data should not be empty string.";

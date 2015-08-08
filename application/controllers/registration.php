@@ -20,10 +20,6 @@ class Registration extends CI_Controller {
 		$this->load->view('templates/footer');
 	}
 
-	private function generateRandomString($length = 20) {
-    	return substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $length);
-	}
-
     private function _checkPWAndConfirmPW(array $data) {
         if ($data["password"] !== $data["confirmPassword"])
             return false;
@@ -45,6 +41,8 @@ class Registration extends CI_Controller {
         if ($sessionCaptcha !== $postCaptcha)
             return FALSE;
 
+        $this->load->helper("utility");
+
         $data["company"] = $this->input->post("company");
         $data["province"] = $this->input->post("province");
         $data["city"] = $this->input->post("city");
@@ -56,7 +54,7 @@ class Registration extends CI_Controller {
         $data["lName"] = $this->input->post("lName");
         $data["gender"] = $this->input->post("gender");
         $data["userEmail"] = $this->input->post("userEmail");
-        $data["hash"] = $this->generateRandomString();
+        $data["hash"] = generateRandomString();
         $data["captcha"] = $sessionCaptcha;
 
         $this->load->model("Company_model");

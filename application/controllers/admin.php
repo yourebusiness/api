@@ -25,6 +25,8 @@ class Admin extends CI_Controller {
 	}
 
 	public function index() {
+		file_put_contents("/tmp/users.txt", $this->username);
+
 		$data["title"] = "Your Spa";
 		$data["username"] = $this->username;
 		$data["userRights"] = $this->session->userdata["role"];
@@ -134,7 +136,7 @@ class Admin extends CI_Controller {
 	public function getAllUsersExceptCurrent() {
 		if ($this->role == 0) {
 			$this->load->model("Users");
-			$users = $this->Users->getAllUsersExceptCurrent($this->userId);
+			$users = $this->Users->getAllUsersExceptCurrent($this->userId, $this->companyId);
 			$this->output
 				->set_content_type('application/json')
 				->set_output(json_encode($users));
@@ -146,20 +148,24 @@ class Admin extends CI_Controller {
 		$headerData['username'] = $this->username;
 
 		if ($this->role == 0) {
+			$data["companyId"] = $this->session->userdata["companyId"];
+			$data["uniqueCode"] = $this->session->userdata["uniqueCode"];
+			$data["createdBy"] = $this->session->userdata["userId"];
+
 			$this->load->view("templates/v2/header2", $headerData);
-	    	$this->load->view("sessioned/v2/users_view");
+	    	$this->load->view("sessioned/v2/users_view", $data);
 	    } else {
 	    	$this->output->set_status_header('401');
 	    	$this->load->view("sessioned/401Unauthorized.php");
 		}
 	}
 
-	public function usersAdd_view() {
+	/*public function usersAdd_view() {
 		$headerData["title"] = "Add Users";
 		$data["username"] = $this->username;
 		$this->load->view("templates/header", $headerData);
 		$this->load->view("sessioned/usersadd_view", $data);
-	}
+	}*/
 
 	public function usersAdd() {
 		$midName = $this->input->get("midName");
@@ -170,8 +176,11 @@ class Admin extends CI_Controller {
 		if ($address == null || empty($address))
 			$address = null;
 
+		$this->load->helper("utility");
+		$password = generateRandomString();
+
 		$data = array("username" => $this->input->get("username"),
-					"password" => $this->input->get("password"),
+					"password" => $password,
 					"fName" => $this->input->get("fName"),
 					"midName" => $midName,
 					"lName" => $this->input->get("lName"),
@@ -182,11 +191,13 @@ class Admin extends CI_Controller {
 					"companyId" => $this->session->userdata["companyId"]
 				);
 
-		$this->load->model("Admin_model");
-		if (!$this->Admin_model->usersAdd($data))
-			echo "Error adding new record.";
-		else
-			return true;
+		$this->load->model("Users");
+		if (!$this->Users->add($data)) {
+			$this->output
+				->set_content_type('application/json')
+				->set_output(json_encode("Error creating new record."));
+		} else
+			return TRUE;
 	}
 
 	public function usersEdit() {
@@ -220,7 +231,7 @@ class Admin extends CI_Controller {
 		if (!$this->Admin_model->usersDelete($id))
 			echo "Deleting record was not successful.";
 		else
-			return true;
+			return TRUE;
 	}
 
 	public function usersChangeStatus($id, $status) {

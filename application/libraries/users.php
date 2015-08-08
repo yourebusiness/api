@@ -2,7 +2,7 @@
 
 include_once ".inc/globals.inc.php";
 
-class Users extends baseClass {
+class Users extends MY_Model {
 	private $mysqli;
 
 	public function __construct() {
@@ -61,7 +61,7 @@ class Users extends baseClass {
 			$this->mysqli->commit();
 			$returnValue = true;
 		} catch (exception $e) {
-			$this->mysqli->rollback();			
+			$this->mysqli->rollback();
 			$returnValue = false;
 		}
 
@@ -133,35 +133,6 @@ class Users extends baseClass {
     		return true;
     	else
     		return false;
-    }
-
-    public function login(array $data) {
-    	$needles = array("username", "password");
-    	if (!$this->checkArrayKeyExists($needles, $data))
-    		return false;
-
-    	$returnValue = false;
-
-		$sql = "select passwd from `users` where username='" . $data["username"] . "'";
-		$result = $this->mysqli->query($sql);
-		if ($result->num_rows == 1) {
-			$row = $result->fetch_array(MYSQLI_ASSOC);
-			if (password_verify($data["password"], $row["passwd"])) {
-				$stmt = $this->mysqli->prepare("update users set lastLogin=now() where username=?");
-				$stmt->bind_param("s", $data["username"]);
-				if ($stmt->execute())
-					$returnValue = true;
-				else
-					$returnValue = false;
-
-				$stmt->close();
-			}
-				
-		}
-
-		$result->close();		    	
-
-    	return $returnValue;
     }
 
     public function __destruct() {

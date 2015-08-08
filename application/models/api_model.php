@@ -15,8 +15,8 @@ class Api_model extends CI_Model {
 	}
 
 	public function signIn(array $data) {
-		$this->load->library("users");
-		return $this->users->login($data);
+		$this->load->model("Users");
+		return $this->Users->login($data);
 	}
 
 	public function checkUsername($username) {

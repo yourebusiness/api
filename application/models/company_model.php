@@ -1,6 +1,6 @@
 <?php
 
-class Company_model extends baseClass2 {
+class Company_model extends My_Model {
 
 	public function __construct() {
 		parent::__construct();

@@ -14,7 +14,7 @@
 
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="menu-nav menubar-right">
-                        <li><a id="username" href="#"><i class="fa fa-user"></i> <?=$username;?> <span class="down-arrow">&#9660;</span></a>
+                        <li><a id="myUsername" href="#"><i class="fa fa-user"></i> <?=$username;?> <span class="down-arrow">&#9660;</span></a>
                             <ul class="sub-menu">
                                 <li><a href="#"><i class="fa fa-user-md"></i> Profile</a></li>
                                 <li><a href="<?=site_url("api/logout");?>"><i class="fa fa-sign-out"></i> Log-out</a></li>
@@ -71,14 +71,14 @@
                         </div>
                     </div>
                     <div class="panel-footer">
-                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addUser">Add</button> <button class="btn btn-primary btn-sm">Download</button>
+                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addUser_modal">Add</button> <button class="btn btn-primary btn-sm">Download</button>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- add modal -->
-        <div class="modal fade" id="addUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal fade" id="addUser_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -86,11 +86,90 @@
                         <h4 class="modal-title" id="myModalLabel">Add new user</h4>
                     </div>
                     <div class="modal-body">
-                        Modal body here...
+                        <div class="container-fluid">
+                            <form id="form_addUser" action="usersAdd" method="get" class="form-horizontal" role="form">
+                                <div class="form-group form-group-sm">
+                                    <label for="username" class="control-label col-sm-2">Email</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" id="username" name="username" class="form-control" placeholder="Email" />
+                                    </div>
+                                    <div class="col-sm-3">
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-sm">
+                                    <label for="fName" class="control-label col-sm-2">First</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" id="fName" name="fName" class="form-control" placeholder="First name" />
+                                    </div>
+                                    <div class="col-sm-3"></div>
+                                </div>
+                                <div class="form-group form-group-sm">
+                                    <label for="midName" class="control-label col-sm-2">Middle</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" id="midName" name="midName" class="form-control" placeholder="Middle name" />
+                                    </div>
+                                    <div class="col-sm-3"></div>
+                                </div>
+                                <div class="form-group form-group-sm">
+                                    <label for="lName" class="control-label col-sm-2">Last</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" id="lName" name="lName" class="form-control" placeholder="Last name" />
+                                    </div>
+                                    <div class="col-sm-3"></div>
+                                </div>
+                                <div class="form-group form-group-sm">
+                                    <label for="address" class="control-label col-sm-2">Address</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" id="address" name="address" class="form-control" placeholder="Address" />
+                                    </div>
+                                    <div class="col-sm-3">
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-sm">
+                                    <label for="gender" class="control-label col-sm-2">Gender</label>
+                                    <div class="col-sm-7">
+                                        <select class="form-control" id="gender" name="gender">
+                                            <option value="M">Male</option>
+                                            <option value="F">Female</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3"></div>
+                                </div>
+                                <div class="form-group form-group-sm">
+                                    <label for="active" class="control-label col-sm-2">Active</label>
+                                    <div class="col-sm-7">
+                                        <select class="form-control" id="active" name="active">
+                                            <option value="Y">Yes</option>
+                                            <option value="N">No</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3"></div>
+                                </div>
+                                <div class="form-group form-group-sm">
+                                    <label for="role" class="control-label col-sm-2">Role</label>
+                                    <div class="col-sm-7">
+                                        <select class="form-control" id="role" name="role">
+                                            <option value="0">Administrator</option>
+                                            <option value="1">User</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3"></div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary btn-sm">Save</button>
-                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Cancel</button>
+                        <div class="col-sm-8">
+                            <div id="alert2" class="alert alert-danger alert-dismissible fade in" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <span>
+                                <button id="addUser" type="button" class="btn btn-primary btn-sm" data-toggle="popover" data-trigger="focus" title="Error" data-content="Fill-out the form completely." data-placement="top">Save</button>
+                            </span>
+                            <button id="cancel" type="button" class="btn btn-default btn-sm" data-dismiss="modal">Cancel</button>
+                        </div>
                     </div>
                 </div>
             </div>
