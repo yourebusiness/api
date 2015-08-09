@@ -6,6 +6,8 @@ class Admin extends CI_Controller {
 	private $companyId = 0;
 	private $role = "-1";	//enum("0, 1")
 
+	private $method;
+
 	public function __construct() {
 		parent::__construct();
 
@@ -133,30 +135,72 @@ class Admin extends CI_Controller {
 		return $this->Admin_model->getAllUsers();
 	}
 
-	public function getAllUsersExceptCurrent() {
+	private function _getUsersExceptCurrentByCompanyId() {
 		if ($this->role == 0) {
 			$this->load->model("Users");
-			$users = $this->Users->getAllUsersExceptCurrent($this->userId, $this->companyId);
-			$this->output
-				->set_content_type('application/json')
-				->set_output(json_encode($users));
+			$users = $this->Users->getUsersExceptCurrentByCompanyId($this->userId, $this->companyId);
+			return $users;
 		}
+	}
+
+	private function _requestStatus($code) {
+		$status = array(
+				200 => "OK",
+				404 => "Not found",
+				405 => "Method not allowed",
+				500 => "Internal Server Error",
+			);
+
+		return ($status[$code]) ? $status[$code] : $status[500];
+	}
+
+	private function _response($data, $status = 200) {
+		$this->output
+				->set_header("HTTP/1.1 " . $status . " " . $this->_requestStatus(200))
+				->set_content_type('application/json')
+				->set_output(json_encode($data));		
 	}
 
 	public function users() {
 		$headerData["title"] = "Users list";
 		$headerData['username'] = $this->username;
 
-		if ($this->role == 0) {
-			$data["companyId"] = $this->session->userdata["companyId"];
-			$data["uniqueCode"] = $this->session->userdata["uniqueCode"];
-			$data["createdBy"] = $this->session->userdata["userId"];
+		$this->method = $_SERVER["REQUEST_METHOD"];
+		if ($this->method == "POST" && array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER)) {
+			if ($_SERVER["HTTP_X_HTTP_METHOD"] == "DELETE")
+				$this->method = "DELETE";
+			elseif ($_SERVER["HTTP_X_HTTP_METHOD"] == "PUT")
+				$this->method = "PUT";
+			else
+				throw new Exception("Unexpected Header");
+		}
 
-			$this->load->view("templates/v2/header2", $headerData);
-	    	$this->load->view("sessioned/v2/users_view", $data);
-	    } else {
-	    	$this->output->set_status_header('401');
-	    	$this->load->view("sessioned/401Unauthorized.php");
+		switch ($this->method) {
+			case "DELETE":
+				break;
+			case "POST":	//add a user
+				$this->_usersAdd();
+				break;
+			case "GET":
+				$currentUser = (string)$this->input->get("current-user");
+
+				if ($currentUser != NULL && ($currentUser == "false"))
+					$this->_response($this->_getUsersExceptCurrentByCompanyId());
+				elseif ($currentUser != NULL && ($currentUser == "true"))
+					$this->_response(array()); // no emplimentation yet
+				else {
+					if ($this->role == 0) {
+						$this->load->view("templates/v2/header2", $headerData);
+				    	$this->load->view("sessioned/v2/users_view");
+				    } else {
+				    	$this->output->set_status_header('401');
+				    	$this->load->view("sessioned/401Unauthorized.php");
+					}
+				}
+				break;
+			default:
+				$this->_response(array("Invalid method."), 405);
+				break;
 		}
 	}
 
@@ -167,37 +211,32 @@ class Admin extends CI_Controller {
 		$this->load->view("sessioned/usersadd_view", $data);
 	}*/
 
-	public function usersAdd() {
-		$midName = $this->input->get("midName");
+	private function _usersAdd() {
+		$midName = $this->input->post("midName");
 		if ($midName == null || empty($midName))
 			$midName = null;
 
-		$address = $this->input->get("address");
+		$address = $this->input->post("address");
 		if ($address == null || empty($address))
 			$address = null;
 
 		$this->load->helper("utility");
 		$password = generateRandomString();
 
-		$data = array("username" => $this->input->get("username"),
+		$data = array("username" => $this->input->post("username"),
 					"password" => $password,
-					"fName" => $this->input->get("fName"),
+					"fName" => $this->input->post("fName"),
 					"midName" => $midName,
-					"lName" => $this->input->get("lName"),
+					"lName" => $this->input->post("lName"),
 					"address" => $address,
-					"gender" => $this->input->get("gender"),
-					"role" => $this->input->get("role"),
+					"gender" => $this->input->post("gender"),
+					"role" => $this->input->post("role"),
 					"createdBy" => $this->session->userdata["userId"],
 					"companyId" => $this->session->userdata["companyId"]
 				);
 
 		$this->load->model("Users");
-		if (!$this->Users->add($data)) {
-			$this->output
-				->set_content_type('application/json')
-				->set_output(json_encode("Error creating new record."));
-		} else
-			return TRUE;
+		$this->_response($this->Users->add($data));
 	}
 
 	public function usersEdit() {

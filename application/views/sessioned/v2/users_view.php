@@ -87,7 +87,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="container-fluid">
-                            <form id="form_addUser" action="usersAdd" method="get" class="form-horizontal" role="form">
+                            <form id="form_addUser" action="users" method="post" class="form-horizontal" role="form">
                                 <div class="form-group form-group-sm">
                                     <label for="username" class="control-label col-sm-2">Email</label>
                                     <div class="col-sm-7">
