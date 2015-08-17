@@ -198,18 +198,14 @@ class Admin extends CI_Controller {
 					}
 				}
 				break;
+			case 'PUT':
+				$this->_usersEdit();
+				break;
 			default:
 				$this->_response(array("Invalid method."), 405);
 				break;
 		}
 	}
-
-	/*public function usersAdd_view() {
-		$headerData["title"] = "Add Users";
-		$data["username"] = $this->username;
-		$this->load->view("templates/header", $headerData);
-		$this->load->view("sessioned/usersadd_view", $data);
-	}*/
 
 	private function _usersAdd() {
 		$midName = $this->input->post("midName");
@@ -239,7 +235,7 @@ class Admin extends CI_Controller {
 		$this->_response($this->Users->add($data));
 	}
 
-	public function usersEdit() {
+	private function _usersEdit() {
 		//username,passwd,fName,midName,lName,email,address,gender,updatedBy
 
 		$midName = $this->input->get("midName");

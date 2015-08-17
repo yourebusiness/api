@@ -76,7 +76,7 @@ class Users extends My_Model {
 		$sql2 = "insert into users(companyId, userId, username, passwd, fName, midName, lName, email, address, gender, createDate, createdBy, role)
 				values(?, @userId, ?, ?,  ?,  ?,  ?,  ?,  ?,  ?, now(), ?, ?);";
 		$sql3 = "Update documents set lastNo=@userId where documentCode='USR' and companyId = ?;";
-		$sql4 = "select @userId as userId";
+		$sql4 = "select @userId as newUserId;";
 
 		$this->db->trans_start();
 		$this->db->query($sql1, array($data["companyId"]));
@@ -89,12 +89,12 @@ class Users extends My_Model {
 			$msg = $this->db->_error_number();
             $num = $this->db->_error_message();
             log_message("error", "Error running sql query in " . __METHOD__ . "(). ($num) $msg");
-            return array("statusCode" => parent::ERRORNO_DB_ERROR, "statusMessage" => parent::ERRORSTR_DB_ERROR);
+            return array("statusCode" => parent::ERRORNO_DB_ERROR, "statusMessage" => parent::ERRORSTR_DB_ERROR, "newUserId" => 0);
 		}
 
 		$row = $query->row_array();
 
-		return array("statusCode" => parent::ERRORNO_OK, "statusMessage" => parent::ERRORSTR_OK, "newUserId" => $row["userId"]);
+		return array("statusCode" => parent::ERRORNO_OK, "statusMessage" => parent::ERRORSTR_OK, "newUserId" => $row["newUserId"]);
 	}
 
 	public function login(array $data) {

@@ -65,20 +65,33 @@
             <div class="row">
                 <div class="panel panel-success">
                     <div class="panel-heading">List of users</div>
-                    <div class="panel-body">
-                        <div class="yui3-skin-sam">
-                            <div id="users-table"></div>
-                        </div>
+                    <div class="panel-body">                        
+                        <table id="userTable" class="display" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>User Id</th>
+                                    <th>Username</th>
+                                    <th>First</th>
+                                    <th>Middle</th>
+                                    <th>Last</th>
+                                    <th>Gender</th>
+                                    <th>Active</th>
+                                    <th>Role</th>
+                                </tr>
+                            </thead>
+                        </table>
                     </div>
                     <div class="panel-footer">
-                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addUser_modal">Add</button> <button class="btn btn-primary btn-sm">Download</button>
+                        <!-- <button id="addRow">Add Row</button> -->
+                        <button id="addRow" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#user_modal">Add</button>
+                        <button class="btn btn-primary btn-sm">Download</button>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- add modal -->
-        <div class="modal fade" id="addUser_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal fade" id="user_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -87,7 +100,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="container-fluid">
-                            <form id="form_addUser" action="users" method="post" class="form-horizontal" role="form">
+                            <form id="form_user" action="users" method="post" class="form-horizontal" role="form">
                                 <div class="form-group form-group-sm">
                                     <label for="username" class="control-label col-sm-2">Email</label>
                                     <div class="col-sm-7">
@@ -117,14 +130,14 @@
                                     </div>
                                     <div class="col-sm-3"></div>
                                 </div>
-                                <div class="form-group form-group-sm">
+                                <!-- <div class="form-group form-group-sm">
                                     <label for="address" class="control-label col-sm-2">Address</label>
                                     <div class="col-sm-7">
                                         <input type="text" id="address" name="address" class="form-control" placeholder="Address" />
                                     </div>
                                     <div class="col-sm-3">
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="form-group form-group-sm">
                                     <label for="gender" class="control-label col-sm-2">Gender</label>
                                     <div class="col-sm-7">
@@ -166,7 +179,7 @@
                         </div>
                         <div class="col-sm-4">
                             <span>
-                                <button id="addUser" type="button" class="btn btn-primary btn-sm" data-toggle="popover" data-trigger="focus" title="Error" data-content="Fill-out the form completely." data-placement="top">Save</button>
+                                <button id="save" type="button" class="btn btn-primary btn-sm" data-toggle="popover" data-trigger="focus" title="Error" data-content="Fill-out the form completely." data-placement="top">Save</button>
                             </span>
                             <button id="cancel" type="button" class="btn btn-default btn-sm" data-dismiss="modal">Cancel</button>
                         </div>
@@ -177,16 +190,15 @@
         
     </div> <!-- end for wrapper -->
 
-    <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.8/js/jquery.dataTables.min.js"></script>
 
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
     <script src="http://cdnjs.cloudflare.com/ajax/libs/metisMenu/2.0.2/metisMenu.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/v2/metisMenuSettings.js"></script>
 
-    <!-- yui3 -->
-    <script src="http://yui.yahooapis.com/3.18.1/build/yui/yui-min.js"></script>
-    <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/v2/users.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/v2/users2.js"></script>
 
     </body>
 </html>

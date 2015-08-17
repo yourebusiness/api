@@ -16,5 +16,7 @@
         <link href="<?php echo base_url(); ?>includes/css/admin-menu.css" rel="stylesheet">
 
         <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.8/css/jquery.dataTables.min.css">
     </head>
     <body>
