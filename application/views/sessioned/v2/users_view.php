@@ -101,6 +101,7 @@
                     <div class="modal-body">
                         <div class="container-fluid">
                             <form id="form_user" action="users" method="post" class="form-horizontal" role="form">
+                                <input id="userId" name="userId" type="hidden" value="0" />
                                 <div class="form-group form-group-sm">
                                     <label for="username" class="control-label col-sm-2">Email</label>
                                     <div class="col-sm-7">

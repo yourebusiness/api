@@ -27,8 +27,6 @@ class Admin extends CI_Controller {
 	}
 
 	public function index() {
-		file_put_contents("/tmp/users.txt", $this->username);
-
 		$data["title"] = "Your Spa";
 		$data["username"] = $this->username;
 		$data["userRights"] = $this->session->userdata["role"];
@@ -158,7 +156,7 @@ class Admin extends CI_Controller {
 		$this->output
 				->set_header("HTTP/1.1 " . $status . " " . $this->_requestStatus(200))
 				->set_content_type('application/json')
-				->set_output(json_encode($data));		
+				->set_output(json_encode($data));
 	}
 
 	public function users() {
@@ -166,6 +164,7 @@ class Admin extends CI_Controller {
 		$headerData['username'] = $this->username;
 
 		$this->method = $_SERVER["REQUEST_METHOD"];
+
 		if ($this->method == "POST" && array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER)) {
 			if ($_SERVER["HTTP_X_HTTP_METHOD"] == "DELETE")
 				$this->method = "DELETE";
@@ -176,7 +175,7 @@ class Admin extends CI_Controller {
 		}
 
 		switch ($this->method) {
-			case "DELETE":
+			case "DELETE":	//we only allow if no transaction yet
 				break;
 			case "POST":	//add a user
 				$this->_usersAdd();
@@ -238,27 +237,28 @@ class Admin extends CI_Controller {
 	private function _usersEdit() {
 		//username,passwd,fName,midName,lName,email,address,gender,updatedBy
 
-		$midName = $this->input->get("midName");
+		$midName = $this->input->post("midName");
 		if ($midName == null || empty($midName))
 			$midName = null;
-		$address = $this->input->get("address");
+		$address = $this->input->post("address");
 		if ($address == null || empty($address))
 			$address = null;
 
-		$data = array("username" => $this->input->get("username"),
-					"fName" => $this->input->get("fName"),
+		$data = array("userId" => $this->input->post("userId"),
+					"username" => $this->input->post("username"),
+					"fName" => $this->input->post("fName"),
 					"midName" => $midName,
-					"lName" => $this->input->get("lName"),
-					"address" => $this->input->get("address"),
-					"gender" => $this->input->get("gender"),
-					"updatedBy" => $this->session->userdata["userId"]
+					"lName" => $this->input->post("lName"),
+					"address" => $this->input->post("address"),
+					"gender" => $this->input->post("gender"),
+					"active" => $this->input->post("active"),
+					"role" => $this->input->post("role"),
+					"updatedBy" => $this->session->userdata["userId"],
+					"companyId" => $this->companyId,
 				);
 
-		$this->load->model("Admin_model");
-		if (!$this->Admin_model->usersEdit($data))
-			echo "Error editting record.";
-		else
-			return true;
+		$this->load->model("Users");
+		$this->_response($this->Users->edit($data));
 	}
 
 	public function usersDelete($id) {

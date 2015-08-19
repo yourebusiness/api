@@ -56,10 +56,13 @@ class Users extends My_Model {
 		}
 	}
 
+	// add new record
 	public function add(array $data) {
 		$needles = array("username", "password", "fName", "lName", "gender", "role", "createdBy", "companyId");
-		if (!$this->checkArrayKeyExists($needles, $data))
-			return FALSE;
+
+		$status = $this->checkArrayKeyExists($needles, $data);
+		if ($status["statusCode"] != 0)
+			return $status;
 
 		$data["email"] = $data["username"]; // because they are the same; For future use.
 		$password = password_hash($data["password"], PASSWORD_BCRYPT);
@@ -89,7 +92,7 @@ class Users extends My_Model {
 			$msg = $this->db->_error_number();
             $num = $this->db->_error_message();
             log_message("error", "Error running sql query in " . __METHOD__ . "(). ($num) $msg");
-            return array("statusCode" => parent::ERRORNO_DB_ERROR, "statusMessage" => parent::ERRORSTR_DB_ERROR, "newUserId" => 0);
+            return array("statusCode" => parent::ERRORNO_DB_ERROR, "statusMessage" => parent::ERRORSTR_DB_ERROR);
 		}
 
 		$row = $query->row_array();
@@ -130,4 +133,25 @@ class Users extends My_Model {
 
 		return TRUE;
     }
+
+    // edit existing record
+    public function edit(array $data) {
+		$needles = array("userId", "username", "fName", "lName", "gender", "active", "role", "updatedBy", "companyId");
+		$status = $this->checkArrayKeyExists($needles, $data);
+		if ($status["statusCode"] != 0) // meaning not OK = 0
+			return $status;
+
+		$data["email"] = $data["username"]; // they are the same.
+
+		$query = "update users set username=?, fName=?, midName=?, lName=?, email=?, address=?, gender=?, updateDate=now(), updatedBy=?, active=?, role=? where userId = ? and companyId = ?";
+		$query = $this->db->query($query, array($data['username'], $data['fName'], $data['midName'], $data['lName'], $data['email'], $data['address'], $data['gender'], $data['updatedBy'], $data['active'], $data['role'], $data['userId'], $data["companyId"]));
+		if (!$query) {
+			$msg = $this->db->_error_number();
+            $num = $this->db->_error_message();
+            log_message("error", "Error running sql query in " . __METHOD__ . "(). ($num) $msg");
+            return array("statusCode" => parent::ERRORNO_DB_ERROR, "statusMessage" => parent::ERRORSTR_DB_ERROR);
+		}
+
+		return array("statusCode" => parent::ERRORNO_OK, "statusMessage" => parent::ERRORSTR_OK);		
+	}
 }
