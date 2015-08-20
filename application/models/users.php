@@ -12,23 +12,23 @@ class Users extends My_Model {
 		return $query->result_array();
 	}
 
-	private function countUsersByCompanyId($companyId) {
+	private function countActiveUsersByCompanyId($companyId) {
 		if (intval($companyId) < 1)
-			return array("statusCode" => parent::ERRORNO_INVALID_PARAMETER, "statusMessage" => parent::ERRORSTR_INVALID_PARAMETER);
+			return array("statusCode" => parent::ERRORNO_INVALID_PARAMETER, "statusMessage" => parent::ERRORSTR_INVALID_PARAMETER, "statusDesc" => "");
 
-		$query = $this->db->query("select count(*) as cnt from users where companyId = ?", array($companyId));
+		$query = $this->db->query("select count(*) as cnt from users where `active`='Y' and companyId = ?", array($companyId));
 		if (!$query) {
     		$msg = $this->db->_error_message();
     		$num = $this->db->_error_number();
     		log_message("error", "Database error ($num) $msg");
-			return array("statusCode" => parent::ERRORNO_DB_ERROR, "statusMessage" => parent::ERRORSTR_DB_ERROR);
+			return array("statusCode" => parent::ERRORNO_DB_ERROR, "statusMessage" => parent::ERRORSTR_DB_ERROR, "statusDesc" => "");
     	}
 
     	$row = $query->row_array();
 
-    	// we only allow max 3 users per company. Static for now.
-    	if ($row["cnt"] > 3)    		
-    		return array("statusCode" => parent::ERRORNO_MAX_REACHED, "statusMessage" => parent::ERRORSTR_MAX_REACHED);
+    	// we only allow max 4 active users per company. Static for now.
+    	if ($row["cnt"] > 3)
+    		return array("statusCode" => parent::ERRORNO_MAX_REACHED, "statusMessage" => parent::ERRORSTR_MAX_REACHED, "statusDesc" => 'Deactivate other users first to add new one.');
     	else
     		return array("statusCode" => parent::ERRORNO_OK, "statusMessage" => parent::ERRORSTR_OK);
 	}
@@ -37,14 +37,14 @@ class Users extends My_Model {
 	private function okToAddUsername($username) { // note: username = email
 		$username = trim($username);
         if ($username == "")
-			return array("statusCode" => parent::ERRORNO_EMPTY_VALUE, "statusMessage" => parent::ERRORSTR_EMPTY_VALUE);
+			return array("statusCode" => parent::ERRORNO_EMPTY_VALUE, "statusMessage" => parent::ERRORSTR_EMPTY_VALUE, "statusDesc" => "");
 
 		$query = $this->db->query("select userId from users where username = ? or email = ?", array($username, $username));
     	if (!$query) {
     		$msg = $this->db->_error_message();
     		$num = $this->db->_error_number();
     		log_message("error", "Database error ($num) $msg");
-			return array("statusCode" => parent::ERRORNO_DB_ERROR, "statusMessage" => parent::ERRORSTR_DB_ERROR);
+			return array("statusCode" => parent::ERRORNO_DB_ERROR, "statusMessage" => parent::ERRORSTR_DB_ERROR, "statusDesc" => "");
     	}
 
     	$count = $query->num_rows();
@@ -52,7 +52,7 @@ class Users extends My_Model {
 			return array("statusCode" => parent::ERRORNO_OK, "statusMessage" => parent::ERRORSTR_OK);
 		else {
 			log_message("error", parent::ERRORNO_DB_VALUE_EXISTS . ": " . parent::ERRORSTR_DB_VALUE_EXISTS . ": username: $username.");
-    		return array("statusCode" => parent::ERRORNO_DB_VALUE_EXISTS, "statusMessage" => parent::ERRORSTR_DB_VALUE_EXISTS);;
+    		return array("statusCode" => parent::ERRORNO_DB_VALUE_EXISTS, "statusMessage" => parent::ERRORSTR_DB_VALUE_EXISTS, "statusDesc" => "");;
 		}
 	}
 
@@ -71,7 +71,7 @@ class Users extends My_Model {
 		if ($status["statusCode"] != 0)
 			return $status;
 
-		$status = $this->countUsersByCompanyId($data["companyId"]);
+		$status = $this->countActiveUsersByCompanyId($data["companyId"]);
 		if ($status["statusCode"] != 0)
 			return $status;
 
@@ -92,7 +92,7 @@ class Users extends My_Model {
 			$msg = $this->db->_error_number();
             $num = $this->db->_error_message();
             log_message("error", "Error running sql query in " . __METHOD__ . "(). ($num) $msg");
-            return array("statusCode" => parent::ERRORNO_DB_ERROR, "statusMessage" => parent::ERRORSTR_DB_ERROR);
+            return array("statusCode" => parent::ERRORNO_DB_ERROR, "statusMessage" => parent::ERRORSTR_DB_ERROR, "statusDesc" => "");
 		}
 
 		$row = $query->row_array();

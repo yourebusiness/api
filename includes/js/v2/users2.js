@@ -1,15 +1,16 @@
-window.showEditDialog = function(data) {
-    $('#user_modal .modal-title').text("Edit user");
-    $('#username').val(data.username);
-    $('#fName').val(data.fName);
-    $('#midName').val(data.midName);
-    $('#lName').val(data.lName);
-    $('#gender').val(data.gender);
-    $('#active').val(data.active);
-    $('#role').val(data.role);
-}
-
 $(document).ready(function() {
+
+    showEditDialog = function(data) {
+        $('#user_modal .modal-title').text("Edit user");
+        $('#userId').val(data.userId);
+        $('#username').val(data.username);
+        $('#fName').val(data.fName);
+        $('#midName').val(data.midName);
+        $('#lName').val(data.lName);
+        $('#gender').val(data.gender);
+        $('#active').val(data.active);
+        $('#role').val(data.role);
+    }
 
     var $userId = $('#userId'),
         $username = $('#username'),
@@ -21,7 +22,7 @@ $(document).ready(function() {
         $role = $('#role'),
         $formUser = $('#form_user');
 
-    var mode = '';
+    var thisRow;
 
     var tableOptions = {
         "paging": false,
@@ -47,7 +48,14 @@ $(document).ready(function() {
                 "data": "userId",
                 "render": function(data, type, full, meta) {
                     return '<a href="#" data-toggle="modal" data-target="#user_modal">'+data+'</a>';
-                }
+                },
+            },
+            {
+                "targets" : 7,
+                "data": "role",
+                "render": function(data, type, full, meta) {
+                    return (data == '0') ? 'Administrator' : 'User';
+                },
             },
         ]
     };
@@ -82,23 +90,23 @@ $(document).ready(function() {
             success: function(response) {
                 if(parseInt(response.statusCode) == 0) {
                     var value = $formUser.attr("data-x-http-method");
+                    var rowData = {};
 
-                    if (value == "") { //meaning add
-                        var row = {};
+                    rowData.username = $username.val();
+                    rowData.fName = $fName.val();
+                    rowData.midName = $midName.val();
+                    rowData.lName = $lName.val();
+                    rowData.gender = $gender.val();
+                    rowData.active = $active.val();
+                    rowData.role = $role.val();
 
-                        row.userId = response.newUserId;
-                        row.username = $username.val();
-                        row.fName = $fName.val();
-                        row.midName = $midName.val();
-                        row.lName = $lName.val();
-                        row.gender = $gender.val();
-                        row.active = $active.val();
-                        row.role = $role.val();
-
-                        var json = JSON.parse(JSON.stringify(row));
+                    if (value == "") { //add
+                        rowData.userId = response.newUserId;
+                        var json = JSON.parse(JSON.stringify(rowData));
                         table.row.add(json).draw();
                     } else if (value.toLowerCase() == "put") {    //edit here
-                        console.log("Edit here.");
+                        rowData.userId = $userId.val();
+                        table.row(thisRow).data(rowData).draw();
                     } else if (value.toLowerCase() == "delete") {
                         console.log("deleting...");
                     } else {
@@ -108,7 +116,7 @@ $(document).ready(function() {
                     $('#form_user').find('input[type=text]').val('');
                     $('#cancel').click();
                 } else {
-                    alert(response.statusMessage);
+                    alert(response.statusMessage + ' ' + response.statusDesc);
                 }
             },
             error: function() {
@@ -116,6 +124,7 @@ $(document).ready(function() {
             }
         });
     });
+
 
     // for add cmd
     $('#addRow').on('click', function() {
@@ -126,11 +135,13 @@ $(document).ready(function() {
         $formUser.attr("data-x-http-method", '');
     });
 
-    var table = $('#userTable').DataTable();
  
     //for update cmd
-    $('#userTable tbody').on( 'click', 'tr', function () {
+    var table = $('#userTable').DataTable();
+    $('#userTable tbody').on( 'click', 'tr', function () {        
+        thisRow = this;
         showEditDialog(table.row(this).data());
+
         $('#userId').val(table.row(this).data().userId);
 
         $formUser.attr("method", "POST");

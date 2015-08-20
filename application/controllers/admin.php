@@ -21,11 +21,6 @@ class Admin extends CI_Controller {
 		}
 	}
 
-	private function showMasseurs($arr) {
-		$this->load->model("Admin_model");
-		return $this->Admin_model->showMasseurs($arr);
-	}
-
 	public function index() {
 		$data["title"] = "Your Spa";
 		$data["username"] = $this->username;
@@ -37,6 +32,24 @@ class Admin extends CI_Controller {
 		// we want this to delete after exiting from company profile page.
 		$this->load->helper("cookie");
 		delete_cookie("yourspaFunc_CompanyProfile");
+	}
+
+	private function _requestStatus($code) {
+		$status = array(
+				200 => "OK",
+				404 => "Not found",
+				405 => "Method not allowed",
+				500 => "Internal Server Error",
+			);
+
+		return ($status[$code]) ? $status[$code] : $status[500];
+	}
+
+	private function _response($data, $status = 200) {
+		$this->output
+				->set_header("HTTP/1.1 " . $status . " " . $this->_requestStatus(200))
+				->set_content_type('application/json')
+				->set_output(json_encode($data));
 	}
 
 	public function masseur() {
@@ -52,6 +65,11 @@ class Admin extends CI_Controller {
 		$data["username"] = $this->username;
 		$this->load->view("templates/header", $data);
 		$this->load->view("sessioned/masseur_view", $data); // includes footer
+	}
+
+	private function showMasseurs($arr) {
+		$this->load->model("Admin_model");
+		return $this->Admin_model->showMasseurs($arr);
 	}
 
 	public function masseuradd_view() {
@@ -141,24 +159,6 @@ class Admin extends CI_Controller {
 		}
 	}
 
-	private function _requestStatus($code) {
-		$status = array(
-				200 => "OK",
-				404 => "Not found",
-				405 => "Method not allowed",
-				500 => "Internal Server Error",
-			);
-
-		return ($status[$code]) ? $status[$code] : $status[500];
-	}
-
-	private function _response($data, $status = 200) {
-		$this->output
-				->set_header("HTTP/1.1 " . $status . " " . $this->_requestStatus(200))
-				->set_content_type('application/json')
-				->set_output(json_encode($data));
-	}
-
 	public function users() {
 		$headerData["title"] = "Users list";
 		$headerData['username'] = $this->username;
@@ -175,7 +175,8 @@ class Admin extends CI_Controller {
 		}
 
 		switch ($this->method) {
-			case "DELETE":	//we only allow if no transaction yet
+			case "DELETE":
+				$this->_usersDelete();
 				break;
 			case "POST":	//add a user
 				$this->_usersAdd();
@@ -235,8 +236,6 @@ class Admin extends CI_Controller {
 	}
 
 	private function _usersEdit() {
-		//username,passwd,fName,midName,lName,email,address,gender,updatedBy
-
 		$midName = $this->input->post("midName");
 		if ($midName == null || empty($midName))
 			$midName = null;
@@ -261,7 +260,9 @@ class Admin extends CI_Controller {
 		$this->_response($this->Users->edit($data));
 	}
 
-	public function usersDelete($id) {
+	private function _usersDelete() {
+		$id = $this->input->post("userId");
+		
 		$this->load->model("Admin_model");
 		if (!$this->Admin_model->usersDelete($id))
 			echo "Deleting record was not successful.";
@@ -269,7 +270,7 @@ class Admin extends CI_Controller {
 			return TRUE;
 	}
 
-	public function usersChangeStatus($id, $status) {
+	/*public function usersChangeStatus($id, $status) {
 		if ($status == "Y")
 			$status = "N";
 		else
@@ -282,10 +283,10 @@ class Admin extends CI_Controller {
 			echo "Error updating status";
 		else
 			return true;
-	}
+	}*/
 
-	public function changeUserRights($id, $userRights) {
-		/* administrator = 0; User = 1 */
+	/*public function changeUserRights($id, $userRights) {
+		// administrator = 0; User = 1
 
 		$userRights = strtolower($userRights);
 		if ($userRights == "administrator")
@@ -302,7 +303,7 @@ class Admin extends CI_Controller {
 			echo "Error updating status";
 		else
 			return true;
-	}
+	}*/
 
 
 	/* controller for services */
