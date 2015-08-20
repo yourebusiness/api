@@ -226,6 +226,7 @@ class Admin extends CI_Controller {
 					"lName" => $this->input->post("lName"),
 					"address" => $address,
 					"gender" => $this->input->post("gender"),
+					"active" => $this->input->post("active"),
 					"role" => $this->input->post("role"),
 					"createdBy" => $this->session->userdata["userId"],
 					"companyId" => $this->session->userdata["companyId"]

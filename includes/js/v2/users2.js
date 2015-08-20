@@ -25,8 +25,8 @@ $(document).ready(function() {
     var thisRow;
 
     var tableOptions = {
-        "paging": false,
-        "searching": false,
+        "paging": true,
+        "searching": true,
         "ordering": true,
         "ajax": {
             url: 'http://yourspa.com/index.php/admin/users?current-user=false',
@@ -119,8 +119,10 @@ $(document).ready(function() {
                     alert(response.statusMessage + ' ' + response.statusDesc);
                 }
             },
-            error: function() {
-                console.log("Error has occured.");
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR);
+                console.log(textStatus);
+                console.log(errorThrown)
             }
         });
     });

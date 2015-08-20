@@ -58,7 +58,7 @@ class Users extends My_Model {
 
 	// add new record
 	public function add(array $data) {
-		$needles = array("username", "password", "fName", "lName", "gender", "role", "createdBy", "companyId");
+		$needles = array("username", "password", "fName", "lName", "gender", "active", "role", "createdBy", "companyId");
 
 		$status = $this->checkArrayKeyExists($needles, $data);
 		if ($status["statusCode"] != 0)
@@ -72,7 +72,7 @@ class Users extends My_Model {
 			return $status;
 
 		$status = $this->countActiveUsersByCompanyId($data["companyId"]);
-		if ($status["statusCode"] != 0)
+		if (($status["statusCode"] != 0) && ($data["active"] == "Y"))
 			return $status;
 
 		$sql1 = "SET @userId=(SELECT CAST(lastNo+1 AS char(11)) FROM documents WHERE documentCode='USR' and companyId = ?);";
@@ -134,12 +134,30 @@ class Users extends My_Model {
 		return TRUE;
     }
 
+    private function _getUserStatus($userId, $companyId) {
+    	$query = $this->db->query("select `active` from users where userId = ? and companyId = ?", array($userId, $companyId));
+    	if (!$query) {
+    		$msg = $this->db->_error_number();
+            $num = $this->db->_error_message();
+            log_message("error", "Error running sql query in " . __METHOD__ . "(). ($num) $msg");
+            return array("statusCode" => parent::ERRORNO_DB_ERROR, "statusMessage" => parent::ERRORSTR_DB_ERROR);
+    	}
+
+    	return $query->row_array();
+    }
+
     // edit existing record
     public function edit(array $data) {
 		$needles = array("userId", "username", "fName", "lName", "gender", "active", "role", "updatedBy", "companyId");
 		$status = $this->checkArrayKeyExists($needles, $data);
 		if ($status["statusCode"] != 0) // meaning not OK = 0
 			return $status;
+
+		// we do not allow more than 3 active users.
+		$status = $this->countActiveUsersByCompanyId($data["companyId"]);
+		$userStatus = $this->_getUserStatus($data["userId"], $data["companyId"]);
+		if (($status["statusCode"] != 0) && ($userStatus["active"] == "N") && ($data["active"] == "Y"))
+			return array("statusCode" => parent::ERRORNO_MAX_REACHED, "statusMessage" => parent::ERRORSTR_MAX_REACHED, "statusDesc" => 'Deactivate other users first to add new one.');
 
 		$data["email"] = $data["username"]; // they are the same.
 

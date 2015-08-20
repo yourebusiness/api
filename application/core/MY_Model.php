@@ -29,7 +29,7 @@ class My_model extends CI_Model {
     	foreach ($needles as $needle) {
             if (!array_key_exists($needle, $haystack)) {
                 error_log(self::ERRORNO_INVALID_PARAMETER . ": " . self::ERRORSTR_INVALID_PARAMETER . " '$needle' ");
-                return array("statusCode" => self::ERRORNO_INVALID_PARAMETER, "statusMessage" => self::ERRORSTR_INVALID_PARAMETER);
+                return array("statusCode" => self::ERRORNO_INVALID_PARAMETER, "statusMessage" => self::ERRORSTR_INVALID_PARAMETER, "statusDesc" => "Missing key: " . $needle);
             }
         }
 
