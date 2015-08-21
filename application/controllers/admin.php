@@ -189,7 +189,7 @@ class Admin extends CI_Controller {
 				elseif ($currentUser != NULL && ($currentUser == "true"))
 					$this->_response(array()); // no emplimentation yet
 				else {
-					if ($this->role == 0) {
+					if ($this->role == 0) { // 0 = administrator
 						$this->load->view("templates/v2/header2", $headerData);
 				    	$this->load->view("sessioned/v2/users_view");
 				    } else {

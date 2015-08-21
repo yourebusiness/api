@@ -69,6 +69,7 @@
                         <table id="userTable" class="display" cellspacing="0" width="100%">
                             <thead>
                                 <tr>
+                                    <th><input type="checkbox" name="checkAll" id="checkAll" /> </th>
                                     <th>User Id</th>
                                     <th>Username</th>
                                     <th>First</th>
@@ -84,7 +85,8 @@
                     <div class="panel-footer">
                         <!-- <button id="addRow">Add Row</button> -->
                         <button id="addRow" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#user_modal">Add</button>
-                        <button class="btn btn-primary btn-sm">Download</button>
+                        <button class="btn btn-warning btn-sm">Download</button>
+                        <button id="btn-delete" class="btn btn-danger btn-sm" disabled>Delete</button>
                     </div>
                 </div>
             </div>

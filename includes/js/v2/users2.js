@@ -33,6 +33,7 @@ $(document).ready(function() {
             dataSrc: '',
         },
         columns: [
+            { data: "" },
             { data: "userId" },
             { data: "username" },
             { data: "fName" },
@@ -45,13 +46,21 @@ $(document).ready(function() {
         "columnDefs": [
             {
                 "targets": 0,
+                "orderable": false,
+                "data": "",
+                "render": function() {
+                    return '<input type="checkbox" name="checkboxRow" />';
+                }
+            },
+            {
+                "targets": 1,
                 "data": "userId",
                 "render": function(data, type, full, meta) {
                     return '<a href="#" data-toggle="modal" data-target="#user_modal">'+data+'</a>';
                 },
             },
             {
-                "targets" : 7,
+                "targets" : 8,
                 "data": "role",
                 "render": function(data, type, full, meta) {
                     return (data == '0') ? 'Administrator' : 'User';
@@ -120,7 +129,6 @@ $(document).ready(function() {
                 }
             },
             error: function(jqXHR, textStatus, errorThrown) {
-                console.log(jqXHR);
                 console.log(textStatus);
                 console.log(errorThrown)
             }
@@ -132,7 +140,7 @@ $(document).ready(function() {
     $('#addRow').on('click', function() {
         $('#user_modal .modal-title').text("Add user");
         $formUser.find('input[type=text]').val('');
-        $('#userId').val('0');
+        $userId.val('0');
         $formUser.attr("method", "POST");
         $formUser.attr("data-x-http-method", '');
     });
@@ -140,13 +148,37 @@ $(document).ready(function() {
  
     //for update cmd
     var table = $('#userTable').DataTable();
-    $('#userTable tbody').on( 'click', 'tr', function () {        
+    $('#userTable tbody').on('click', 'tr', function () {        
         thisRow = this;
         showEditDialog(table.row(this).data());
 
-        $('#userId').val(table.row(this).data().userId);
+        $userId.val(table.row(this).data().userId);
 
         $formUser.attr("method", "POST");
         $formUser.attr("data-x-http-method", 'PUT');
     });
+
+
+    //for all checkbox
+    $btnDelete = $('#btn-delete');
+    $('#checkAll').on('click', function() {
+        if (this.checked == true) {
+            var value = true;
+            $btnDelete.attr('disabled', false);
+        } else {
+            var value = false;
+            $btnDelete.attr('disabled', true);
+        }
+
+        $table.find('input[name="checkboxRow"]').prop('checked', value);
+    });
+
+
+    // for every checkboxRow
+    $table.delegate('input[name="checkboxRow"]', 'click', function() {
+        var countChecked = $('input[type="checkbox"]:checked').length;
+        var countRowCheckboxes = $('input[type="checkbox"]').length - 1;
+        
+    });
+    
 });

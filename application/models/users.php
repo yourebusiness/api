@@ -28,7 +28,7 @@ class Users extends My_Model {
 
     	// we only allow max 4 active users per company. Static for now.
     	if ($row["cnt"] > 3)
-    		return array("statusCode" => parent::ERRORNO_MAX_REACHED, "statusMessage" => parent::ERRORSTR_MAX_REACHED, "statusDesc" => 'Deactivate other users first to add new one.');
+    		return array("statusCode" => parent::ERRORNO_MAX_REACHED, "statusMessage" => parent::ERRORSTR_MAX_REACHED, "statusDesc" => 'Deactivate other users first to add new one or add this one as deactivated.');
     	else
     		return array("statusCode" => parent::ERRORNO_OK, "statusMessage" => parent::ERRORSTR_OK);
 	}
@@ -60,6 +60,10 @@ class Users extends My_Model {
 	public function add(array $data) {
 		$needles = array("username", "password", "fName", "lName", "gender", "active", "role", "createdBy", "companyId");
 
+		// we only accept Y/N for active
+		if (!in_array($data["active"], array("Y", "N")))
+			return array("statusCode" => parent::ERRORNO_INVALID_PARAMETER, "statusMessage" => parent::ERRORSTR_INVALID_PARAMETER, "statusDesc" => "Active value should only be Y or N.");
+
 		$status = $this->checkArrayKeyExists($needles, $data);
 		if ($status["statusCode"] != 0)
 			return $status;
@@ -76,14 +80,14 @@ class Users extends My_Model {
 			return $status;
 
 		$sql1 = "SET @userId=(SELECT CAST(lastNo+1 AS char(11)) FROM documents WHERE documentCode='USR' and companyId = ?);";
-		$sql2 = "insert into users(companyId, userId, username, passwd, fName, midName, lName, email, address, gender, createDate, createdBy, role)
-				values(?, @userId, ?, ?,  ?,  ?,  ?,  ?,  ?,  ?, now(), ?, ?);";
+		$sql2 = "insert into users(companyId, userId, username, passwd, fName, midName, lName, email, address, gender, createDate, createdBy, active, role)
+				values(?, @userId, ?, ?,  ?,  ?,  ?,  ?,  ?,  ?, now(), ?, ?, ?);";
 		$sql3 = "Update documents set lastNo=@userId where documentCode='USR' and companyId = ?;";
 		$sql4 = "select @userId as newUserId;";
 
 		$this->db->trans_start();
 		$this->db->query($sql1, array($data["companyId"]));
-		$this->db->query($sql2, array($data["companyId"], $data['username'], $password, $data['fName'], $data['midName'], $data['lName'], $data['email'], $data['address'], $data['gender'], $data['createdBy'], $data['role']));
+		$this->db->query($sql2, array($data["companyId"], $data['username'], $password, $data['fName'], $data['midName'], $data['lName'], $data['email'], $data['address'], $data['gender'], $data['createdBy'], $data["active"], $data['role']));
 		$this->db->query($sql3, array($data["companyId"]));
 		$query = $this->db->query($sql4);
 		$this->db->trans_complete();
