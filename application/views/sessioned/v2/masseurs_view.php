@@ -33,8 +33,8 @@
                         <a href="#"><i class="fa fa-dashboard fa-fw"></i> Administration <i class="fa fa-minus"></i></a>
                         <ul class="nav nav-second-level collapse in" aria-expanded="false">
                             <li><a href="<?=site_url("admin/adminLogin") . "?v=companyProfile"; ?>"> Company Profile</a></li>
-                            <li><a href="#"> Massuers</a></li>
-                            <li class="active"><a href="<?=site_url('admin/users'); ?>"> Users</a></li>
+                            <li class="active"><a href="<?php=site_url('admin/masseurs'); ?>"> Massuers</a></li>
+                            <li><a href="<?=site_url('admin/users'); ?>"> Users</a></li>
                         </ul>
                     </li>
                     <li>
@@ -69,7 +69,6 @@
                         <table id="userTable" class="display" cellspacing="0" width="100%">
                             <thead>
                                 <tr>
-                                    <th><input type="checkbox" name="checkAll" id="checkAll" /> </th>
                                     <th>User Id</th>
                                     <th>Username</th>
                                     <th>First</th>
@@ -85,8 +84,7 @@
                     <div class="panel-footer">
                         <!-- <button id="addRow">Add Row</button> -->
                         <button id="addRow" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#user_modal">Add</button>
-                        <button class="btn btn-warning btn-sm">Download</button>
-                        <button id="btn-delete" class="btn btn-danger btn-sm confirm" type="button" disabled>Delete</button>
+                        <button class="btn btn-primary btn-sm">Download</button>
                     </div>
                 </div>
             </div>
@@ -133,6 +131,14 @@
                                     </div>
                                     <div class="col-sm-3"></div>
                                 </div>
+                                <!-- <div class="form-group form-group-sm">
+                                    <label for="address" class="control-label col-sm-2">Address</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" id="address" name="address" class="form-control" placeholder="Address" />
+                                    </div>
+                                    <div class="col-sm-3">
+                                    </div>
+                                </div> -->
                                 <div class="form-group form-group-sm">
                                     <label for="gender" class="control-label col-sm-2">Gender</label>
                                     <div class="col-sm-7">
@@ -194,8 +200,6 @@
     <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/v2/metisMenuSettings.js"></script>
 
     <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/v2/users2.js"></script>
-
-    <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/jquery.confirm.min.js"></script>
 
     </body>
 </html>

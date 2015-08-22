@@ -33,7 +33,7 @@ $(document).ready(function() {
             dataSrc: '',
         },
         columns: [
-            { data: "" },
+            { data: "userId" },
             { data: "userId" },
             { data: "username" },
             { data: "fName" },
@@ -47,9 +47,8 @@ $(document).ready(function() {
             {
                 "targets": 0,
                 "orderable": false,
-                "data": "",
-                "render": function() {
-                    return '<input type="checkbox" name="checkboxRow" />';
+                "render": function(data, type, full, meta) {
+                    return '<input type="checkbox" name="checkboxRow" value = "' + data + '" />';
                 }
             },
             {
@@ -71,6 +70,8 @@ $(document).ready(function() {
 
     var $table = $('#userTable');
     $table.DataTable(tableOptions);     // initialize it
+
+    var table = $('#userTable').DataTable();
  
 
     // when save is clicked.
@@ -116,8 +117,6 @@ $(document).ready(function() {
                     } else if (value.toLowerCase() == "put") {    //edit here
                         rowData.userId = $userId.val();
                         table.row(thisRow).data(rowData).draw();
-                    } else if (value.toLowerCase() == "delete") {
-                        console.log("deleting...");
                     } else {
                         console.log("Unknown method.");
                     }
@@ -146,8 +145,7 @@ $(document).ready(function() {
     });
 
  
-    //for update cmd
-    var table = $('#userTable').DataTable();
+    //for update cmd    
     $('#userTable tbody').on('click', 'tr', function () {        
         thisRow = this;
         showEditDialog(table.row(this).data());
@@ -176,9 +174,77 @@ $(document).ready(function() {
 
     // for every checkboxRow
     $table.delegate('input[name="checkboxRow"]', 'click', function() {
-        var countChecked = $('input[type="checkbox"]:checked').length;
+        if ($(this).prop("checked"))
+            $(this).addClass("rowSelected");
+        else
+            $(this).removeClass("rowSelected");
+
+        var countRowChecked = $('input[name="checkboxRow"]:checked').length;
         var countRowCheckboxes = $('input[type="checkbox"]').length - 1;
+
+        if (countRowChecked > 0)
+            $btnDelete.attr('disabled', false);
+        else
+            $btnDelete.attr('disabled', true);
         
+        (countRowChecked == countRowCheckboxes) ? $('#checkAll').prop('checked', true) : "";        
+        (this.checked == false) ? $('#checkAll').prop('checked', false) : "";
+    });
+
+
+    // for the delete button
+    $btnDelete.on('click', function() {
+        var countRowChecked = $('input[name="checkboxRow"]:checked').length;
+
+        if (countRowChecked > 0) {
+            $('.confirm').confirm({
+                text: "Are you sure you want to delete selected record(s)?",
+                title: "Confirmation required",
+                confirm: function(button) {
+                    var checkboxValues = $('input[name="checkboxRow"]:checked').map(function() {
+                        return this.value;
+                    }).get();
+
+                    var data = checkboxValues;
+
+                    $formUser.attr("data-x-http-method", "DELETE");
+                    
+                    $.ajax({
+                        type: "POST",
+                        url: $formUser.attr("action"),
+                        data: {userIds: data},
+                        dataType: "JSON",
+                        beforeSend: function(xhr) {
+                            if ($formUser.attr("data-x-http-method") != "")
+                                xhr.setRequestHeader('X-HTTP-METHOD', $formUser.attr("data-x-http-method"));
+                            else {
+                                alert("No value for X-HTTP-METHOD");
+                                return false;
+                            }
+                        },
+                        success: function(response) {
+                            if(parseInt(response.statusCode) == 0) {
+                                //table.rows('.rowSelected').remove().draw();
+
+                                // we want it reload for now because the above code isn't working.
+                                location.reload();
+                            } else {
+                                alert(response.statusMessage + ' ' + response.statusDesc);
+                            }
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            console.log(textStatus);
+                            console.log(errorThrown)
+                        }
+                    });
+                },
+                cancel: function(button) {
+                    // nothing
+                },
+                confirmButton: "Yes",
+                cancelButton: "No",
+            });
+        }
     });
     
 });

@@ -176,10 +176,10 @@ class Admin extends CI_Controller {
 
 		switch ($this->method) {
 			case "DELETE":
-				$this->_usersDelete();
+				$this->_users_Delete();
 				break;
 			case "POST":	//add a user
-				$this->_usersAdd();
+				$this->_users_Add();
 				break;
 			case "GET":
 				$currentUser = (string)$this->input->get("current-user");
@@ -199,7 +199,7 @@ class Admin extends CI_Controller {
 				}
 				break;
 			case 'PUT':
-				$this->_usersEdit();
+				$this->_users_Edit();
 				break;
 			default:
 				$this->_response(array("Invalid method."), 405);
@@ -207,7 +207,7 @@ class Admin extends CI_Controller {
 		}
 	}
 
-	private function _usersAdd() {
+	private function _users_Add() {
 		$midName = $this->input->post("midName");
 		if ($midName == null || empty($midName))
 			$midName = null;
@@ -236,7 +236,7 @@ class Admin extends CI_Controller {
 		$this->_response($this->Users->add($data));
 	}
 
-	private function _usersEdit() {
+	private function _users_Edit() {
 		$midName = $this->input->post("midName");
 		if ($midName == null || empty($midName))
 			$midName = null;
@@ -261,50 +261,12 @@ class Admin extends CI_Controller {
 		$this->_response($this->Users->edit($data));
 	}
 
-	private function _usersDelete() {
-		$id = $this->input->post("userId");
+	private function _users_Delete() {
+		$userIds = $this->input->post();
 		
-		$this->load->model("Admin_model");
-		if (!$this->Admin_model->usersDelete($id))
-			echo "Deleting record was not successful.";
-		else
-			return TRUE;
+		$this->load->model("Users");
+		$this->_response($this->Users->delete($userIds));
 	}
-
-	/*public function usersChangeStatus($id, $status) {
-		if ($status == "Y")
-			$status = "N";
-		else
-			$status = "Y";
-
-		$data = array("id" => $id, "status" => $status, "updatedBy" => $this->session->userdata["userId"]);
-
-		$this->load->model("Admin_model");
-		if (!$this->Admin_model->usersChangeStatus($data))
-			echo "Error updating status";
-		else
-			return true;
-	}*/
-
-	/*public function changeUserRights($id, $userRights) {
-		// administrator = 0; User = 1
-
-		$userRights = strtolower($userRights);
-		if ($userRights == "administrator")
-			$userRights = 1;
-		elseif ($userRights == 'user')
-			$userRights = 0;
-		else
-			return false;
-
-		$data = array("id" => $id, "role" => $userRights, "updatedBy" => $this->session->userdata["userId"]);
-
-		$this->load->model("Admin_model");
-		if (!$this->Admin_model->usersChangeRights($data))
-			echo "Error updating status";
-		else
-			return true;
-	}*/
 
 
 	/* controller for services */

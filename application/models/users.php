@@ -60,13 +60,13 @@ class Users extends My_Model {
 	public function add(array $data) {
 		$needles = array("username", "password", "fName", "lName", "gender", "active", "role", "createdBy", "companyId");
 
-		// we only accept Y/N for active
-		if (!in_array($data["active"], array("Y", "N")))
-			return array("statusCode" => parent::ERRORNO_INVALID_PARAMETER, "statusMessage" => parent::ERRORSTR_INVALID_PARAMETER, "statusDesc" => "Active value should only be Y or N.");
-
 		$status = $this->checkArrayKeyExists($needles, $data);
 		if ($status["statusCode"] != 0)
 			return $status;
+
+		// we only accept Y/N for active
+		if (!in_array($data["active"], array("Y", "N")))
+			return array("statusCode" => parent::ERRORNO_INVALID_PARAMETER, "statusMessage" => parent::ERRORSTR_INVALID_PARAMETER, "statusDesc" => "Active value should only be Y or N.");
 
 		$data["email"] = $data["username"]; // because they are the same; For future use.
 		$password = password_hash($data["password"], PASSWORD_BCRYPT);
@@ -175,5 +175,28 @@ class Users extends My_Model {
 		}
 
 		return array("statusCode" => parent::ERRORNO_OK, "statusMessage" => parent::ERRORSTR_OK);		
+	}
+
+	public function delete(array $data) {
+		if (!isset($data["userIds"]))
+			return array("statusCode" => parent::ERRORNO_INVALID_PARAMETER, "statusMessage" => parent::ERRORSTR_INVALID_PARAMETER, "statusDesc" => "Missing key: userIds");
+
+		// I think want the company_users in the future.
+		//$sql1 = "delete from company_users where userId in(" . implode(", ", $data["userIds"]) . ")";
+		$sql2 = "delete from users where userId in(" . implode(", ", $data["userIds"]) . ")";
+
+		$this->db->trans_start();
+		//$this->db->query($sql1);
+		$this->db->query($sql2);
+		$this->db->trans_complete();
+
+		if ($this->db->trans_status() === FALSE) {
+			$msg = $this->db->_error_number();
+            $num = $this->db->_error_message();
+            log_message("error", "Error running sql query in " . __METHOD__ . "(). ($num) $msg");
+            return array("statusCode" => parent::ERRORNO_DB_ERROR, "statusMessage" => parent::ERRORSTR_DB_ERROR, "statusDesc" => "");
+		}
+
+		return array("statusCode" => parent::ERRORNO_OK, "statusMessage" => parent::ERRORSTR_OK);
 	}
 }
