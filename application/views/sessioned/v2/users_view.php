@@ -85,8 +85,8 @@
                     <div class="panel-footer">
                         <!-- <button id="addRow">Add Row</button> -->
                         <button id="addRow" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#user_modal">Add</button>
-                        <button class="btn btn-warning btn-sm">Download</button>
                         <button id="btn-delete" class="btn btn-danger btn-sm confirm" type="button" disabled>Delete</button>
+                        <a href="http://yourspa.com/index.php/admin/users_download" class="btn btn-warning btn-sm">Download</a>
                     </div>
                 </div>
             </div>

@@ -157,8 +157,9 @@ $(document).ready(function() {
     });
 
 
-    //for all checkbox
     $btnDelete = $('#btn-delete');
+
+    //for all checkbox
     $('#checkAll').on('click', function() {
         if (this.checked == true) {
             var value = true;

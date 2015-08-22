@@ -185,9 +185,9 @@ class Admin extends CI_Controller {
 				$currentUser = (string)$this->input->get("current-user");
 
 				if ($currentUser != NULL && ($currentUser == "false"))
-					$this->_response($this->_getUsersExceptCurrentByCompanyId());
+					$this->_response($this->_getUsersByCompanyId(FALSE, $this->userId, $this->companyId));
 				elseif ($currentUser != NULL && ($currentUser == "true"))
-					$this->_response(array()); // no emplimentation yet
+					$this->_response($this->_getUsersByCompanyId(TRUE, $this->userId, $this->companyId));
 				else {
 					if ($this->role == 0) { // 0 = administrator
 						$this->load->view("templates/v2/header2", $headerData);
@@ -266,6 +266,27 @@ class Admin extends CI_Controller {
 		
 		$this->load->model("Users");
 		$this->_response($this->Users->delete($userIds));
+	}
+
+	private function _getUsersByCompanyId($includeCurrent, $myUserId, $myCompanyId) {
+		$this->load->model("Users");
+		return $this->Users->getUsersByCompanyId($includeCurrent, $this->userId, $this->companyId);
+	}
+
+	public function users_download() {
+		$fileName = 'users-records.csv';
+
+		header('Content-Description: File Transfer');
+		header('Content-Type: application/octet-stream');
+		header('Content-Disposition: attachment; filename=' . $fileName);
+		header('Content-Transfer-Encoding: binary');
+		header('Expires: 0');
+		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+
+		$this->load->helper("utility");
+		$csv = arrayToCSV($this->_getUsersByCompanyId(TRUE, $this->userId, $this->companyId));
+
+		echo $csv;
 	}
 
 

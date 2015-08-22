@@ -12,6 +12,26 @@ class Users extends My_Model {
 		return $query->result_array();
 	}
 
+	public function getUsersByCompanyId($includeCurrent, $myUserId, $myCompanyId) {
+		if ($includeCurrent) {
+			$query = "SELECT userId,username,fName,midName,lName,gender,active,role from users WHERE companyId = ?";
+			$bindArray = array($myCompanyId);
+		} else {
+			$query = "SELECT userId,username,fName,midName,lName,gender,active,role from users WHERE userId <> ? and companyId = ?";
+			$bindArray = array($myUserId, $myCompanyId);
+		}
+
+		$query = $this->db->query($query, $bindArray);
+		if (!$query) {
+			$msg = $this->db->_error_number();
+            $num = $this->db->_error_message();
+            log_message("error", "Error running sql query in " . __METHOD__ . "(). ($num) $msg");
+            return array("statusCode" => parent::ERRORNO_DB_ERROR, "statusMessage" => parent::ERRORSTR_DB_ERROR, "statusDesc" => "");
+		}
+
+		return $query->result_array();
+	}
+
 	private function countActiveUsersByCompanyId($companyId) {
 		if (intval($companyId) < 1)
 			return array("statusCode" => parent::ERRORNO_INVALID_PARAMETER, "statusMessage" => parent::ERRORSTR_INVALID_PARAMETER, "statusDesc" => "");
@@ -161,7 +181,7 @@ class Users extends My_Model {
 		$status = $this->countActiveUsersByCompanyId($data["companyId"]);
 		$userStatus = $this->_getUserStatus($data["userId"], $data["companyId"]);
 		if (($status["statusCode"] != 0) && ($userStatus["active"] == "N") && ($data["active"] == "Y"))
-			return array("statusCode" => parent::ERRORNO_MAX_REACHED, "statusMessage" => parent::ERRORSTR_MAX_REACHED, "statusDesc" => 'Deactivate other users first to add new one.');
+			return array("statusCode" => parent::ERRORNO_MAX_REACHED, "statusMessage" => parent::ERRORSTR_MAX_REACHED, "statusDesc" => 'Deactivate other user(s) first to activate this user.');
 
 		$data["email"] = $data["username"]; // they are the same.
 
