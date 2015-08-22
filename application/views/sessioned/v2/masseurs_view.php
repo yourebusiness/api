@@ -3,14 +3,14 @@
         <nav class="navbar navbar-default">
             <div class="myContainer">
                 <div class="navbar-header">
-					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-						<span class="sr-only">Toggle Navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</button>
-					<a href="<?=site_url('admin');?>" class="navbar-brand"><img src="../../../images/spa_logo.png"></a>
-				</div>
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle Navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="<?=site_url('admin');?>" class="navbar-brand"><img src="../../../images/spa_logo.png"></a>
+                </div>
 
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="menu-nav menubar-right">
@@ -33,7 +33,7 @@
                         <a href="#"><i class="fa fa-dashboard fa-fw"></i> Administration <i class="fa fa-minus"></i></a>
                         <ul class="nav nav-second-level collapse in" aria-expanded="false">
                             <li><a href="<?=site_url("admin/adminLogin") . "?v=companyProfile"; ?>"> Company Profile</a></li>
-                            <li class="active"><a href="<?php=site_url('admin/masseurs'); ?>"> Massuers</a></li>
+                            <li class="active"><a href="#"> Massuers</a></li>
                             <li><a href="<?=site_url('admin/users'); ?>"> Users</a></li>
                         </ul>
                     </li>
@@ -69,29 +69,29 @@
                         <table id="userTable" class="display" cellspacing="0" width="100%">
                             <thead>
                                 <tr>
-                                    <th>User Id</th>
-                                    <th>Username</th>
+                                    <th><input type="checkbox" name="checkAll" id="checkAll" /> </th>
+                                    <th>Masseur Id</th>
                                     <th>First</th>
                                     <th>Middle</th>
                                     <th>Last</th>
                                     <th>Gender</th>
+                                    <th>Nickname</th>
                                     <th>Active</th>
-                                    <th>Role</th>
                                 </tr>
                             </thead>
                         </table>
                     </div>
                     <div class="panel-footer">
-                        <!-- <button id="addRow">Add Row</button> -->
-                        <button id="addRow" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#user_modal">Add</button>
-                        <button class="btn btn-primary btn-sm">Download</button>
+                        <button id="addRow" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#masseur_modal">Add</button>
+                        <button id="btn-delete" class="btn btn-danger btn-sm confirm" type="button" disabled>Delete</button>
+                        <a href="http://yourspa.com/index.php/admin/masseurs_download" class="btn btn-warning btn-sm">Download</a>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- add modal -->
-        <div class="modal fade" id="user_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal fade" id="masseur_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -103,19 +103,12 @@
                             <form id="form_user" action="users" method="post" class="form-horizontal" role="form">
                                 <input id="userId" name="userId" type="hidden" value="0" />
                                 <div class="form-group form-group-sm">
-                                    <label for="username" class="control-label col-sm-2">Email</label>
+                                    <label for="fName" class="control-label col-sm-2">First</label>
                                     <div class="col-sm-7">
-                                        <input type="text" id="username" name="username" class="form-control" placeholder="Email" />
+                                        <input type="text" id="fName" name="fName" class="form-control" placeholder="First" />
                                     </div>
                                     <div class="col-sm-3">
                                     </div>
-                                </div>
-                                <div class="form-group form-group-sm">
-                                    <label for="fName" class="control-label col-sm-2">First</label>
-                                    <div class="col-sm-7">
-                                        <input type="text" id="fName" name="fName" class="form-control" placeholder="First name" />
-                                    </div>
-                                    <div class="col-sm-3"></div>
                                 </div>
                                 <div class="form-group form-group-sm">
                                     <label for="midName" class="control-label col-sm-2">Middle</label>
@@ -131,14 +124,6 @@
                                     </div>
                                     <div class="col-sm-3"></div>
                                 </div>
-                                <!-- <div class="form-group form-group-sm">
-                                    <label for="address" class="control-label col-sm-2">Address</label>
-                                    <div class="col-sm-7">
-                                        <input type="text" id="address" name="address" class="form-control" placeholder="Address" />
-                                    </div>
-                                    <div class="col-sm-3">
-                                    </div>
-                                </div> -->
                                 <div class="form-group form-group-sm">
                                     <label for="gender" class="control-label col-sm-2">Gender</label>
                                     <div class="col-sm-7">
@@ -150,21 +135,18 @@
                                     <div class="col-sm-3"></div>
                                 </div>
                                 <div class="form-group form-group-sm">
+                                    <label for="nickname" class="control-label col-sm-2">Nickname</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" id="nickname" name="nickname" class="form-control" placeholder="Nickname" />
+                                    </div>
+                                    <div class="col-sm-3"></div>
+                                </div>
+                                <div class="form-group form-group-sm">
                                     <label for="active" class="control-label col-sm-2">Active</label>
                                     <div class="col-sm-7">
                                         <select class="form-control" id="active" name="active">
                                             <option value="Y">Yes</option>
                                             <option value="N">No</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-sm-3"></div>
-                                </div>
-                                <div class="form-group form-group-sm">
-                                    <label for="role" class="control-label col-sm-2">Role</label>
-                                    <div class="col-sm-7">
-                                        <select class="form-control" id="role" name="role">
-                                            <option value="0">Administrator</option>
-                                            <option value="1">User</option>
                                         </select>
                                     </div>
                                     <div class="col-sm-3"></div>
@@ -199,7 +181,9 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/metisMenu/2.0.2/metisMenu.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/v2/metisMenuSettings.js"></script>
 
-    <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/v2/users2.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/v2/masseurs.js"></script>
+
+    <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/jquery.confirm.min.js"></script>
 
     </body>
 </html>

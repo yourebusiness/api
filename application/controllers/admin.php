@@ -52,7 +52,7 @@ class Admin extends CI_Controller {
 				->set_output(json_encode($data));
 	}
 
-	public function masseur() {
+	/*public function masseur() {
 		$arr = array("companyId" => $this->companyId);
 		
 		$masseurs = $this->showMasseurs($arr);
@@ -65,6 +65,50 @@ class Admin extends CI_Controller {
 		$data["username"] = $this->username;
 		$this->load->view("templates/header", $data);
 		$this->load->view("sessioned/masseur_view", $data); // includes footer
+	}*/
+
+	public function masseurs($list = "") {
+		$this->method = $_SERVER["REQUEST_METHOD"];
+
+		if ($this->method == "POST" && array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER)) {
+			if ($_SERVER["HTTP_X_HTTP_METHOD"] == "DELETE")
+				$this->method = "DELETE";
+			elseif ($_SERVER["HTTP_X_HTTP_METHOD"] == "PUT")
+				$this->method = "PUT";
+			else
+				throw new Exception("Unexpected Header");
+		}
+
+		switch ($this->method) {
+			case "DELETE":
+				$this->_masseurs_delete();
+				break;
+			case "POST":	//add a user
+				$this->_masseurs_add();
+				break;
+			case "GET":
+				if ($list == "list") {
+					$this->_getMasseursListByCompanyId($this->companyId);
+				} else {
+					$headerData["title"] = "Masseurs list";
+					$headerData['username'] = $this->username;
+
+					$this->load->view("templates/v2/header2", $headerData);
+				    $this->load->view("sessioned/v2/masseurs_view");
+				}
+				break;
+			case 'PUT':
+				$this->_masseurs_Edit();
+				break;
+			default:
+				$this->_response(array("Invalid method."), 405);
+				break;
+		}
+	}
+
+	private function _getMasseursListByCompanyId($companyId) {
+		$this->load->model("Masseurs");
+		$this->_response($this->Masseurs->getMasseursListByCompanyId($companyId));
 	}
 
 	private function showMasseurs($arr) {
@@ -146,11 +190,6 @@ class Admin extends CI_Controller {
 
 	/* controller for users */
 
-	private function getAllUsers() {
-		$this->load->model("Admin_model");
-		return $this->Admin_model->getAllUsers();
-	}
-
 	private function _getUsersExceptCurrentByCompanyId() {
 		if ($this->role == 0) {
 			$this->load->model("Users");
@@ -208,6 +247,9 @@ class Admin extends CI_Controller {
 	}
 
 	private function _users_Add() {
+		if ($this->role < 1)
+			return array("statusCode" => parent::ERRORNO_NOT_AUTHORIZED, "statusMessage" => parent::ERRORSTR_NOT_AUTHORIZED, "statusDesc" => "");
+
 		$midName = $this->input->post("midName");
 		if ($midName == null || empty($midName))
 			$midName = null;
@@ -237,6 +279,9 @@ class Admin extends CI_Controller {
 	}
 
 	private function _users_Edit() {
+		if ($this->role < 1)
+			return array("statusCode" => parent::ERRORNO_NOT_AUTHORIZED, "statusMessage" => parent::ERRORSTR_NOT_AUTHORIZED, "statusDesc" => "");
+
 		$midName = $this->input->post("midName");
 		if ($midName == null || empty($midName))
 			$midName = null;
@@ -262,6 +307,9 @@ class Admin extends CI_Controller {
 	}
 
 	private function _users_Delete() {
+		if ($this->role < 1)
+			return array("statusCode" => parent::ERRORNO_NOT_AUTHORIZED, "statusMessage" => parent::ERRORSTR_NOT_AUTHORIZED, "statusDesc" => "");
+
 		$userIds = $this->input->post();
 		
 		$this->load->model("Users");
@@ -277,7 +325,8 @@ class Admin extends CI_Controller {
 		$fileName = 'users-records.csv';
 
 		header('Content-Description: File Transfer');
-		header('Content-Type: application/octet-stream');
+		//header('Content-Type: application/octet-stream');
+		header('Content-Type: text/csv');
 		header('Content-Disposition: attachment; filename=' . $fileName);
 		header('Content-Transfer-Encoding: binary');
 		header('Expires: 0');

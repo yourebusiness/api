@@ -6,12 +6,6 @@ class Users extends My_Model {
 		parent::__construct();
 	}
 
-	public function getUsersExceptCurrentByCompanyId($myUserId, $companyId) {
-		$query = "select userId,username,fName,midName,lName,gender,active,role from users where userId <> ? and companyId = ?";
-		$query = $this->db->query($query, array($myUserId, $companyId));
-		return $query->result_array();
-	}
-
 	public function getUsersByCompanyId($includeCurrent, $myUserId, $myCompanyId) {
 		if ($includeCurrent) {
 			$query = "SELECT userId,username,fName,midName,lName,gender,active,role from users WHERE companyId = ?";

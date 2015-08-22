@@ -33,7 +33,7 @@
                         <a href="#"><i class="fa fa-dashboard fa-fw"></i> Administration <i class="fa fa-plus"></i></a>
                         <ul class="nav nav-second-level collapse" aria-expanded="false">
                             <li><a href="<?=site_url("admin/adminLogin") . "?v=companyProfile"; ?>"> Company Profile</a></li>
-                            <li><a href="#"> Massuers</a></li>
+                            <li><a href="<?=site_url('admin/masseurs'); ?>"> Massuers</a></li>
                             <li><a href="<?=site_url('admin/users'); ?>"> Users</a></li>
                         </ul>
                     </li>

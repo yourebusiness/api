@@ -33,7 +33,7 @@
                         <a href="#"><i class="fa fa-dashboard fa-fw"></i> Administration <i class="fa fa-minus"></i></a>
                         <ul class="nav nav-second-level collapse in" aria-expanded="false">
                             <li><a href="<?=site_url("admin/adminLogin") . "?v=companyProfile"; ?>"> Company Profile</a></li>
-                            <li><a href="#"> Massuers</a></li>
+                            <li><a href="<?=site_url('admin/masseurs'); ?>"> Massuers</a></li>
                             <li class="active"><a href="<?=site_url('admin/users'); ?>"> Users</a></li>
                         </ul>
                     </li>
@@ -83,7 +83,6 @@
                         </table>
                     </div>
                     <div class="panel-footer">
-                        <!-- <button id="addRow">Add Row</button> -->
                         <button id="addRow" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#user_modal">Add</button>
                         <button id="btn-delete" class="btn btn-danger btn-sm confirm" type="button" disabled>Delete</button>
                         <a href="http://yourspa.com/index.php/admin/users_download" class="btn btn-warning btn-sm">Download</a>
@@ -193,7 +192,7 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/metisMenu/2.0.2/metisMenu.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/v2/metisMenuSettings.js"></script>
 
-    <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/v2/users2.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/v2/users.js"></script>
 
     <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/jquery.confirm.min.js"></script>
 
