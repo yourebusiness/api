@@ -1,26 +1,24 @@
 $(document).ready(function() {
 
     showEditDialog = function(data) {
-        $('#user_modal .modal-title').text("Edit user");
-        $('#userId').val(data.userId);
-        $('#username').val(data.username);
+        $('#masseur_modal .modal-title').text("Edit Masseur record");
+        $('#masseurId').val(data.masseurId);
         $('#fName').val(data.fName);
         $('#midName').val(data.midName);
         $('#lName').val(data.lName);
         $('#gender').val(data.gender);
+        $('#nickname').val(data.nickname);
         $('#active').val(data.active);
-        $('#role').val(data.role);
     }
 
-    var $userId = $('#userId'),
-        $username = $('#username'),
+    var $masseurId = $('#masseurId'),
         $fName = $('#fName'),
         $midName = $('#midName'),
         $lName = $('#lName'),
         $gender = $('#gender'),
+        $nickname = $('#nickname'),
         $active = $('#active'),
-        $role = $('#role'),
-        $formUser = $('#form_user'),
+        $formMasseur = $('#form_masseur'),
         $checkboxHeader = $('#checkAll');
 
     var thisRow;
@@ -30,19 +28,18 @@ $(document).ready(function() {
         "searching": true,
         "ordering": true,
         "ajax": {
-            url: 'http://yourspa.com/index.php/admin/users?current-user=false',
+            url: 'http://yourspa.com/index.php/admin/masseurs/list',
             dataSrc: '',
         },
         columns: [
-            { data: "userId" },
-            { data: "userId" },
-            { data: "username" },
+            { data: "masseurId" },
+            { data: "masseurId" },
             { data: "fName" },
             { data: "midName" },
             { data: "lName" },
             { data: "gender" },
+            { data: "nickname" },
             { data: "active" },
-            { data: "role" },
         ],
         "columnDefs": [
             {
@@ -54,78 +51,70 @@ $(document).ready(function() {
             },
             {
                 "targets": 1,
-                "data": "userId",
+                "data": "masseurId",
                 "render": function(data, type, full, meta) {
-                    return '<a href="#" data-toggle="modal" data-target="#user_modal">'+data+'</a>';
-                },
-            },
-            {
-                "targets" : 8,
-                "data": "role",
-                "render": function(data, type, full, meta) {
-                    return (data == '0') ? 'Administrator' : 'User';
+                    return '<a href="#" data-toggle="modal" data-target="#masseur_modal">' + data + '</a>';
                 },
             },
         ]
     };
 
-    var $table = $('#userTable');
+    var $table = $('#masseurTable');
     $table.DataTable(tableOptions);     // initialize it
 
-    var table = $('#userTable').DataTable();
 
-    if (table.rows().data().length == 0)
-        $checkboxHeader.attr('disabled', true);
+    var table = $('#masseurTable').DataTable();
+
+    //if (table.rows().data().length == 0)
+    //    $checkboxHeader.attr('disabled', true);
  
 
     // when save is clicked.
     $('#save').on('click', function() {
-        var action = $formUser.attr("action");
+        var action = $formMasseur.attr("action");
 
         var data = {
-            userId: $userId.val(),
-            username: $username.val(),
+            masseurId: $masseurId.val(),
             fName: $fName.val(),
             midName: $midName.val(),
             lName: $lName.val(),
             gender: $gender.val(),
+            nickname: $nickname.val(),
             active: $active.val(),
-            role: $role.val(),
         };
 
         $.ajax({
-            type: $formUser.attr("method"),
+            type: $formMasseur.attr("method"),
             url: action,
             data: data,
             beforeSend: function(xhr) {
-                if ($formUser.attr("data-x-http-method") != "")
-                    xhr.setRequestHeader('X-HTTP-METHOD', $formUser.attr("data-x-http-method"));
+                if ($formMasseur.attr("data-x-http-method") != "")
+                    xhr.setRequestHeader('X-HTTP-METHOD', $formMasseur.attr("data-x-http-method"));
             },
             success: function(response) {
                 if(parseInt(response.statusCode) == 0) {
-                    var value = $formUser.attr("data-x-http-method");
+                    var value = $formMasseur.attr("data-x-http-method");
                     var rowData = {};
 
-                    rowData.username = $username.val();
                     rowData.fName = $fName.val();
                     rowData.midName = $midName.val();
                     rowData.lName = $lName.val();
                     rowData.gender = $gender.val();
+                    rowData.nickname = $nickname.val();
                     rowData.active = $active.val();
-                    rowData.role = $role.val();
 
                     if (value == "") { //add
-                        rowData.userId = response.newUserId;
+                        rowData.masseurId = response.newMasseurId;
                         var json = JSON.parse(JSON.stringify(rowData));
                         table.row.add(json).draw();
                     } else if (value.toLowerCase() == "put") {    //edit here
-                        rowData.userId = $userId.val();
+                        rowData.masseurId = $masseurId.val();
                         table.row(thisRow).data(rowData).draw();
                     } else {
                         console.log("Unknown method.");
                     }
 
-                    $('#form_user').find('input[type=text]').val('');
+                    $('#form_masseur').find('input[type=text]').val('');
                     $('#cancel').click();
                 } else {
                     alert(response.statusMessage + ' ' + response.statusDesc);
@@ -141,23 +130,23 @@ $(document).ready(function() {
 
     // for add cmd
     $('#addRow').on('click', function() {
-        $('#user_modal .modal-title').text("Add user");
-        $formUser.find('input[type=text]').val('');
-        $userId.val('0');
-        $formUser.attr("method", "POST");
-        $formUser.attr("data-x-http-method", '');
+        $('#masseur_modal .modal-title').text("Add masseur record");
+        $formMasseur.find('input[type=text]').val('');
+        $masseurId.val('0');
+        $formMasseur.attr("method", "POST");
+        $formMasseur.attr("data-x-http-method", '');
     });
 
  
     //for update cmd    
-    $('#userTable tbody').on('click', 'tr', function () {        
+    $('#masseurTable tbody').on('click', 'tr', function () {        
         thisRow = this;
         showEditDialog(table.row(this).data());
 
-        $userId.val(table.row(this).data().userId);
+        $masseurId.val(table.row(this).data().masseurId);
 
-        $formUser.attr("method", "POST");
-        $formUser.attr("data-x-http-method", 'PUT');
+        $formMasseur.attr("method", "POST");
+        $formMasseur.attr("data-x-http-method", 'PUT');
     });
 
 
@@ -165,6 +154,9 @@ $(document).ready(function() {
 
     //for all checkbox
     $('#checkAll').on('click', function() {
+        if (table.rows().data().length == 0)
+            return;
+
         if (this.checked == true) {
             var value = true;
             $btnDelete.attr('disabled', false);
@@ -212,16 +204,16 @@ $(document).ready(function() {
 
                     var data = checkboxValues;
 
-                    $formUser.attr("data-x-http-method", "DELETE");
+                    $formMasseur.attr("data-x-http-method", "DELETE");
                     
                     $.ajax({
                         type: "POST",
-                        url: $formUser.attr("action"),
-                        data: {userIds: data},
+                        url: $formMasseur.attr("action"),
+                        data: {masseurIds: data},
                         dataType: "JSON",
                         beforeSend: function(xhr) {
-                            if ($formUser.attr("data-x-http-method") != "")
-                                xhr.setRequestHeader('X-HTTP-METHOD', $formUser.attr("data-x-http-method"));
+                            if ($formMasseur.attr("data-x-http-method") != "")
+                                xhr.setRequestHeader('X-HTTP-METHOD', $formMasseur.attr("data-x-http-method"));
                             else {
                                 alert("No value for X-HTTP-METHOD");
                                 return false;

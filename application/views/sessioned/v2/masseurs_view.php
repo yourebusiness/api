@@ -64,9 +64,9 @@
         <div id="main-content">
             <div class="row">
                 <div class="panel panel-success">
-                    <div class="panel-heading">List of users</div>
+                    <div class="panel-heading">List of Masseurs Records</div>
                     <div class="panel-body">                        
-                        <table id="userTable" class="display" cellspacing="0" width="100%">
+                        <table id="masseurTable" class="display" cellspacing="0" width="100%">
                             <thead>
                                 <tr>
                                     <th><input type="checkbox" name="checkAll" id="checkAll" /> </th>
@@ -84,7 +84,7 @@
                     <div class="panel-footer">
                         <button id="addRow" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#masseur_modal">Add</button>
                         <button id="btn-delete" class="btn btn-danger btn-sm confirm" type="button" disabled>Delete</button>
-                        <a href="http://yourspa.com/index.php/admin/masseurs_download" class="btn btn-warning btn-sm">Download</a>
+                        <a href="http://yourspa.com/index.php/admin/masseurslist_download" class="btn btn-warning btn-sm">Download</a>
                     </div>
                 </div>
             </div>
@@ -96,12 +96,12 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Add new user</h4>
+                        <h4 class="modal-title" id="myModalLabel">Add new masseur record</h4>
                     </div>
                     <div class="modal-body">
                         <div class="container-fluid">
-                            <form id="form_user" action="users" method="post" class="form-horizontal" role="form">
-                                <input id="userId" name="userId" type="hidden" value="0" />
+                            <form id="form_masseur" action="masseurs" method="post" class="form-horizontal" role="form">
+                                <input id="masseurId" name="masseurId" type="hidden" value="0" />
                                 <div class="form-group form-group-sm">
                                     <label for="fName" class="control-label col-sm-2">First</label>
                                     <div class="col-sm-7">
@@ -155,11 +155,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <div class="col-sm-8">
-                            <div id="alert2" class="alert alert-danger alert-dismissible fade in" role="alert">
-                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            </div>
-                        </div>
+                        <div class="col-sm-8"></div>
                         <div class="col-sm-4">
                             <span>
                                 <button id="save" type="button" class="btn btn-primary btn-sm" data-toggle="popover" data-trigger="focus" title="Error" data-content="Fill-out the form completely." data-placement="top">Save</button>

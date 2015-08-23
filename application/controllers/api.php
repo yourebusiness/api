@@ -26,7 +26,7 @@ class Api extends CI_Controller {
 				$this->load->helper('record');
 				$row = getRecordsForLoginByUsername($data["username"]);
 
-				$sess_data = array( "username" => $data["username"], "companyId" => $row["companyId"], "uniqueCode" => $row["uniqueCode"], "userId" => $row["userId"], "role" => $row["role"]); // username = email
+				$sess_data = array( "username" => $data["username"], "companyId" => $row["companyId"], "uniqueCode" => $row["uniqueCode"], "userId" => $row["userId"], "id" => $row["id"], "role" => $row["role"]); // username = email
 				$this->session->set_userdata($sess_data);
 
 				redirect(site_url("admin"));

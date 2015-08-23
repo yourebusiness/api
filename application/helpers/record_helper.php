@@ -6,7 +6,7 @@ if ( ! function_exists('getRecordsForLoginByUsername')) {
         $ci =& get_instance();
         $ci->load->database();
 
-        $query = "select companyId, userId, role, uniqueCode FROM users JOIN company USING(companyId) WHERE username = ?";
+        $query = "select id, userId, companyId, role, uniqueCode FROM users JOIN company USING(companyId) WHERE username = ?";
         $query = $ci->db->query($query, $username);
         if (!$query)
             return FALSE;
@@ -22,12 +22,12 @@ if ( ! function_exists('getRecordsForLoginByUsername')) {
 }
 
 if ( ! function_exists('checkUserRightsByUserId')) {        
-    function checkUserRightsByUserId($userId) {        
+    function checkUserRightsByUserId($id) {        
         $ci =& get_instance();     
         $ci->load->database();     
        
-        $query = "select role from users where userId = ?";        
-        $query = $ci->db->query($query, $userId);      
+        $query = "select role from users where id = ?";        
+        $query = $ci->db->query($query, $id);      
         if (!$query)       
             return false;      
         else {     

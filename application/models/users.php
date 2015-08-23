@@ -7,12 +7,13 @@ class Users extends My_Model {
 	}
 
 	public function getUsersByCompanyId($includeCurrent, $myUserId, $myCompanyId) {
+		$query = "SELECT userId,username,fName,midName,lName,gender,active,role from users WHERE companyId = ?";
+
 		if ($includeCurrent) {
-			$query = "SELECT userId,username,fName,midName,lName,gender,active,role from users WHERE companyId = ?";
 			$bindArray = array($myCompanyId);
 		} else {
-			$query = "SELECT userId,username,fName,midName,lName,gender,active,role from users WHERE userId <> ? and companyId = ?";
-			$bindArray = array($myUserId, $myCompanyId);
+			$query .= " and userId <> ?";
+			$bindArray = array($myCompanyId, $myUserId);
 		}
 
 		$query = $this->db->query($query, $bindArray);
@@ -23,7 +24,10 @@ class Users extends My_Model {
             return array("statusCode" => parent::ERRORNO_DB_ERROR, "statusMessage" => parent::ERRORSTR_DB_ERROR, "statusDesc" => "");
 		}
 
-		return $query->result_array();
+		if ($query->num_rows())
+			return $query->result_array();
+		else
+			return array();
 	}
 
 	private function countActiveUsersByCompanyId($companyId) {
@@ -72,6 +76,9 @@ class Users extends My_Model {
 
 	// add new record
 	public function add(array $data) {
+		if ($this->session->userdata["role"] > 0)
+			return array("statusCode" => parent::ERRORNO_NOT_AUTHORIZED, "statusMessage" => parent::ERRORSTR_NOT_AUTHORIZED, "statusDesc" => "");
+		
 		$needles = array("username", "password", "fName", "lName", "gender", "active", "role", "createdBy", "companyId");
 
 		$status = $this->checkArrayKeyExists($needles, $data);
@@ -166,6 +173,9 @@ class Users extends My_Model {
 
     // edit existing record
     public function edit(array $data) {
+    	if ($this->session->userdata["role"] > 0)
+			return array("statusCode" => parent::ERRORNO_NOT_AUTHORIZED, "statusMessage" => parent::ERRORSTR_NOT_AUTHORIZED, "statusDesc" => "");
+
 		$needles = array("userId", "username", "fName", "lName", "gender", "active", "role", "updatedBy", "companyId");
 		$status = $this->checkArrayKeyExists($needles, $data);
 		if ($status["statusCode"] != 0) // meaning not OK = 0
@@ -192,8 +202,18 @@ class Users extends My_Model {
 	}
 
 	public function delete(array $data) {
+		if ($this->session->userdata["role"] > 0)
+			return array("statusCode" => parent::ERRORNO_NOT_AUTHORIZED, "statusMessage" => parent::ERRORSTR_NOT_AUTHORIZED, "statusDesc" => "");
+
 		if (!isset($data["userIds"]))
 			return array("statusCode" => parent::ERRORNO_INVALID_PARAMETER, "statusMessage" => parent::ERRORSTR_INVALID_PARAMETER, "statusDesc" => "Missing key: userIds");
+
+		$countIds = count($data);
+		$cannotBeDeleted = 0;
+
+		foreach ($data["userIds"] as $id)
+			if (!$this->okToDeleteRecord($id))
+				$cannotBeDeleted++;
 
 		// I think want the company_users in the future.
 		//$sql1 = "delete from company_users where userId in(" . implode(", ", $data["userIds"]) . ")";
@@ -211,6 +231,9 @@ class Users extends My_Model {
             return array("statusCode" => parent::ERRORNO_DB_ERROR, "statusMessage" => parent::ERRORSTR_DB_ERROR, "statusDesc" => "");
 		}
 
-		return array("statusCode" => parent::ERRORNO_OK, "statusMessage" => parent::ERRORSTR_OK);
+		if ($cannotBeDeleted)
+			return array("statusCode" => parent::ERRORNO_OK, "statusMessage" => parent::ERRORSTR_OK, "statusDesc" => "One or more record(s) cannot be deleted.");
+		else
+			return array("statusCode" => parent::ERRORNO_OK, "statusMessage" => parent::ERRORSTR_OK);
 	}
 }

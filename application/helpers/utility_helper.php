@@ -8,11 +8,27 @@ if ( ! function_exists('generateRandomString')) {
 
 if ( ! function_exists('arrayToCSV')) {
 	function arrayToCSV(array $data) {
-		$columns = array_keys($data[0]);
+		if (isset($data[0]))
+			$columns = array_keys($data[0]);
+		else
+			return $csv = "";	// if nothing, early exit
+
+		// we want to avoid the comma inside the column names
+		foreach ($columns as $key => $column)
+			if (strpos($column, ","))
+				$columns[$key] = '"' . $column . '"';
+
 		$csv = implode(",", $columns) . "\r\n";
 
-    	foreach ($data as $row)
+		// we want to avoid the comma inside the field values
+    	foreach ($data as $row) {
+    		foreach ($row as $key => $field) {
+    			if (strpos($field, ","))
+					$row[$key] = '"' . $field . '"';
+    		}
+
     		$csv .= implode(",", $row) . "\r\n";
+    	}
 
     	return $csv;
 	}

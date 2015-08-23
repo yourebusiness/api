@@ -2,6 +2,7 @@
 
 class Admin extends CI_Controller {
 	private $username = "";
+	private $id = 0;
 	private $userId = 0;
 	private $companyId = 0;
 	private $role = "-1";	//enum("0, 1")
@@ -16,6 +17,7 @@ class Admin extends CI_Controller {
 		else {
 			$this->username = $this->session->userdata["username"];
 			$this->userId = $this->session->userdata["userId"];
+			$this->id = $this->session->userdata["id"];
 			$this->companyId = $this->session->userdata["companyId"];
 			$this->role = $this->session->userdata["role"];
 		}
@@ -87,7 +89,7 @@ class Admin extends CI_Controller {
 				$this->_masseurs_add();
 				break;
 			case "GET":
-				if ($list == "list") {
+				if (trim($list) == "list") {
 					$this->_getMasseursListByCompanyId($this->companyId);
 				} else {
 					$headerData["title"] = "Masseurs list";
@@ -98,7 +100,7 @@ class Admin extends CI_Controller {
 				}
 				break;
 			case 'PUT':
-				$this->_masseurs_Edit();
+				$this->_masseurs_edit();
 				break;
 			default:
 				$this->_response(array("Invalid method."), 405);
@@ -111,80 +113,70 @@ class Admin extends CI_Controller {
 		$this->_response($this->Masseurs->getMasseursListByCompanyId($companyId));
 	}
 
-	private function showMasseurs($arr) {
-		$this->load->model("Admin_model");
-		return $this->Admin_model->showMasseurs($arr);
-	}
-
-	public function masseuradd_view() {
-		$data["title"] = "Add Masseur";
-		$data["username"] = $this->username;
-		$this->load->view("templates/header", $data);
-		$this->load->view("sessioned/masseuradd_view");
-	}
-
-	public function masseuradd() {
-		
-		$midName = $this->input->get("midName");
-		if ($midName == null || $midName == "")
-			$midName = null;
-
+	private function _masseurs_add() {
 		$data = array("companyId" => $this->session->userdata["companyId"],
-					"createdBy" => $this->session->userdata["userId"],
-					"nickname" => $this->input->get("nickname"),
-					"fName" => $this->input->get("fName"),
-					"midName" => $midName,
-					"lName" => $this->input->get("lName")
+					"createdBy" => $this->session->userdata["id"],
+					"fName" => $this->input->post("fName"),
+					"midName" => $this->input->post("midName"),
+					"lName" => $this->input->post("lName"),
+					"gender" => $this->input->post("gender"),
+					"nickname" => $this->input->post("nickname"),
+					"active" => $this->input->post("active"),
 				);
 
-		$this->load->model("Admin_model");
-		if (!$this->Admin_model->masseurAdd($data))
-			echo "Error adding new record.";
-		else
-			return true;
+		$this->load->model("Masseurs");
+		$this->_response($this->Masseurs->add($data));
 	}
 
-	public function masseurChangeStatus($id, $status) {
-		if ($status == "Y")
-			$status = "N";
-		else
-			$status = "Y";
-
-		$data = array("id" => $id, "status" => $status, "updatedBy" => $this->session->userdata["userId"]);
-
-		$this->load->model("Admin_model");
-		if (!$this->Admin_model->masseurChangeStatus($data))
-			echo "Error updating status";
-		else
-			return true;
-	}
-
-	public function masseurDelete($id) {
-		$this->load->model("Admin_model");
-		if (!$this->Admin_model->masseurDelete($id))
-			echo "Error deleting masseur.";
-		else
-			return true;
-	}
-
-	public function masseurEdit($id = 0, $nickname = "", $fName = "", $midName = "", $lName = "") {
-		$midName = $this->input->get("midName");
+	private function _masseurs_edit() {
+		$midName = $this->input->post("midName");
 		if ($midName == null || empty($midName))
 			$midName = null;
+		$nickname = $this->input->post("nickname");
+		if ($nickname == null || empty($nickname))
+			$nickname = null;
 
-		$data = array("id" => $this->input->get("id"),
-					"updatedBy" => $this->session->userdata["userId"],
-					"nickname" => $this->input->get("nickname"),
-					"fName" => $this->input->get("fName"),
+		$data = array("masseurId" => $this->input->post("masseurId"),
+					"fName" => $this->input->post("fName"),
 					"midName" => $midName,
-					"lName" => $this->input->get("lName")
+					"lName" => $this->input->post("lName"),
+					"gender" => $this->input->post("gender"),
+					"nickname" => $nickname,
+					"active" => $this->input->post("active"),
+					"updatedBy" => $this->session->userdata["id"],
+					"companyId" => $this->companyId,
 				);
 
-		$this->load->model("Admin_model");
-		if (!$this->Admin_model->masseurEdit($data))
-			echo "Error adding new record.";
-		else
-			return true;
+		$this->load->model("Masseurs");
+		$this->_response($this->Masseurs->edit($data));
+	}
+
+	private function _masseurs_delete() {
+		$masseurIds = $this->input->post();
+		
+		$this->load->model("Masseurs");
+		$this->_response($this->Masseurs->delete($masseurIds));
+	}
+
+	private function _getMasseursByCompanyId($myCompanyId) {
+		$this->load->model("Masseurs");
+		return $this->Masseurs->getMasseursListByCompanyId($myCompanyId);
+	}
+
+	public function masseurslist_download() {
+		$fileName = 'masseurs-records.csv';
+
+		header('Content-Description: File Transfer');
+		header('Content-Type: text/csv');
+		header('Content-Disposition: attachment; filename=' . $fileName);
+		header('Content-Transfer-Encoding: binary');
+		header('Expires: 0');
+		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+
+		$this->load->helper("utility");
+		$csv = arrayToCSV($this->_getMasseursByCompanyId($this->companyId));
+
+		echo $csv;
 	}
 
 
@@ -270,7 +262,7 @@ class Admin extends CI_Controller {
 					"gender" => $this->input->post("gender"),
 					"active" => $this->input->post("active"),
 					"role" => $this->input->post("role"),
-					"createdBy" => $this->session->userdata["userId"],
+					"createdBy" => $this->session->userdata["id"],
 					"companyId" => $this->session->userdata["companyId"]
 				);
 
@@ -279,9 +271,6 @@ class Admin extends CI_Controller {
 	}
 
 	private function _users_Edit() {
-		if ($this->role < 1)
-			return array("statusCode" => parent::ERRORNO_NOT_AUTHORIZED, "statusMessage" => parent::ERRORSTR_NOT_AUTHORIZED, "statusDesc" => "");
-
 		$midName = $this->input->post("midName");
 		if ($midName == null || empty($midName))
 			$midName = null;
@@ -298,7 +287,7 @@ class Admin extends CI_Controller {
 					"gender" => $this->input->post("gender"),
 					"active" => $this->input->post("active"),
 					"role" => $this->input->post("role"),
-					"updatedBy" => $this->session->userdata["userId"],
+					"updatedBy" => $this->session->userdata["id"],
 					"companyId" => $this->companyId,
 				);
 
@@ -307,9 +296,6 @@ class Admin extends CI_Controller {
 	}
 
 	private function _users_Delete() {
-		if ($this->role < 1)
-			return array("statusCode" => parent::ERRORNO_NOT_AUTHORIZED, "statusMessage" => parent::ERRORSTR_NOT_AUTHORIZED, "statusDesc" => "");
-
 		$userIds = $this->input->post();
 		
 		$this->load->model("Users");
@@ -318,7 +304,7 @@ class Admin extends CI_Controller {
 
 	private function _getUsersByCompanyId($includeCurrent, $myUserId, $myCompanyId) {
 		$this->load->model("Users");
-		return $this->Users->getUsersByCompanyId($includeCurrent, $this->userId, $this->companyId);
+		return $this->Users->getUsersByCompanyId($includeCurrent, $myUserId, $this->companyId);
 	}
 
 	public function users_download() {
