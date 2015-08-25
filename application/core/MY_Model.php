@@ -6,7 +6,10 @@ class My_model extends CI_Model {
 	const ERRORSTR_OK = "OK";
 
 	const ERRORNO_NOT_AUTHORIZED = 1;
-	const ERRORSTR_NOT_AUTHORIZED = "You are not authorized to make this change.";
+	const ERRORSTR_NOT_AUTHORIZED = "User not authorized.";
+
+	const ERRORNO_UNEXPECTED_VALUE = 2;
+	const ERRORSTR_UNEXPECTED_VALUE = "Unexpected returned value.";
 	
 	const ERRORNO_EMPTY_VALUE = 4;
 	const ERRORSTR_EMPTY_VALUE = "Data should not be empty.";

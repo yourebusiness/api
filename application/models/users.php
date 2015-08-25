@@ -127,8 +127,10 @@ class Users extends My_Model {
 
 	public function login(array $data) {
     	$needles = array("username", "password");
-    	if (!$this->checkArrayKeyExists($needles, $data))
-    		return FALSE;
+
+    	$status = $this->checkArrayKeyExists($needles, $data);
+		if ($status["statusCode"] != 0)
+			return $status;
 
 		$query = "select passwd from `users` where username=?";
 		$query = $this->db->query($query, array($data["username"]));
@@ -137,23 +139,23 @@ class Users extends My_Model {
     		$msg = $this->db->_error_message();
     		$num = $this->db->_error_number();
     		log_message("error", "Database error ($num) $msg");
-			return FALSE;
+			return array("statusCode" => parent::ERRORNO_DB_ERROR, "statusMessage" => parent::ERRORSTR_DB_ERROR, "statusDesc" => "");
     	}
 
 		if ($query->num_rows() != 1)
-			return FALSE;
+			return array("statusCode" => parent::ERRORNO_UNEXPECTED_VALUE, "statusMessage" => parent::ERRORSTR_UNEXPECTED_VALUE, "statusDesc" => "");
 
 		$row = $query->row_array();
 
 		if (!password_verify($data["password"], $row["passwd"]))
-			return FALSE;
+			return array("statusCode" => parent::ERRORNO_NOT_AUTHORIZED, "statusMessage" => parent::ERROSTR_NOT_AUTHORIZED, "statusDesc" => "");
 		
 		$query = $this->db->query("update users set lastLogin=now() where username=?", array($data["username"]));
 		if (!$query) {
 			$msg = $this->db->_error_number();
 			$num = $this->db->_error_message();
 			log_message("error", "Error running sql query in " . __METHOD__ . "(). ($num) $msg");
-			return FALSE;
+			return array("statusCode" => parent::ERRORNO_DB_ERROR, "statusMessage" => parent::ERRORSTR_DB_ERROR, "statusDesc" => "");
 		}
 
 		return TRUE;
