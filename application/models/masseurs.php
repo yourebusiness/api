@@ -28,12 +28,6 @@ class Masseurs extends My_Model {
 		if ($this->session->userdata["role"] > 0)
 			return array("statusCode" => parent::ERRORNO_NOT_AUTHORIZED, "statusMessage" => parent::ERRORSTR_NOT_AUTHORIZED, "statusDesc" => "");
 
-		$midName = null; $nickname = null;
-		if (isset($data["midName"]) || (trim($data["midName"]) != ""))
-			$midName = $data["midName"];
-		if (!isset($data["nickname"]) || (trim($data["nickname"]) == ""))
-			$nickname = $data["nickname"];
-
 		$needles = array("fName", "lName", "gender", "active", "createdBy", "companyId");
 
 		$status = $this->checkArrayKeyExists($needles, $data);
@@ -48,7 +42,7 @@ class Masseurs extends My_Model {
 
 		$this->db->trans_start();
 		$this->db->query($sql1, array($data["companyId"]));
-		$this->db->query($sql2, array($data["companyId"], $nickname, $data['fName'], $midName, $data['lName'], $data['gender'], $data["active"], $data['createdBy']));
+		$this->db->query($sql2, array($data["companyId"], $data["nickname"], $data['fName'], $data["midName"], $data['lName'], $data['gender'], $data["active"], $data['createdBy']));
 		$this->db->query($sql3, array($data["companyId"]));
 		$query = $this->db->query($sql4);
 		$this->db->trans_complete();

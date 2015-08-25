@@ -13,14 +13,14 @@ if ( ! function_exists('arrayToCSV')) {
 		else
 			return $csv = "";	// if nothing, early exit
 
-		// we want to avoid the comma inside the column names
+		// we want to escape comma inside the column names
 		foreach ($columns as $key => $column)
 			if (strpos($column, ","))
 				$columns[$key] = '"' . $column . '"';
 
 		$csv = implode(",", $columns) . "\r\n";
 
-		// we want to avoid the comma inside the field values
+		// we want to escape comma inside the field values
     	foreach ($data as $row) {
     		foreach ($row as $key => $field) {
     			if (strpos($field, ","))

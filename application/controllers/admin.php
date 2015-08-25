@@ -54,21 +54,6 @@ class Admin extends CI_Controller {
 				->set_output(json_encode($data));
 	}
 
-	/*public function masseur() {
-		$arr = array("companyId" => $this->companyId);
-		
-		$masseurs = $this->showMasseurs($arr);
-		if ($masseurs)
-			$data["masseurs"] = $masseurs;
-		else
-			$data["masseurs"] = array();
-
-		$data["title"] = "Masseurs";
-		$data["username"] = $this->username;
-		$this->load->view("templates/header", $data);
-		$this->load->view("sessioned/masseur_view", $data); // includes footer
-	}*/
-
 	public function masseurs($list = "") {
 		$this->method = $_SERVER["REQUEST_METHOD"];
 
@@ -114,13 +99,20 @@ class Admin extends CI_Controller {
 	}
 
 	private function _masseurs_add() {
+		$midName = $this->input->post("midName");
+		if ($midName == null || empty($midName))
+			$midName = null;
+		$nickname = $this->input->post("nickname");
+		if ($nickname == null || empty($nickname))
+			$nickname = null;
+
 		$data = array("companyId" => $this->session->userdata["companyId"],
 					"createdBy" => $this->session->userdata["id"],
 					"fName" => $this->input->post("fName"),
-					"midName" => $this->input->post("midName"),
+					"midName" => $midName,
 					"lName" => $this->input->post("lName"),
 					"gender" => $this->input->post("gender"),
-					"nickname" => $this->input->post("nickname"),
+					"nickname" => $nickname,
 					"active" => $this->input->post("active"),
 				);
 
@@ -743,8 +735,8 @@ class Admin extends CI_Controller {
     	
     	$data = array("username" => $username, "password" => $this->input->post("password"));
     	if ($v == "companyProfile") {
-    		 $this->load->model("Admin_model");
-    		if ($this->Admin_model->login($data)) {    			
+    		 $this->load->model("Users");
+    		if ($this->Users->login($data)) {    			
     			$this->load->helper("cookie");
     			
     			$hashed_password = password_hash($username, PASSWORD_BCRYPT);
