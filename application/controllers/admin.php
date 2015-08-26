@@ -315,33 +315,55 @@ class Admin extends CI_Controller {
 
 		echo $csv;
 	}
-
+	/* end for users */
 
 	/* controller for services */
 
-	public function getAllServices() {		
-		$this->load->model("Admin_model");
-		$result = $this->Admin_model->getAllServices();
-		header('Content-type: application/json');
-		echo json_encode($result);
+	private function _getServicesListByCompanyId($companyId) {		
+		$this->load->model("Services");
+		$this->_response($this->Services->getServicesListByCompanyId($companyId));
 	}
 
-	public function services() {
-		$this->load->helper("record");
-		$data["userRights"] = checkUserRightsByUserId($this->session->userdata["userId"]);
+	public function services($list = "") {
+		$this->method = $_SERVER["REQUEST_METHOD"];
 
-		if ($data["userRights"] == 0) { // 0 = administrator
-			$headerData["title"] = "Services";
-			$headerData['username'] = $this->username;
-			$this->load->view("templates/header", $headerData);
-			$this->load->view("sessioned/services_view");
-		} else {
-			header("HTTP/1.1 401 Unauthorized.");
-			echo "Unauthorized.<br />Go to <a href='" . site_url("admin") . "''>Home Page</a>";
+		if ($this->method == "POST" && array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER)) {
+			if ($_SERVER["HTTP_X_HTTP_METHOD"] == "DELETE")
+				$this->method = "DELETE";
+			elseif ($_SERVER["HTTP_X_HTTP_METHOD"] == "PUT")
+				$this->method = "PUT";
+			else
+				throw new Exception("Unexpected Header");
+		}
+
+		switch ($this->method) {
+			case "DELETE":
+				$this->_services_delete();
+				break;
+			case "POST":	//add a service
+				$this->_services_add();
+				break;
+			case "GET":
+				if (trim($list) == "list") {
+					$this->_getServicesListByCompanyId($this->companyId);
+				} else {
+					$headerData["title"] = "Services list";
+					$headerData['username'] = $this->username;
+
+					$this->load->view("templates/v2/header2", $headerData);
+				    $this->load->view("sessioned/v2/services_view");
+				}
+				break;
+			case 'PUT':
+				$this->_services_edit();
+				break;
+			default:
+				$this->_response(array("Invalid method."), 405);
+				break;
 		}
 	}
 
-	public function deleteService($id = 0) {
+	private function _services_delete($id = 0) {
 		$id = $this->input->get("id");
 		if (empty($id) || $id == "")
 			return false;
@@ -350,52 +372,42 @@ class Admin extends CI_Controller {
 		$this->Admin_model->serviceDelete($id);
 	}
 
-	public function addService_view() {
-		$data["userRights"] = $this->session->userdata["role"];
-		if ($data["userRights"] == 0) {
-			$headerData["title"] = "Add new Services";
-			$headerData["username"] = $this->username;
-			$data["userRights"] = $this->session->userdata["role"];
-			$this->load->view("templates/header", $headerData);
-			$this->load->view("sessioned/addService_view", $data);
-		} else {
-			header("HTTP/1.1 401 Unauthorized.");
-			echo "Unauthorized.<br />Go to <a href='" . site_url("admin") . "''>Home Page</a>";
-		}
-	}
-
-	private function checkDataForAdd($data) {
-		if (empty($data["serviceName"]) || $data["regPrice"] == "" || $data["memberPrice"] == "" || empty($data["createdBy"]))
-			return false;
-
-		return true;
-	}
-
-	public function addService() {
+	private function _services_add() {
 		$data = array("companyId" => $this->session->userdata["companyId"],
-					"serviceName" => $this->input->get("serviceName"),
-					"description" => $this->input->get("description"),
-					"regPrice" => $this->input->get("regPrice"),
-					"memberPrice" => $this->input->get("memberPrice"),
-					"createdBy" => $this->session->userdata["userId"]
+					"serviceName" => $this->input->post("serviceName"),
+					"description" => $this->input->post("description"),
+					"regPrice" => $this->input->post("regPrice"),
+					"memberPrice" => $this->input->post("memberPrice"),
+					"active" => $this->input->post("active"),
+					"createdBy" => $this->id,
 				);
-
-		if (!$this->checkDataForAdd($data))
-			return false;
 		
-		$this->load->model("Admin_model");
-		if (!$this->Admin_model->addService($data))
-			return FALSE;
-		else
-			return TRUE;
+		$this->load->model("Services");
+		$this->_response($this->Services->add($data));
 	}
 
-	private function getServiceDetailById($id) {
-		$this->load->model("Admin_model");
-		return $this->Admin_model->getServiceDetailById($id);
+	private function _getServicesByCompanyId($myCompanyId) {
+		$this->load->model("Services");
+		return $this->Services->getServicesListByCompanyId($myCompanyId);
 	}
 
-	public function editService_view() {
+	public function serviceslist_download() {
+		$fileName = 'services-records.csv';
+
+		header('Content-Description: File Transfer');
+		header('Content-Type: text/csv');
+		header('Content-Disposition: attachment; filename=' . $fileName);
+		header('Content-Transfer-Encoding: binary');
+		header('Expires: 0');
+		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+
+		$this->load->helper("utility");
+		$csv = arrayToCSV($this->_getServicesByCompanyId($this->companyId));
+
+		echo $csv;
+	}
+
+	/*private function editService_view() {
 		$id = $this->input->get("id");
 
 		if (empty($id) || $id == "")
@@ -408,9 +420,9 @@ class Admin extends CI_Controller {
 
 		$this->load->view("templates/header", $headerData);
 		$this->load->view("sessioned/editService_view", $data);
-	}
+	}*/
 
-	public function editService() {
+	private function _services_edit() {
 		$data = array("serviceId" => $this->input->get("serviceId"),
 					"serviceName" => $this->input->get("serviceName"),
 					"description" => $this->input->get("description"),
@@ -423,6 +435,7 @@ class Admin extends CI_Controller {
 		$this->Admin_model->editService($data);
 	}
 	/* end for services */
+
 
 	/* profile */
 	public function profile() {
@@ -736,7 +749,7 @@ class Admin extends CI_Controller {
     	$data = array("username" => $username, "password" => $this->input->post("password"));
     	if ($v == "companyProfile") {
     		 $this->load->model("Users");
-    		if ($this->Users->login($data)) {    			
+    		if ($this->Users->login($data)["statusCode"] == 0) {
     			$this->load->helper("cookie");
     			
     			$hashed_password = password_hash($username, PASSWORD_BCRYPT);
@@ -747,8 +760,13 @@ class Admin extends CI_Controller {
 					    'expire' => '300', // 5 minutes
 					    'secure' => FALSE);
 				$this->input->set_cookie($cookie);
+				exit(0);
     		}
+    		exit(0);
     	}
+
+    	redirect(site_url("admin"));
+    	exit(0);
     }
 
 } /* end of admin.php class */

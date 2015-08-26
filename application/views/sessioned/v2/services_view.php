@@ -29,19 +29,18 @@
         <div class="sidebar-default sidebar" role="navigation">
             <div class="sidebar-nav sidebar-collapse">
                 <ul class="nav in" id="menu">
-                    <li class="active">
-                        <a href="#"><i class="fa fa-dashboard fa-fw"></i> Administration <i class="fa fa-minus"></i></a>
-                        <ul class="nav nav-second-level collapse in" aria-expanded="false">
+                    <li>
+                        <a href="#"><i class="fa fa-dashboard fa-fw"></i> Administration <i class="fa fa-plus"></i></a>
+                        <ul class="nav nav-second-level collapse" aria-expanded="false">
                             <li><a href="<?=site_url("admin/adminLogin") . "?v=companyProfile"; ?>"> Company Profile</a></li>
-                            <li class="active"><a href="#"> Massuers</a></li>
+                            <li><a href="<?=site_url('admin/masseurs'); ?>"> Massuers</a></li>
                             <li><a href="<?=site_url('admin/users'); ?>"> Users</a></li>
                         </ul>
                     </li>
-                    <li>
-                        <a href="#"><i class="fa fa-car"></i> Services <i class="fa fa-plus"></i></a>
-                        <ul class="nav nav-second-level collapse" aria-expanded="false">
-                            <li><a href="<?=site_url('admin/services'); ?>"> List of Services</a></li>
-                            <li><a href="#"> Add Service</a></li>
+                    <li class="active">
+                        <a href="#"><i class="fa fa-car"></i> Services <i class="fa fa-minus"></i></a>
+                        <ul class="nav nav-second-level collapse in" aria-expanded="true">
+                            <li class="active"><a href="#"> List of Services</a></li>
                         </ul>
                     </li>
                     <li>
@@ -64,80 +63,68 @@
         <div id="main-content">
             <div class="row">
                 <div class="panel panel-success">
-                    <div class="panel-heading">List of Masseurs Records</div>
+                    <div class="panel-heading">List of Services</div>
                     <div class="panel-body">                        
-                        <table id="masseurTable" class="display" cellspacing="0" width="100%">
+                        <table id="servicesTable" class="display" cellspacing="0" width="100%">
                             <thead>
                                 <tr>
                                     <th><input type="checkbox" name="checkAll" id="checkAll" /> </th>
-                                    <th>Masseur Id</th>
-                                    <th>First</th>
-                                    <th>Middle</th>
-                                    <th>Last</th>
-                                    <th>Gender</th>
-                                    <th>Nickname</th>
+                                    <th>Service Id</th>
+                                    <th>Service Name</th>
+                                    <th>Description</th>
+                                    <th>Reg. Price</th>
+                                    <th>Member Price</th>
                                     <th>Active</th>
                                 </tr>
                             </thead>
                         </table>
                     </div>
                     <div class="panel-footer">
-                        <button id="addRow" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#masseur_modal">Add</button>
+                        <button id="addRow" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#services_modal">Add</button>
                         <button id="btn-delete" class="btn btn-danger btn-sm confirm" type="button" disabled>Delete</button>
-                        <a href="http://yourspa.com/index.php/admin/masseurslist_download" class="btn btn-warning btn-sm">Download</a>
+                        <a href="http://yourspa.com/index.php/admin/serviceslist_download" class="btn btn-warning btn-sm">Download</a>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- add modal -->
-        <div class="modal fade" id="masseur_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal fade" id="services_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Add new masseur record</h4>
+                        <h4 class="modal-title" id="myModalLabel">Add new service record</h4>
                     </div>
                     <div class="modal-body">
                         <div class="container-fluid">
-                            <form id="form_masseur" action="masseurs" method="post" class="form-horizontal" role="form">
-                                <input id="masseurId" name="masseurId" type="hidden" value="0" />
+                            <form id="form_services" action="services" method="post" class="form-horizontal" role="form">
+                                <input id="serviceId" name="serviceId" type="hidden" value="0" />
                                 <div class="form-group form-group-sm">
-                                    <label for="fName" class="control-label col-sm-2">First</label>
+                                    <label for="serviceName" class="control-label col-sm-2">Service</label>
                                     <div class="col-sm-7">
-                                        <input type="text" id="fName" name="fName" class="form-control" placeholder="First" />
-                                    </div>
-                                    <div class="col-sm-3">
-                                    </div>
-                                </div>
-                                <div class="form-group form-group-sm">
-                                    <label for="midName" class="control-label col-sm-2">Middle</label>
-                                    <div class="col-sm-7">
-                                        <input type="text" id="midName" name="midName" class="form-control" placeholder="Middle name" />
+                                        <input type="text" id="serviceName" name="serviceName" class="form-control" placeholder="Service name" />
                                     </div>
                                     <div class="col-sm-3"></div>
                                 </div>
                                 <div class="form-group form-group-sm">
-                                    <label for="lName" class="control-label col-sm-2">Last</label>
+                                    <label for="serviceDescription" class="control-label col-sm-2">Description</label>
                                     <div class="col-sm-7">
-                                        <input type="text" id="lName" name="lName" class="form-control" placeholder="Last name" />
+                                        <input type="text" id="serviceDescription" name="serviceDescription" class="form-control" placeholder="Service description" />
                                     </div>
                                     <div class="col-sm-3"></div>
                                 </div>
                                 <div class="form-group form-group-sm">
-                                    <label for="gender" class="control-label col-sm-2">Gender</label>
+                                    <label for="regPrice" class="control-label col-sm-2">Reg. Price</label>
                                     <div class="col-sm-7">
-                                        <select class="form-control" id="gender" name="gender">
-                                            <option value="M">Male</option>
-                                            <option value="F">Female</option>
-                                        </select>
+                                        <input type="text" id="regPrice" name="regPrice" class="form-control" placeholder="Regular price" />
                                     </div>
                                     <div class="col-sm-3"></div>
                                 </div>
                                 <div class="form-group form-group-sm">
-                                    <label for="nickname" class="control-label col-sm-2">Nickname</label>
+                                    <label for="memberPrice" class="control-label col-sm-2">Member Price</label>
                                     <div class="col-sm-7">
-                                        <input type="text" id="nickname" name="nickname" class="form-control" placeholder="Nickname" />
+                                        <input type="text" id="memberPrice" name="memberPrice" class="form-control" placeholder="Member Price" />
                                     </div>
                                     <div class="col-sm-3"></div>
                                 </div>
@@ -177,7 +164,7 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/metisMenu/2.0.2/metisMenu.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/v2/metisMenuSettings.js"></script>
 
-    <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/v2/masseurs.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/v2/services.js"></script>
 
     <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/jquery.confirm.min.js"></script>
 

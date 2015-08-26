@@ -158,7 +158,7 @@ class Users extends My_Model {
 			return array("statusCode" => parent::ERRORNO_DB_ERROR, "statusMessage" => parent::ERRORSTR_DB_ERROR, "statusDesc" => "");
 		}
 
-		return TRUE;
+		return array("statusCode" => parent::ERRORNO_OK, "statusMessage" => parent::ERRORSTR_OK, "statusDesc" => "");
     }
 
     private function _getUserStatus($userId, $companyId) {
