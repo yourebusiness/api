@@ -80,9 +80,9 @@ class Masseurs extends My_Model {
 		return array("statusCode" => parent::ERRORNO_OK, "statusMessage" => parent::ERRORSTR_OK);		
 	}
 
-	private function okToDeleteRecord($masseurId) {
-		$query = "SELECT masseurId FROM transactions where masseurId = ?";
-		$query = $this->db->query($query, array($masseurId));
+	private function okToDeleteRecord($masseurId, $companyId) {
+		$query = "SELECT trans FROM masseurs where masseurId = ? and companyId = ?";
+		$query = $this->db->query($query, array($masseurId, $companyId));
 
 		if (!$query) {
 			$msg = $this->db->_error_number();
@@ -104,17 +104,16 @@ class Masseurs extends My_Model {
 		if (!isset($data["masseurIds"]))
 			return array("statusCode" => parent::ERRORNO_INVALID_PARAMETER, "statusMessage" => parent::ERRORSTR_INVALID_PARAMETER, "statusDesc" => "Missing key: masseurIds");
 
-		$countIds = count($data);
 		$cannotBeDeleted = 0;
 
-		foreach ($data["masseurIds"] as $id)
-			if (!$this->okToDeleteRecord($id))
+		foreach ($data["masseurIds"] as $masseurId)
+			if (!$this->okToDeleteRecord($masseurId, $data["companyId"]))
 				$cannotBeDeleted++;
 
-		$sql1 = "delete from masseurs where masseurId in(" . implode(", ", $data["masseurIds"]) . ")";
+		$sql1 = "delete from masseurs where masseurId in(" . implode(", ", $data["masseurIds"]) . ") and companyId = ?";
 
 		$this->db->trans_start();
-		$this->db->query($sql1);
+		$this->db->query($sql1, array($data["companyId"]));
 		$this->db->trans_complete();
 
 		if ($this->db->trans_status() === FALSE) {

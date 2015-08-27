@@ -144,10 +144,11 @@ class Admin extends CI_Controller {
 	}
 
 	private function _masseurs_delete() {
-		$masseurIds = $this->input->post();
+		$data = $this->input->post();
+		$data["companyId"] = $this->companyId;
 		
 		$this->load->model("Masseurs");
-		$this->_response($this->Masseurs->delete($masseurIds));
+		$this->_response($this->Masseurs->delete($data));
 	}
 
 	private function _getMasseursByCompanyId($myCompanyId) {
@@ -288,10 +289,11 @@ class Admin extends CI_Controller {
 	}
 
 	private function _users_Delete() {
-		$userIds = $this->input->post();
+		$data = $this->input->post();
+		$data["companyId"] = $this->companyId;
 		
 		$this->load->model("Users");
-		$this->_response($this->Users->delete($userIds));
+		$this->_response($this->Users->delete($data));
 	}
 
 	private function _getUsersByCompanyId($includeCurrent, $myUserId, $myCompanyId) {
@@ -322,6 +324,11 @@ class Admin extends CI_Controller {
 	private function _getServicesListByCompanyId($companyId) {		
 		$this->load->model("Services");
 		$this->_response($this->Services->getServicesListByCompanyId($companyId));
+	}
+
+	private function _getServicesByCompanyId($myCompanyId) {
+		$this->load->model("Services");
+		return $this->Services->getServicesListByCompanyId($myCompanyId);
 	}
 
 	public function services($list = "") {
@@ -363,7 +370,7 @@ class Admin extends CI_Controller {
 		}
 	}
 
-	private function _services_delete($id = 0) {
+	private function _services_delete() {
 		$id = $this->input->get("id");
 		if (empty($id) || $id == "")
 			return false;
@@ -386,9 +393,18 @@ class Admin extends CI_Controller {
 		$this->_response($this->Services->add($data));
 	}
 
-	private function _getServicesByCompanyId($myCompanyId) {
+	private function _services_edit() {
+		$data = array("serviceId" => $this->input->post("serviceId"),
+					"serviceName" => $this->input->post("serviceName"),
+					"description" => $this->input->post("description"),
+					"regPrice" => $this->input->post("regPrice"),
+					"memberPrice" => $this->input->post("memberPrice"),
+					"createdBy" => $this->id,
+					"companyId" => $this->companyId,
+				);
+
 		$this->load->model("Services");
-		return $this->Services->getServicesListByCompanyId($myCompanyId);
+		$this->Services->edit($data);
 	}
 
 	public function serviceslist_download() {
@@ -422,18 +438,6 @@ class Admin extends CI_Controller {
 		$this->load->view("sessioned/editService_view", $data);
 	}*/
 
-	private function _services_edit() {
-		$data = array("serviceId" => $this->input->get("serviceId"),
-					"serviceName" => $this->input->get("serviceName"),
-					"description" => $this->input->get("description"),
-					"regPrice" => $this->input->get("regPrice"),
-					"memberPrice" => $this->input->get("memberPrice"),
-					"createdBy" => $this->session->userdata["userId"]
-				);
-
-		$this->load->model("Admin_model");
-		$this->Admin_model->editService($data);
-	}
 	/* end for services */
 
 

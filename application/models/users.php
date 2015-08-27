@@ -6,6 +6,49 @@ class Users extends My_Model {
 		parent::__construct();
 	}
 
+	private function countActiveUsersByCompanyId($companyId) {
+		if (intval($companyId) < 1)
+			return array("statusCode" => parent::ERRORNO_INVALID_PARAMETER, "statusMessage" => parent::ERRORSTR_INVALID_PARAMETER, "statusDesc" => "");
+
+		$query = $this->db->query("select count(*) as cnt from users where `active`='Y' and companyId = ?", array($companyId));
+		if (!$query) {
+    		$msg = $this->db->_error_message();
+    		$num = $this->db->_error_number();
+    		log_message("error", "Database error ($num) $msg");
+			return array("statusCode" => parent::ERRORNO_DB_ERROR, "statusMessage" => parent::ERRORSTR_DB_ERROR, "statusDesc" => "");
+    	}
+
+    	$row = $query->row_array();
+
+    	// we only allow max 4 active users per company. Static for now.
+    	if ($row["cnt"] > 3)
+    		return array("statusCode" => parent::ERRORNO_MAX_REACHED, "statusMessage" => parent::ERRORSTR_MAX_REACHED, "statusDesc" => 'Deactivate other users first to add new one or add this one as deactivated.');
+    	else
+    		return array("statusCode" => parent::ERRORNO_OK, "statusMessage" => parent::ERRORSTR_OK);
+	}
+
+	// username or email should not exist per company record
+	private function okToAddUsername(array $data) { // note: username = email
+        if (trim($data["username"]) == "")
+			return array("statusCode" => parent::ERRORNO_EMPTY_VALUE, "statusMessage" => parent::ERRORSTR_EMPTY_VALUE, "statusDesc" => "");
+
+		$query = $this->db->query("select userId from users where (username = ? or email = ?) and companyId = ?", array($data["username"], $data["username"], $data["companyId"]));
+    	if (!$query) {
+    		$msg = $this->db->_error_message();
+    		$num = $this->db->_error_number();
+    		log_message("error", "Database error ($num) $msg");
+			return array("statusCode" => parent::ERRORNO_DB_ERROR, "statusMessage" => parent::ERRORSTR_DB_ERROR, "statusDesc" => "");
+    	}
+
+    	$count = $query->num_rows();
+    	if ($count < 1)
+			return array("statusCode" => parent::ERRORNO_OK, "statusMessage" => parent::ERRORSTR_OK);
+		else {
+			log_message("error", parent::ERRORNO_DB_VALUE_EXISTS . ": " . parent::ERRORSTR_DB_VALUE_EXISTS . ": username: $username.");
+    		return array("statusCode" => parent::ERRORNO_DB_VALUE_EXISTS, "statusMessage" => parent::ERRORSTR_DB_VALUE_EXISTS, "statusDesc" => "");;
+		}
+	}
+
 	public function getUsersByCompanyId($includeCurrent, $myUserId, $myCompanyId) {
 		$query = "SELECT userId,username,fName,midName,lName,gender,active,role from users WHERE companyId = ?";
 
@@ -28,50 +71,6 @@ class Users extends My_Model {
 			return $query->result_array();
 		else
 			return array();
-	}
-
-	private function countActiveUsersByCompanyId($companyId) {
-		if (intval($companyId) < 1)
-			return array("statusCode" => parent::ERRORNO_INVALID_PARAMETER, "statusMessage" => parent::ERRORSTR_INVALID_PARAMETER, "statusDesc" => "");
-
-		$query = $this->db->query("select count(*) as cnt from users where `active`='Y' and companyId = ?", array($companyId));
-		if (!$query) {
-    		$msg = $this->db->_error_message();
-    		$num = $this->db->_error_number();
-    		log_message("error", "Database error ($num) $msg");
-			return array("statusCode" => parent::ERRORNO_DB_ERROR, "statusMessage" => parent::ERRORSTR_DB_ERROR, "statusDesc" => "");
-    	}
-
-    	$row = $query->row_array();
-
-    	// we only allow max 4 active users per company. Static for now.
-    	if ($row["cnt"] > 3)
-    		return array("statusCode" => parent::ERRORNO_MAX_REACHED, "statusMessage" => parent::ERRORSTR_MAX_REACHED, "statusDesc" => 'Deactivate other users first to add new one or add this one as deactivated.');
-    	else
-    		return array("statusCode" => parent::ERRORNO_OK, "statusMessage" => parent::ERRORSTR_OK);
-	}
-
-	// username or email should not exist
-	private function okToAddUsername($username) { // note: username = email
-		$username = trim($username);
-        if ($username == "")
-			return array("statusCode" => parent::ERRORNO_EMPTY_VALUE, "statusMessage" => parent::ERRORSTR_EMPTY_VALUE, "statusDesc" => "");
-
-		$query = $this->db->query("select userId from users where username = ? or email = ?", array($username, $username));
-    	if (!$query) {
-    		$msg = $this->db->_error_message();
-    		$num = $this->db->_error_number();
-    		log_message("error", "Database error ($num) $msg");
-			return array("statusCode" => parent::ERRORNO_DB_ERROR, "statusMessage" => parent::ERRORSTR_DB_ERROR, "statusDesc" => "");
-    	}
-
-    	$count = $query->num_rows();
-    	if ($count < 1)
-			return array("statusCode" => parent::ERRORNO_OK, "statusMessage" => parent::ERRORSTR_OK);
-		else {
-			log_message("error", parent::ERRORNO_DB_VALUE_EXISTS . ": " . parent::ERRORSTR_DB_VALUE_EXISTS . ": username: $username.");
-    		return array("statusCode" => parent::ERRORNO_DB_VALUE_EXISTS, "statusMessage" => parent::ERRORSTR_DB_VALUE_EXISTS, "statusDesc" => "");;
-		}
 	}
 
 	// add new record
@@ -203,6 +202,23 @@ class Users extends My_Model {
 		return array("statusCode" => parent::ERRORNO_OK, "statusMessage" => parent::ERRORSTR_OK);		
 	}
 
+	private function okToDeleteRecord($userId, $companyId) {
+		$query = "SELECT trans FROM users where userId = ? and companyId = ? and trans = 'Y'";
+		$query = $this->db->query($query, array($userId, $companyId));
+
+		if (!$query) {
+			$msg = $this->db->_error_number();
+            $num = $this->db->_error_message();
+            log_message("error", "Error running sql query in " . __METHOD__ . "(). ($num) $msg");
+            return array("statusCode" => parent::ERRORNO_DB_ERROR, "statusMessage" => parent::ERRORSTR_DB_ERROR);
+		}
+
+		if ($query->num_rows())
+			return FALSE;
+		else
+			return TRUE;
+	}
+
 	public function delete(array $data) {
 		if ($this->session->userdata["role"] > 0)
 			return array("statusCode" => parent::ERRORNO_NOT_AUTHORIZED, "statusMessage" => parent::ERRORSTR_NOT_AUTHORIZED, "statusDesc" => "");
@@ -210,20 +226,16 @@ class Users extends My_Model {
 		if (!isset($data["userIds"]))
 			return array("statusCode" => parent::ERRORNO_INVALID_PARAMETER, "statusMessage" => parent::ERRORSTR_INVALID_PARAMETER, "statusDesc" => "Missing key: userIds");
 
-		$countIds = count($data);
 		$cannotBeDeleted = 0;
 
-		foreach ($data["userIds"] as $id)
-			if (!$this->okToDeleteRecord($id))
+		foreach ($data["userIds"] as $userId)
+			if (!$this->okToDeleteRecord($userId, $data["companyId"]))
 				$cannotBeDeleted++;
 
-		// I think want the company_users in the future.
-		//$sql1 = "delete from company_users where userId in(" . implode(", ", $data["userIds"]) . ")";
-		$sql2 = "delete from users where userId in(" . implode(", ", $data["userIds"]) . ")";
+		$sql = "delete from users where userId in(" . implode(", ", $data["userIds"]) . ") and companyId = ?";
 
 		$this->db->trans_start();
-		//$this->db->query($sql1);
-		$this->db->query($sql2);
+		$this->db->query($sql, array($data["companyId"]));
 		$this->db->trans_complete();
 
 		if ($this->db->trans_status() === FALSE) {
