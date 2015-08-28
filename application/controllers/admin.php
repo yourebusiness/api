@@ -404,7 +404,7 @@ class Admin extends CI_Controller {
 				);
 
 		$this->load->model("Services");
-		$this->Services->edit($data);
+		$this->_response($this->Services->edit($data));
 	}
 
 	public function serviceslist_download() {

@@ -4,7 +4,7 @@ $(document).ready(function() {
         $('#services_modal .modal-title').text("Edit Masseur record");
         $('#serviceId').val(data.serviceId);
         $('#serviceName').val(data.serviceName);
-        $('#serviceDescription').val(data.serviceDescription);
+        $('#serviceDescription').val(data.description);
         $('#regPrice').val(data.regPrice);
         $('#memberPrice').val(data.memberPrice);
         $('#active').val(data.active);
@@ -70,7 +70,7 @@ $(document).ready(function() {
         var data = {
             serviceId: $serviceId.val(),
             serviceName: $serviceName.val(),
-            serviceDescription: $serviceDescription.val(),
+            description: $serviceDescription.val(),
             regPrice: $regPrice.val(),
             memberPrice: $memberPrice.val(),
             active: $active.val(),
@@ -90,7 +90,7 @@ $(document).ready(function() {
                     var rowData = {};
 
                     rowData.serviceName = $serviceName.val();
-                    rowData.serviceDescription = $serviceDescription.val();
+                    rowData.description = $serviceDescription.val();
                     rowData.regPrice = $regPrice.val();
                     rowData.memberPrice = $memberPrice.val();
                     rowData.active = $active.val();
@@ -131,7 +131,7 @@ $(document).ready(function() {
 
  
     //for update cmd    
-    $('#masseurTable tbody').on('click', 'tr', function () {        
+    $('#servicesTable tbody').on('click', 'tr', function () {        
         thisRow = this;
         showEditDialog(table.row(this).data());
 

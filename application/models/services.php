@@ -88,22 +88,24 @@ class Services extends MY_Model {
 		if ($status["statusCode"] != 0)
 			return $status;
 
-		$data = $this->formatData($data);		
+		$data = $this->formatData($data);
 
-		$sql1 = "update services set serviceName = ?, description = ? where id = ?;";
-		$sql2 = "insert into pricelistHistory(serviceId,priceListCode,price,cp_createDate,cp_createdBy,createDate,createdBy)
-					SELECT serviceId,priceListCode,price,createDate,createdBy,now(), ? FROM pricelist WHERE serviceId = ? AND priceListCode=0;";
+		$sql1 = "SET @id = (SELECT id FROM services WHERE serviceId = ? AND companyId = ?);";
+		$sql2 = "update services set serviceName = ?, description = ? where id = @id;";
 		$sql3 = "insert into pricelistHistory(serviceId,priceListCode,price,cp_createDate,cp_createdBy,createDate,createdBy)
-					SELECT serviceId,priceListCode,price,createDate,createdBy,now(), ? FROM pricelist WHERE serviceId = ? AND priceListCode=1;";
-		$sql4 = "update pricelist set price = ? where serviceId = ? and pricelistCode = 0;";
-		$sql5 = "update pricelist set price = ? where serviceId = ? and pricelistCode = 1;";
+					SELECT serviceId,priceListCode,price,createDate,createdBy,now(), ? FROM pricelist WHERE serviceId = @id AND priceListCode=0;";
+		$sql4 = "insert into pricelistHistory(serviceId,priceListCode,price,cp_createDate,cp_createdBy,createDate,createdBy)
+					SELECT serviceId,priceListCode,price,createDate,createdBy,now(), ? FROM pricelist WHERE serviceId = @id AND priceListCode=1;";
+		$sql5 = "update pricelist set price = ? where serviceId = @id and pricelistCode = 0;";
+		$sql6 = "update pricelist set price = ? where serviceId = @id and pricelistCode = 1;";
 
 		$this->db->trans_start();
-		$this->db->query($sql1, array($data['serviceName'], $data['description'], $data['serviceId']));
-		$this->db->query($sql2, array($data["createdBy"], $data["serviceId"]));
-		$this->db->query($sql3, array($data["createdBy"], $data["serviceId"]));
-		$this->db->query($sql4, array($data['regPrice'], $data['serviceId']));
-		$this->db->query($sql5, array($data['memberPrice'], $data['serviceId']));
+		$this->db->query($sql1, array($data["serviceId"], $data["companyId"]));
+		$this->db->query($sql2, array($data['serviceName'], $data['description']));
+		$this->db->query($sql3, array($data["createdBy"]));
+		$this->db->query($sql4, array($data["createdBy"]));
+		$this->db->query($sql5, array($data['regPrice']));
+		$this->db->query($sql6, array($data['memberPrice']));
 		$this->db->trans_complete();
 
 		if ($this->db->trans_status() === FALSE) {
