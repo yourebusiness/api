@@ -33,3 +33,22 @@ if ( ! function_exists('arrayToCSV')) {
     	return $csv;
 	}
 }
+
+if ( ! function_exists('isCurrency')) {
+	function isCurrency($value) {
+		$return = preg_match("/\b\d{1,3}(?:,?\d{3})*(?:\.\d{2})?\b/", $value);
+
+		if ($return == 1)
+			return TRUE;
+		else
+			return FALSE;
+	}
+}
+
+/* remove comma from monetary value and replaced with empty string. */
+
+if ( ! function_exists('normalizeNumber')) {
+	function normalizeNumber($value) {
+		return preg_replace("/[,]/", "", $value);
+	}
+}

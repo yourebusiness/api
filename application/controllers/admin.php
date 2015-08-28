@@ -371,12 +371,11 @@ class Admin extends CI_Controller {
 	}
 
 	private function _services_delete() {
-		$id = $this->input->get("id");
-		if (empty($id) || $id == "")
-			return false;
-
-		$this->load->model("Admin_model");
-		$this->Admin_model->serviceDelete($id);
+		$data = $this->input->post();
+		$data["companyId"] = $this->companyId;
+		
+		$this->load->model("Services");
+		$this->_response($this->Services->delete($data));
 	}
 
 	private function _services_add() {
@@ -422,21 +421,6 @@ class Admin extends CI_Controller {
 
 		echo $csv;
 	}
-
-	/*private function editService_view() {
-		$id = $this->input->get("id");
-
-		if (empty($id) || $id == "")
-			$id = 0;
-
-		$headerData["title"] = "Edit Service Info";
-		$headerData["username"] = $this->username;
-
-		$data['serviceDetails'] = $this->getServiceDetailById($id);
-
-		$this->load->view("templates/header", $headerData);
-		$this->load->view("sessioned/editService_view", $data);
-	}*/
 
 	/* end for services */
 

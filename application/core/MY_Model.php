@@ -17,6 +17,9 @@ class My_model extends CI_Model {
 	const ERRORNO_MAX_REACHED = 5;
 	const ERRORSTR_MAX_REACHED = "Maximum allowed records has been reached.";
 
+	const ERRORNO_INVALID_VALUE = 7;
+	const ERRORSTR_INVALID_VALUE = "Invalid passed value.";
+
 	const ERRORNO_INVALID_PARAMETER = 8;
 	const ERRORSTR_INVALID_PARAMETER = "Invalid passed parameter.";
 
