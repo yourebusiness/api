@@ -1,13 +1,13 @@
 <?php
 
-class Customers_model extends MY_Model {
+class Customers extends MY_Model {
 	
 	public function __construct() {
 		parent::__construct();
 	}
 
 	public function getCustomersByCompanyId($companyId) {
-		$query = "SELECT id, CONCAT(fName, ' ', midName, ' ', lName) AS customerName FROM customer WHERE companyId = ?";
+		$query = "SELECT customerId, CONCAT(fName, ' ', midName, ' ', lName) AS customerFullName FROM customer WHERE companyId = ?";
 		$query = $this->db->query($query, array($companyId));
 		return $query->result_array();
 	}

@@ -35,7 +35,7 @@
                             <li><a href="<?=site_url("admin/adminLogin") . "?v=companyProfile"; ?>"> Company Profile</a></li>
                             <li><a href="<?=site_url('admin/users'); ?>"> Users</a></li>
                             <li><a href="<?=site_url('admin/masseurs'); ?>"> Massuers</a></li>
-                            <li><a href="<?=site_url('admin/customers'); ?>"> Customers</a></li>
+                            <li><a href="#"> Customers</a></li>
                         </ul>
                     </li>
                     <li>

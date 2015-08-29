@@ -42,13 +42,12 @@
                     <a href="#"><i class="fa fa-car"></i> Services <i class="fa fa-plus"></i></a>
                     <ul class="nav nav-second-level collapse" aria-expanded="false">
                         <li><a href="<?=site_url("admin/services"); ?>"> List of Services</a></li>
-                        <li><a href="#"> Add Service</a></li>
                     </ul>
                 </li>
                 <li>
                     <a href="#"><i class="fa fa-money"></i> Transactions <i class="fa fa-plus"></i></a>
                     <ul class="nav nav-second-level collapse" aria-expanded="false">
-                        <li><a href="#"> Add New Transaction</a></li>
+                        <li><a href="<?=site_url('admin/transactions'); ?>"> Add New Transaction</a></li>
                     </ul>
                 </li>
                 <li>

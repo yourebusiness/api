@@ -5,17 +5,7 @@ class Services extends MY_Model {
 	public function __construct() {
 		parent::__construct();
 		$this->load->helper("utility");
-	}
-
-	private function formatData(array $data) {
-		if (!isset($data["description"]) || empty($data["description"]))
-			$data["description"] = NULL;
-
-		$data["regPrice"] = normalizeNumber($data["regPrice"]);
-		$data["memberPrice"] = normalizeNumber($data["memberPrice"]);
-
-		return $data;
-	}
+	}	
 
 	public function getServicesListByCompanyId($companyId) {
 		$query = "select serviceId, serviceName, description
@@ -37,6 +27,23 @@ class Services extends MY_Model {
 			return array();
 	}
 
+	public function getServicesByCompanyId($companyId) {
+		$query = "SELECT serviceId, serviceName FROM services WHERE companyId = ?";
+		$query = $this->db->query($query, array($companyId));
+		return $query->result_array();
+	}
+
+	/* utilities */
+	private function formatData(array $data) {
+		if (!isset($data["description"]) || empty($data["description"]))
+			$data["description"] = NULL;
+
+		$data["regPrice"] = normalizeNumber($data["regPrice"]);
+		$data["memberPrice"] = normalizeNumber($data["memberPrice"]);
+
+		return $data;
+	}
+
 	private function checkValues(array $data) {
 		if (!isCurrency($data["regPrice"]))
 			return array("statusCode" => parent::ERRORNO_INVALID_VALUE, "statusMessage" => parent::ERRORSTR_INVALID_VALUE, "statusDesc" => "Invalid passed value for reg. price.");
@@ -52,6 +59,8 @@ class Services extends MY_Model {
 
 		return array("statusCode" => parent::ERRORNO_OK, "statusMessage" => parent::ERRORSTR_OK);
 	}
+	/* end for utilities */
+
 
 	public function add(array $data) {
 		if ($this->session->userdata["role"] > 0)

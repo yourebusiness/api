@@ -64,33 +64,29 @@
         <div id="main-content">
             <div class="row">
                 <div class="panel panel-success">
-                    <div class="panel-heading">List of Services</div>
+                    <div class="panel-heading"></div>
                     <div class="panel-body">                        
-                        <table id="servicesTable" class="display" cellspacing="0" width="100%">
-                            <thead>
-                                <tr>
-                                    <th><input type="checkbox" name="checkAll" id="checkAll" /> </th>
-                                    <th>Service Id</th>
-                                    <th>Service Name</th>
-                                    <th>Description</th>
-                                    <th>Reg. Price</th>
-                                    <th>Member Price</th>
-                                    <th>Active</th>
-                                </tr>
-                            </thead>
-                        </table>
+                        <div class="col-sm-3">Masseur</div>
+                        <div class="col-sm-4">
+                            <select id="masseur" name="masseur" class="form-control">
+                              <option value="0">-- select --</option>
+                              <?php foreach($masseurs as $masseur): ?>
+                                <option value="<?php echo $masseur["id"] ?>"><?php echo $masseur["nickname"]; ?></option>
+                              <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-sm-5">Service</div>
                     </div>
                     <div class="panel-footer">
-                        <button id="addRow" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#services_modal">Add</button>
-                        <button id="btn-delete" class="btn btn-danger btn-sm confirm" type="button" disabled>Delete</button>
-                        <a href="http://yourspa.com/index.php/admin/serviceslist_download" class="btn btn-warning btn-sm">Download</a>
+                        <button id="addRow" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#transact_modal">Add</button>
+                        <button id="btn-clear" class="btn btn-default btn-sm" type="button">Clear</button>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- add modal -->
-        <div class="modal fade" id="services_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <!-- <div class="modal fade" id="transact_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -153,7 +149,7 @@
                     </div>
                 </div>
             </div>
-        </div> <!-- end for add modal -->
+        </div> --> <!-- end for add modal -->
         
     </div> <!-- end for wrapper -->
 
@@ -165,7 +161,7 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/metisMenu/2.0.2/metisMenu.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/v2/metisMenuSettings.js"></script>
 
-    <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/v2/services.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/v2/transact.js"></script>
 
     <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/jquery.confirm.min.js"></script>
 

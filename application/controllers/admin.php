@@ -54,6 +54,7 @@ class Admin extends CI_Controller {
 				->set_output(json_encode($data));
 	}
 
+	/* controller for masseurs */
 	public function masseurs($list = "") {
 		$this->method = $_SERVER["REQUEST_METHOD"];
 
@@ -171,6 +172,8 @@ class Admin extends CI_Controller {
 
 		echo $csv;
 	}
+
+	/* end controllers for masseurs */
 
 
 	/* controller for users */
@@ -317,7 +320,7 @@ class Admin extends CI_Controller {
 
 		echo $csv;
 	}
-	/* end for users */
+	/* end controller for users */
 
 	/* controller for services */
 
@@ -425,7 +428,7 @@ class Admin extends CI_Controller {
 	/* end for services */
 
 
-	/* profile */
+	/* profile controllers */
 	public function profile() {
 		$data["userId"] = $this->session->userdata["userId"];
 		$this->load->model("Admin_model");
@@ -498,10 +501,52 @@ class Admin extends CI_Controller {
 
 	/* End for subscription methods*/
 
-	/* transaction functions */
+	/* transaction controllers */
 
-	public function transactions() {
-		$this->load->model("Transactions_model");
+	public function transactions($list = "") {
+		$this->method = $_SERVER["REQUEST_METHOD"];
+
+		if ($this->method == "POST" && array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER)) {
+			if ($_SERVER["HTTP_X_HTTP_METHOD"] == "DELETE")
+				$this->method = "DELETE";
+			elseif ($_SERVER["HTTP_X_HTTP_METHOD"] == "PUT")
+				$this->method = "PUT";
+			else
+				throw new Exception("Unexpected Header");
+		}
+
+		switch ($this->method) {
+			case "DELETE":
+				$this->_transactions_delete();
+				break;
+			case "POST":	//add a service
+				$this->_transactions_add();
+				break;
+			case "GET":
+				if (trim($list) == "list") {
+					$this->_getTransactionsListByCompanyId($this->companyId);
+				} else if (trim($resources = "resources")) {
+					
+				}
+				else {
+					$headerData["title"] = "Transact";
+					$headerData['username'] = $this->username;
+
+					$this->load->view("templates/v2/header2", $headerData);
+				    $this->load->view("sessioned/v2/transact_view");
+				    //$this->load->view("sessioned/transaction_view");
+				}
+				break;
+			case 'PUT':
+				$this->_transactions_edit();
+				break;
+			default:
+				$this->_response(array("Invalid method."), 405);
+				break;
+		}
+
+
+		/*$this->load->model("Transactions_model");
 		$subscription = $this->Transactions_model->withActiveSubscription($this->companyId);
 		
 		$headerData["title"] = "Transactions";
@@ -533,10 +578,10 @@ class Admin extends CI_Controller {
 		if ($subscription)
 			$this->load->view("sessioned/transaction_view", $data);
 		else
-			$this->load->view("sessioned/alertSubscription_view");
+			$this->load->view("sessioned/alertSubscription_view");*/
 	}
 
-	public function addTransaction() {
+	private function _transactions_add() {
 		$remarks = $this->input->get("remarks");
 		( ! isset($remarks)) ? $remarks = NULL : $remarks;
 
@@ -558,6 +603,17 @@ class Admin extends CI_Controller {
 			return TRUE;
 		else
 			return FALSE;
+	}
+
+	public function transactions_resources() {
+		$models = array("Masseurs", "Services", "Customers");
+		$this->load->model($models);
+		
+		$data["masseurs"] = $this->Masseurs->getMasseurNamesByCompanyId($this->companyId);
+		$data["services"] = $this->Services->getServicesByCompanyId($this->companyId);
+		$data["customers"] = $this->Customers->getCustomersByCompanyId($this->companyId);
+
+		$this->_response(array($data));
 	}
 
 	public function getPriceForCustomer() {
@@ -584,24 +640,45 @@ class Admin extends CI_Controller {
 
 	/* end for transactions */
 
-	/* controller for customer */
+	/* controllers for customer */
 
-	public function getAllCustomersByCompanyId() {
-		$companyId = $this->input->get("companyId");
-		$this->load->model("Customers_model");
-		$customersList = $this->Customers_model->getAllCustomersByCompanyId($companyId);
+	public function customers($list = "") {
+		$this->method = $_SERVER["REQUEST_METHOD"];
 
-		header("Content-type: application/json");
-		echo json_encode($customersList);
-	}
+		if ($this->method == "POST" && array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER)) {
+			if ($_SERVER["HTTP_X_HTTP_METHOD"] == "DELETE")
+				$this->method = "DELETE";
+			elseif ($_SERVER["HTTP_X_HTTP_METHOD"] == "PUT")
+				$this->method = "PUT";
+			else
+				throw new Exception("Unexpected Header");
+		}
 
-	public function customers() {
-		$headerData["title"] = "Customers";
-		$headerData['username'] = $this->username;
-		$companyId = $this->session->userdata["companyId"];
-		$data["companyId"] = $companyId;
-		$this->load->view("templates/header", $headerData);
-		$this->load->view("sessioned/customers_view", $data);
+		switch ($this->method) {
+			case "DELETE":
+				$this->_customers_delete();
+				break;
+			case "POST":	//add a service
+				$this->_customers_add();
+				break;
+			case "GET":
+				if (trim($list) == "list") {
+					$this->_getCustomersListByCompanyId($this->companyId);
+				} else {
+					$headerData["title"] = "Customers";
+					$headerData['username'] = $this->username;
+
+					$this->load->view("templates/v2/header2", $headerData);
+				    $this->load->view("sessioned/v2/customers_view");
+				}
+				break;
+			case 'PUT':
+				$this->_customers_edit();
+				break;
+			default:
+				$this->_response(array("Invalid method."), 405);
+				break;
+		}
 	}
 
 	public function addCustomer_view() {
