@@ -611,7 +611,7 @@ class Admin extends CI_Controller {
 		
 		$data["masseurs"] = $this->Masseurs->getMasseurNamesByCompanyId($this->companyId);
 		$data["services"] = $this->Services->getServicesByCompanyId($this->companyId);
-		$data["customers"] = $this->Customers->getCustomersByCompanyId($this->companyId);
+		$data["customers"] = $this->Customers->getCustomersBasicInfoByCompanyId($this->companyId);
 
 		$this->_response(array($data));
 	}
@@ -641,6 +641,11 @@ class Admin extends CI_Controller {
 	/* end for transactions */
 
 	/* controllers for customer */
+
+	private function _getCustomersListByCompanyId($companyId) {		
+		$this->load->model("Customers");
+		$this->_response($this->Customers->getCustomersListByCompanyId($companyId));
+	}
 
 	public function customers($list = "") {
 		$this->method = $_SERVER["REQUEST_METHOD"];

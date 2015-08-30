@@ -6,17 +6,14 @@ class Customers extends MY_Model {
 		parent::__construct();
 	}
 
-	public function getCustomersByCompanyId($companyId) {
-		$query = "SELECT customerId, CONCAT(fName, ' ', midName, ' ', lName) AS customerFullName FROM customer WHERE companyId = ?";
+	public function getCustomersBasicInfoByCompanyId($companyId) {
+		$query = "SELECT customerId, CONCAT(fName, ' ', midName, ' ', lName) AS customerFullName FROM customers WHERE companyId = ?";
 		$query = $this->db->query($query, array($companyId));
 		return $query->result_array();
 	}
 
-	public function getAllCustomersByCompanyId($companyId = 0) {
-		if ($companyId < 1)
-			return array();
-
-		$sql = "SELECT customerId, custType, fName, midName, lName FROM customer WHERE companyId = ?";
+	public function getCustomersListByCompanyId($companyId) {
+		$sql = "SELECT customerId, custType, fName, midName, lName, gender, active FROM customers WHERE companyId = ?";
 		$query = $this->db->query($sql, array($companyId));
 		return $query->result_array();
 	}

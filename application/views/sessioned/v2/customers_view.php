@@ -29,13 +29,13 @@
         <div class="sidebar-default sidebar" role="navigation">
             <div class="sidebar-nav sidebar-collapse">
                 <ul class="nav in" id="menu">
-                    <li>
-                        <a href="#"><i class="fa fa-dashboard fa-fw"></i> Administration <i class="fa fa-plus"></i></a>
-                        <ul class="nav nav-second-level collapse" aria-expanded="false">
+                    <li class="active">
+                        <a href="#"><i class="fa fa-dashboard fa-fw"></i> Administration <i class="fa fa-minus"></i></a>
+                        <ul class="nav nav-second-level collapse in" aria-expanded="false">
                             <li><a href="<?=site_url("admin/adminLogin") . "?v=companyProfile"; ?>"> Company Profile</a></li>
                             <li><a href="<?=site_url('admin/users'); ?>"> Users</a></li>
                             <li><a href="<?=site_url('admin/masseurs'); ?>"> Massuers</a></li>
-                            <li><a href="#"> Customers</a></li>
+                            <li class="active"><a href="#"> Customers</a></li>
                         </ul>
                     </li>
                     <li>
@@ -60,13 +60,130 @@
                 </ul>
             </div>
         </div> <!-- end of the left side menu -->
+
+        <div id="main-content">
+            <div class="row">
+                <div class="panel panel-success">
+                    <div class="panel-heading">List of Customers</div>
+                    <div class="panel-body">                        
+                        <table id="customersTable" class="display" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" name="checkAll" id="checkAll" /> </th>
+                                    <th>Id</th>
+                                    <th>Type</th>
+                                    <th>First</th>
+                                    <th>Middle</th>
+                                    <th>Last</th>
+                                    <th>Gender</th>
+                                    <th>Active</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div class="panel-footer">
+                        <button id="addRow" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#customer_modal">Add</button>
+                        <button id="btn-delete" class="btn btn-danger btn-sm confirm" type="button" disabled>Delete</button>
+                        <a href="http://yourspa.com/index.php/admin/users_download" class="btn btn-warning btn-sm">Download</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- add modal -->
+        <div class="modal fade" id="customer_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Add new customer</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <form id="form_customer" action="customers" method="post" class="form-horizontal" role="form">
+                                <input id="customerId" name="customerId" type="hidden" value="0" />
+                                <div class="form-group form-group-sm">
+                                    <label for="customerType" class="control-label col-sm-2">Type</label>
+                                    <div class="col-sm-7">
+                                        <select class="form-control" id="customerType" name="customerType">
+                                            <option value="0">Guest</option>
+                                            <option value="1">Member</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3"></div>
+                                </div>
+                                <div class="form-group form-group-sm">
+                                    <label for="fName" class="control-label col-sm-2">First</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" id="fName" name="fName" class="form-control" placeholder="First name" />
+                                    </div>
+                                    <div class="col-sm-3"></div>
+                                </div>
+                                <div class="form-group form-group-sm">
+                                    <label for="midName" class="control-label col-sm-2">Middle</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" id="midName" name="midName" class="form-control" placeholder="Middle name" />
+                                    </div>
+                                    <div class="col-sm-3"></div>
+                                </div>
+                                <div class="form-group form-group-sm">
+                                    <label for="lName" class="control-label col-sm-2">Last</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" id="lName" name="lName" class="form-control" placeholder="Last name" />
+                                    </div>
+                                    <div class="col-sm-3"></div>
+                                </div>
+                                <div class="form-group form-group-sm">
+                                    <label for="gender" class="control-label col-sm-2">Gender</label>
+                                    <div class="col-sm-7">
+                                        <select class="form-control" id="gender" name="gender">
+                                            <option value="M">Male</option>
+                                            <option value="F">Female</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3"></div>
+                                </div>
+                                <div class="form-group form-group-sm">
+                                    <label for="active" class="control-label col-sm-2">Active</label>
+                                    <div class="col-sm-7">
+                                        <select class="form-control" id="active" name="active">
+                                            <option value="Y">Yes</option>
+                                            <option value="N">No</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3"></div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="col-sm-8">
+                            <div id="alert2" class="alert alert-danger alert-dismissible fade in" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <button id="save" type="button" class="btn btn-primary btn-sm" data-toggle="popover" data-trigger="focus" title="Error" data-content="Fill-out the form completely." data-placement="top">Save</button>
+                            <button id="cancel" type="button" class="btn btn-default btn-sm" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- end for add modal -->
+
     </div> <!-- end for wrapper -->
     <!-- If no online access, fallback to our hardcoded version of jQuery -->
     <script>window.jQuery || document.write('<script src="https://code.jquery.com/jquery-1.11.2.min.js"><\/script>')</script>
+
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.8/js/jquery.dataTables.min.js"></script>
 
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
     <script src="http://cdnjs.cloudflare.com/ajax/libs/metisMenu/2.0.2/metisMenu.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/v2/metisMenuSettings.js"></script>
+
+    <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/v2/customers.js"></script>
+
+    <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/jquery.confirm.min.js"></script>
     </body>
 </html>
