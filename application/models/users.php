@@ -147,7 +147,7 @@ class Users extends My_Model {
 		$row = $query->row_array();
 
 		if (!password_verify($data["password"], $row["passwd"]))
-			return array("statusCode" => parent::ERRORNO_NOT_AUTHORIZED, "statusMessage" => parent::ERROSTR_NOT_AUTHORIZED, "statusDesc" => "");
+			return array("statusCode" => parent::ERRORNO_NOT_AUTHORIZED, "statusMessage" => parent::ERRORSTR_NOT_AUTHORIZED, "statusDesc" => "");
 		
 		$query = $this->db->query("update users set lastLogin=now() where username=?", array($data["username"]));
 		if (!$query) {

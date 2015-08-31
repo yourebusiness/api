@@ -30,6 +30,9 @@ class My_model extends CI_Model {
 	const ERRORNO_DB_ERROR = 10;
 	const ERRORSTR_DB_ERROR = "Database error.";
 
+	const ERRORNO_NO_SUBSCRIPTION = 20;
+	const ERRORSTR_NO_SUBSCRIPTION = "Permission denied with no subscription.";
+
 	public function __construct() {
 		parent::__construct();
 	}
@@ -44,4 +47,22 @@ class My_model extends CI_Model {
 
     	return array("statusCode" => self::ERRORNO_OK, "statusMessage" => self::ERRORSTR_OK);
     }
+
+    protected function checkCompanySubscription($companyId) {
+		if (empty($companyId))
+			return array("statusCode" => parent::ERRORNO_INVALID_VALUE, "statusMessage" => parent::ERRORSTR_INVALID_VALUE, "statusDesc" => "Invalid company id.");
+
+		$query = "SELECT id FROM company_payment WHERE companyId = ? AND expiry > CURDATE() ORDER BY id DESC;";
+		if (!$query) {
+			$msg = $this->db->_error_number();
+            $num = $this->db->_error_message();
+            log_message("error", "Error running sql query in " . __METHOD__ . "(). ($num) $msg");
+            return array("statusCode" => parent::ERRORNO_DB_ERROR, "statusMessage" => parent::ERRORSTR_DB_ERROR, "statusDesc" => "");
+		}
+
+		if ($query->num_rows())
+			return TRUE;
+		else
+			return FALSE;
+	}
 }

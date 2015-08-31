@@ -686,26 +686,18 @@ class Admin extends CI_Controller {
 		}
 	}
 
-	public function addCustomer_view() {
-		$headerData["title"] = "AddCustomers";
-		$headerData['username'] = $this->username;
-		$this->load->view("templates/header", $headerData);
-		$this->load->view("sessioned/addCustomer_view");
-	}
-
-	public function addCustomer() {
+	private function _customers_add() {
 		$data = array("companyId" => $this->session->userdata["companyId"],
-					"custType" => $this->input->get("custType"),
+					"custType" => $this->input->get("custType"),	//customer type
 					"fName" => $this->input->get("fName"),
 					"midName" => $this->input->get("midName"),
 					"lName" => $this->input->get("lName"),
+					"gender" => $this->input->post("gender"),
+					"active" => $this->input->post("active"),
 					"createdBy" => $this->session->userdata["userId"]
 				);
-		$this->load->model("Customers_model");
-		if ($this->Customers_model->add($data))
-			return TRUE;
-		else
-			return FALSE;
+		$this->load->model("Customers");
+		$this->_response($this->Customers->add($data));
 	}
 
 	public function searchCustomers($searchText = "") {
