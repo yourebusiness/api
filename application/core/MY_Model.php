@@ -53,6 +53,7 @@ class My_model extends CI_Model {
 			return array("statusCode" => parent::ERRORNO_INVALID_VALUE, "statusMessage" => parent::ERRORSTR_INVALID_VALUE, "statusDesc" => "Invalid company id.");
 
 		$query = "SELECT id FROM company_payment WHERE companyId = ? AND expiry > CURDATE() ORDER BY id DESC;";
+		$query = $this->db->query($query, array($companyId));
 		if (!$query) {
 			$msg = $this->db->_error_number();
             $num = $this->db->_error_message();

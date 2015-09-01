@@ -54,7 +54,7 @@ class Registration extends CI_Controller {
         $data["lName"] = $this->input->post("lName");
         $data["gender"] = $this->input->post("gender");
         $data["userEmail"] = $this->input->post("userEmail");
-        $data["hash"] = generateRandomString();
+        $data["hash"] = generateRandomString(); // we actually has to check first the existence in the db
         $data["captcha"] = $sessionCaptcha;
 
         $this->load->model("Company_model");

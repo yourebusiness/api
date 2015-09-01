@@ -153,6 +153,9 @@ class Company_model extends My_Model {
                     (@companyId, 'USR', 'Users', 1);";
         $sql5 = "insert into customer(companyId, customerId, custType, fName, midName, lName, active, createdBy, createDate)
                 values(@companyId, 1, 0, 'Guest', 'Guest', 'Guest', 'Y', NULL, now());";
+        $sql6 = "SET @intervalInMonths = (SELECT intervalInMonths FROM payment WHERE id = 1);"; //Free Registration
+        $sql7 = "INSERT INTO company_payment(companyId, paymentId, approvalCode, expiry, amount, createDate, createdBy)
+                VALUES(@companyId, 1, 'AAA-BBB-CCC-000', DATE_ADD(CURDATE(), INTERVAL @intervalInMonths MONTH), 0, NOW(), NULL);";
 
 		$this->db->trans_start();
 		$this->db->query($sql1, array($data["company"], $data["address"], $data["province"], $data["city"], $data["phoneNo"], $data["companyWebsite"], $data["tin"], $data["hash"], $data["captcha"]));
@@ -160,6 +163,8 @@ class Company_model extends My_Model {
 		$this->db->query($sql3, array($data["userEmail"], $data["password"], $data["fName"], $data["lName"], $data["userEmail"], $data["gender"]));
 		$this->db->query($sql4);
 		$this->db->query($sql5);
+        $this->db->query($sql6);
+        $this->db->query($sql7);
 		$this->db->trans_complete();
 
 		if ($this->db->trans_status() === FALSE) {

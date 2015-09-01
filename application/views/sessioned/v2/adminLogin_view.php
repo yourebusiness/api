@@ -36,6 +36,11 @@
                             <li class="active"><a href="#"> Company Profile</a></li>
                             <li><a href="<?=site_url('admin/users'); ?>"> Users</a></li>
                             <li><a href="<?=site_url('admin/masseurs'); ?>"> Massuers</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-suitcase"></i> Business Partner<i class="fa fa-plus"></i></a>
+                        <ul class="nav nav-second-level collapse" aria-expanded="false">
                             <li><a href="<?=site_url('admin/customers'); ?>"> Customers</a></li>
                         </ul>
                     </li>
