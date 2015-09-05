@@ -50,7 +50,7 @@ class My_model extends CI_Model {
 
     protected function checkCompanySubscription($companyId) {
 		if (empty($companyId))
-			return array("statusCode" => parent::ERRORNO_INVALID_VALUE, "statusMessage" => parent::ERRORSTR_INVALID_VALUE, "statusDesc" => "Invalid company id.");
+			return array("statusCode" => self::ERRORNO_INVALID_VALUE, "statusMessage" => self::ERRORSTR_INVALID_VALUE, "statusDesc" => "Invalid company id.");
 
 		$query = "SELECT id FROM company_payment WHERE companyId = ? AND expiry > CURDATE() ORDER BY id DESC;";
 		$query = $this->db->query($query, array($companyId));
@@ -58,7 +58,7 @@ class My_model extends CI_Model {
 			$msg = $this->db->_error_number();
             $num = $this->db->_error_message();
             log_message("error", "Error running sql query in " . __METHOD__ . "(). ($num) $msg");
-            return array("statusCode" => parent::ERRORNO_DB_ERROR, "statusMessage" => parent::ERRORSTR_DB_ERROR, "statusDesc" => "");
+            return array("statusCode" => self::ERRORNO_DB_ERROR, "statusMessage" => self::ERRORSTR_DB_ERROR, "statusDesc" => "");
 		}
 
 		if ($query->num_rows())

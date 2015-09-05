@@ -2,7 +2,11 @@
 
 include_once ".inc/globals.inc.php";
 
-class Registration extends CI_Controller {	
+class Registration extends My_Controller {	
+    public function __construct() {
+        parent::__construct();
+    }
+
 	public function view($page = 'register_view') {
 
 		if (!file_exists('application/views/' . $page . '.php'))
@@ -22,24 +26,53 @@ class Registration extends CI_Controller {
 
     private function _checkPWAndConfirmPW(array $data) {
         if ($data["password"] !== $data["confirmPassword"])
-            return false;
+            return array("statusCode" => parent::ERRORNO_INVALID_VALUE, "statusMessage" => parent::ERRORSTR_INVALID_VALUE, "statusDesc" => "Password and confirm password do not match.");
 
         return true;
     }
 
 	public function register() {
+        $this->method = $_SERVER["REQUEST_METHOD"];
+
+        if ($this->method == "POST" && array_key_exists("HTTP_X_HTTP_METHOD", $_SERVER)) {
+            if ($_SERVER["HTTP_X_HTTP_METHOD"] == "DELETE")
+                $this->method = "DELETE";
+            elseif ($_SERVER["HTTP_X_HTTP_METHOD"] == "PUT")
+                $this->method = "PUT";
+            else
+                throw new Exception("Unexpected Header");
+        }
+
+        switch ($this->method) {
+            case "DELETE":
+                break;
+            case "POST":
+                $this->_registration_add();
+                break;
+            case "GET":
+                break;
+            case 'PUT':
+                break;
+            default:
+                $this->_response(array("Invalid method."), 405);
+                break;
+        }
+	}
+
+    private function _registration_add() {
         $data = array();
         $data["password"] = $this->input->post("password");
         $data["confirmPassword"] = $this->input->post("confirmPassword");
 
-        if ( ! $this->_checkPWAndConfirmPW($data))
-            return false;
+        $status = $this->_checkPWAndConfirmPW($data);
+        if ($status["statusCode"] != 0)
+            return $status;
 
         session_start();
         $sessionCaptcha = strtolower($_SESSION['captcha']['code']);
         $postCaptcha = strtolower($this->input->post("captcha"));
         if ($sessionCaptcha !== $postCaptcha)
-            return FALSE;
+            return array("statusCode" => parent::ERRORNO_INVALID_VALUE, "statusMessage" => parent::ERRORSTR_INVALID_VALUE, "statusDesc" => "Wrong captcha.");
 
         $this->load->helper("utility");
 
@@ -54,22 +87,26 @@ class Registration extends CI_Controller {
         $data["lName"] = $this->input->post("lName");
         $data["gender"] = $this->input->post("gender");
         $data["userEmail"] = $this->input->post("userEmail");
-        $data["hash"] = generateRandomString(); // we actually has to check first the existence in the db
+        $data["hash"] = generateRandomString();
         $data["captcha"] = $sessionCaptcha;
 
-        $this->load->model("Company_model");
-    	if ($this->Company_model->add($data)) {
+        $this->load->model("Company");
+        $status = $this->Company->add($data);
+
+        if ($status["statusCode"] == 0) {
             global $settings;
             if ($settings["sendEmail"])
                 $this->sendEmail($data["userEmail"], $data["hash"]);
-
-            $data["title"] = "Registration";
-            $this->load->view("templates/header", $data);
-            $this->load->view("register_success");
-    	} else {
-            redirect(site_url("registration/view"));
         }
-	}
+
+        $this->_response($status);
+    }
+
+    public function registration_success() {
+        $data["title"] = "Registration";
+        $this->load->view("templates/header", $data);
+        $this->load->view("register_success");
+    }
 
     private function sendEmail($email, $hash) {
         $this->load->library("MY_PHPMailer.php");

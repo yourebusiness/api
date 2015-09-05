@@ -16,14 +16,14 @@
                             <div class="form-group">
                                  <label for="inputEmail" class="col-sm-2 control-label">Email</label>
                                  <div class="col-sm-8">
-                                    <input type="email" class="form-control" id="inputEmail" placeholder="You email here">
+                                    <input type="email" name="username" class="form-control" id="inputEmail" placeholder="You email here">
                                  </div>
                                  <div class="col-sm-2"></div>
                             </div> <!-- end of form-group -->
                             <div class="form-group">
                                 <label for="inputPassword" class="col-sm-2 control-label">Password</label>
                                 <div class="col-sm-8">
-                                    <input type="password" id="inputPassword" class="form-control" placeholder="Input password here">
+                                    <input type="password" id="password" name="password" class="form-control" placeholder="Input password here">
                                 </div> <!-- end of col-sm-8 -->
                             </div> <!-- end of form-group -->
                             <div class="form-group">
@@ -102,9 +102,6 @@
 
 <!-- Bootstrap JS -->
 <script src="../../../bootstrap/js/bootstrap.min.js"></script>
-
-<!-- Custom JS -->
-<script src="../../../includes/js/register.js"></script>
 
 </body>
 </html>

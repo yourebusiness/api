@@ -21,6 +21,7 @@ $(function () {
     });
 
     $('.btn-primary').on('click', function(event) {
+        event.preventDefault();
 
         var styles = {display : "none"},
             that = $('#form'),
@@ -123,6 +124,22 @@ $(function () {
                 name = that.attr("name"),
                 value = that.val();
                 data[name] = value;
+        });
+
+        $.ajax({
+            type: "post",
+            url: url,
+            data: data,
+            success: function(response) {
+                if(parseInt(response.statusCode) == 0)
+                    window.location = "http://yourspa.com/index.php/registration/registration_success";
+                else
+                    alert(response.statusMessage + ' ' + response.statusDesc);
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(textStatus);
+                console.log(errorThrown)
+            }
         });
     });
 });
