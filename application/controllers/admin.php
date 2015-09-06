@@ -525,10 +525,9 @@ class Admin extends CI_Controller {
 			case "GET":
 				if (trim($list) == "list") {
 					$this->_getTransactionsListByCompanyId($this->companyId);
-				} else if (trim($resources = "resources")) {
-					
-				}
-				else {
+				} else if (trim($list == "resources")) {
+					$this->_transactions_resources();
+				} else if (trim($list == "")) {
 					$headerData["title"] = "Transact";
 					$headerData['username'] = $this->username;
 
@@ -605,7 +604,7 @@ class Admin extends CI_Controller {
 			return FALSE;
 	}
 
-	public function transactions_resources() {
+	private function _transactions_resources() {
 		$models = array("Masseurs", "Services", "Customers");
 		$this->load->model($models);
 		

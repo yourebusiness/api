@@ -70,17 +70,29 @@
             <div class="row">
                 <div class="panel panel-success">
                     <div class="panel-heading"></div>
-                    <div class="panel-body">                        
-                        <div class="col-sm-3">Masseur</div>
-                        <div class="col-sm-4">
-                            <select id="masseur" name="masseur" class="form-control">
-                              <option value="0">-- select --</option>
-                              <?php foreach($masseurs as $masseur): ?>
-                                <option value="<?php echo $masseur["id"] ?>"><?php echo $masseur["nickname"]; ?></option>
-                              <?php endforeach; ?>
-                            </select>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-1">Masseur</div>
+                            <div class="col-sm-3">
+                                <select id="masseur" name="masseur" class="form-control">
+                                  <option value="0">-- select --</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-2">Services</div>
+                            <div class="col-sm-4">
+                                <select id="service" name="service" class="form-control">
+                                    <option value="0">-- select --</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="col-sm-5">Service</div>
+                        <div class="row">
+                            <div class="col-sm-2">Customers</div>
+                            <div class="col-sm-4">
+                                <select id="customer" name="customer" class="form-control">
+                                  <option value="0">-- select --</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                     <div class="panel-footer">
                         <button id="addRow" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#transact_modal">Add</button>
@@ -166,7 +178,7 @@
     <script src="http://cdnjs.cloudflare.com/ajax/libs/metisMenu/2.0.2/metisMenu.min.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/v2/metisMenuSettings.js"></script>
 
-    <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/v2/transact.js"></script>
+    <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/v2/transaction.js"></script>
 
     <script type="text/javascript" src="<?php echo base_url(); ?>includes/js/jquery.confirm.min.js"></script>
 

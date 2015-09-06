@@ -23,7 +23,7 @@ class Masseurs extends My_Model {
 	}
 
 	public function getMasseurNamesByCompanyId($companyId) {
-		$query = "SELECT (CASE WHEN nickname IS NULL THEN CONCAT(fName, ' ', lName) ELSE nickname END) AS `name` FROM masseurs WHERE companyId = ?";
+		$query = "SELECT masseurId, (CASE WHEN nickname IS NULL THEN CONCAT(fName, ' ', lName) ELSE nickname END) AS `name` FROM masseurs WHERE companyId = ?";
 		$query = $this->db->query($query, array($companyId));
 		return $query->result_array();
 	}
