@@ -42,7 +42,7 @@
                 <h4 class="page_title">Register</h4>
                 <hr>
                 <h5>Company Details</h5> <hr>
-                <p>Fill out the form completely to use the services for free.</p>
+                <p>Fill out the form completely to use the services.</p>
                 
                 <div class="alert alert-danger" role="alert">
                   <p>

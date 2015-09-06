@@ -687,17 +687,65 @@ class Admin extends CI_Controller {
 	}
 
 	private function _customers_add() {
-		$data = array("companyId" => $this->session->userdata["companyId"],
-					"custType" => $this->input->get("custType"),	//customer type
-					"fName" => $this->input->get("fName"),
-					"midName" => $this->input->get("midName"),
-					"lName" => $this->input->get("lName"),
+		$data = array("companyId" => $this->companyId,
+					"custType" => $this->input->post("custType"),	//customer type
+					"fName" => $this->input->post("fName"),
+					"midName" => $this->input->post("midName"),
+					"lName" => $this->input->post("lName"),
 					"gender" => $this->input->post("gender"),
 					"active" => $this->input->post("active"),
-					"createdBy" => $this->session->userdata["userId"]
+					"createdBy" => $this->id,
 				);
 		$this->load->model("Customers");
 		$this->_response($this->Customers->add($data));
+	}
+
+	private function _customers_edit() {
+		$data = array("custType" => $this->input->post("custType"),
+					"customerId" => $this->input->post("customerId"),
+					"fName" => $this->input->post("fName"),
+					"midName" => $this->input->post("midName"),
+					"lName" => $this->input->post("lName"),
+					"gender" => $this->input->post("gender"),
+					"active" => $this->input->post("active"),
+					"updatedBy" => $this->id,
+					"companyId" => $this->companyId,
+				);
+
+		$this->load->model("Customers");
+		$this->_response($this->Customers->edit($data));
+	}
+
+	private function _customers_delete() {
+		$data = $this->input->post();
+		$data["companyId"] = $this->companyId;
+		
+		$this->load->model("Customers");
+		$status = $this->Customers->delete($data);
+		//file_put_contents("/tmp/customers.txt", print_r($status, true));
+		$this->_response($status);
+	}
+
+	// for dl
+	private function _getCustomersByCompanyId($companyId) {
+		$this->load->model("Customers");
+		return $this->Customers->getCustomersByCompanyId($companyId);
+	}
+
+	public function customerslist_download() {
+		$fileName = 'customers-records.csv';
+
+		header('Content-Description: File Transfer');
+		header('Content-Type: text/csv');
+		header('Content-Disposition: attachment; filename=' . $fileName);
+		header('Content-Transfer-Encoding: binary');
+		header('Expires: 0');
+		header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+
+		$this->load->helper("utility");
+		$csv = arrayToCSV($this->_getCustomersByCompanyId($this->companyId));
+
+		echo $csv;
 	}
 
 	public function searchCustomers($searchText = "") {

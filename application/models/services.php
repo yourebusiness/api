@@ -213,6 +213,5 @@ class Services extends MY_Model {
 			return array("statusCode" => parent::ERRORNO_OK, "statusMessage" => parent::ERRORSTR_OK, "statusDesc" => "One or more record(s) cannot be deleted.");
 		else
 			return array("statusCode" => parent::ERRORNO_OK, "statusMessage" => parent::ERRORSTR_OK);
-
-	}
-}
+	}	/* end for delete */
+}	/* end for Services */

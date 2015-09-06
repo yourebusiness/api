@@ -166,11 +166,11 @@ class Company extends My_Model {
                     (@companyId, 'SVS', 'Services', 0),
                     (@companyId, 'TRAN', 'Transactions', 0),
                     (@companyId, 'USR', 'Users', 1);";
-        $sql6 = "INSERT INTO customers(companyId, customerId, custType, fName, midName, lName, active, createdBy, createDate)
-                VALUES(@companyId, 1, 0, 'Guest', 'Guest', 'Guest', 'Y', @user, now());";
+        $sql6 = "INSERT INTO customers(companyId, customerId, custType, fName, midName, lName, active, defaultCustomer, createdBy, createDate, trans)
+                VALUES(@companyId, 1, 0, 'Guest', 'Guest', 'Guest', 'Y', 'Y', @user, now(), 'N');";
         $sql7 = "SET @intervalInMonths = (SELECT intervalInMonths FROM payment WHERE id = 1);"; //Free Registration
         $sql8 = "INSERT INTO company_payment(companyId, paymentId, approvalCode, expiry, amount, createDate, createdBy)
-                VALUES(@companyId, 1, 'AAA-BBB-CCC-000', DATE_ADD(CURDATE(), INTERVAL @intervalInMonths MONTH), 0, NOW(), @user);";
+                VALUES(@companyId, 1, 'AAA-BBB-000', DATE_ADD(CURDATE(), INTERVAL @intervalInMonths MONTH), 0, NOW(), @user);";
 
 		$this->db->trans_start();
 		$this->db->query($sql1, array($data["company"], $data["address"], $data["province"], $data["city"], $data["phoneNo"], $data["companyWebsite"], $data["tin"], $data["hash"], $data["captcha"]));

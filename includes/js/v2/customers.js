@@ -1,7 +1,6 @@
 $(document).ready(function() {
 
     showEditDialog = function(data) {
-        console.log(data);
         $('#customer_modal .modal-title').text("Edit Customer record");
         $('#customerType').val(data.custType);
         $('#customerId').val(data.customerId);
@@ -82,12 +81,27 @@ $(document).ready(function() {
     //    $checkboxHeader.attr('disabled', true);
  
 
+    function checkValues(data) {
+        if (data["customerType"] < 0 || data["customerType"] > 1)
+            return false;
+        if((jQuery.trim(data["fName"]).length) < 1)
+            return false;
+        if((jQuery.trim(data["lName"]).length) < 1)
+            return false;
+        if (jQuery.trim(data["gender"]).length < 1)
+            return false;
+        if (jQuery.trim(data["active"]).length < 1)
+            return false;
+
+        return true;
+    }    
+
     // when save is clicked.
     $('#save').on('click', function() {
         var action = $formCustomer.attr("action");
 
         var data = {
-            customerType: $customerType.val(),
+            custType: $customerType.val(),
             customerId: $customerId.val(),
             fName: $fName.val(),
             midName: $midName.val(),
@@ -95,6 +109,11 @@ $(document).ready(function() {
             gender: $gender.val(),
             active: $active.val(),
         };
+
+        if (!checkValues(data)) {
+            alert("Fill-out the form completely.");
+            return false;
+        }
 
         $.ajax({
             type: $formCustomer.attr("method"),
@@ -109,7 +128,7 @@ $(document).ready(function() {
                     var value = $formCustomer.attr("data-x-http-method");
                     var rowData = {};
 
-                    rowData.customerType = $customerType.val();
+                    rowData.custType = $customerType.val();
                     rowData.fName = $fName.val();
                     rowData.midName = $midName.val();
                     rowData.lName = $lName.val();
@@ -117,7 +136,7 @@ $(document).ready(function() {
                     rowData.active = $active.val();
 
                     if (value == "") { //add
-                        rowData.customerId = response.newCustomerId;
+                        rowData.customerId = response.newId;
                         var json = JSON.parse(JSON.stringify(rowData));
                         table.row.add(json).draw();
                     } else if (value.toLowerCase() == "put") {    //edit here
