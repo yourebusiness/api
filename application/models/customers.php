@@ -25,7 +25,7 @@ class Customers extends MY_Model {
 	}
 
 	public function getCustomersBasicInfoByCompanyId($companyId) {
-		$query = "SELECT customerId, CONCAT(fName, ' ', midName, ' ', lName) AS customerFullName FROM customers WHERE companyId = ?";
+		$query = "SELECT customerId, CONCAT(fName, ' ', midName, ' ', lName) AS customerFullName FROM customers WHERE companyId = ? AND active='Y'";
 		$query = $this->db->query($query, array($companyId));
 		return $query->result_array();
 	}

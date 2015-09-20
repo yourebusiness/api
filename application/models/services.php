@@ -28,7 +28,7 @@ class Services extends MY_Model {
 	}
 
 	public function getServicesByCompanyId($companyId) {
-		$query = "SELECT serviceId, serviceName FROM services WHERE companyId = ?";
+		$query = "SELECT serviceId, serviceName FROM services WHERE companyId = ? AND active = 'Y'";
 		$query = $this->db->query($query, array($companyId));
 		return $query->result_array();
 	}

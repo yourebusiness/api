@@ -34,3 +34,42 @@ $.ajax({
         console.log(errorThrown)
     }
 });
+
+$services = $("#services");
+var $yesButton = $('#yesButton');
+
+$services.change(function() {
+		var $price = $('#price');
+	    var serviceId = $('#services').val();
+		var customerId = $('#customers').val();
+		var companyId = $('#companyId').val();
+
+        $.ajax({
+            type: "GET",
+            url:"http://yourspa.com/admin/getPriceForCustomer?serviceId=" + serviceId + "&customerId=" + customerId + "&companyId=" + companyId ,
+            success:function(data) {
+                var json_price = jQuery.parseJSON(data);
+                json_price = json_price.toFixed(2);
+                $price.text(json_price);
+            },
+            error: function() {
+                console.log("Error.");
+            }
+        });
+
+    });
+
+
+$yesButton.on('click', function() {
+	$.ajax({
+		type: "post",
+		url: "http://yourspa.com/index.php/admin/transactions/resources",
+		success: function(response) {
+			
+		},
+		error: function(jqXHR, textStatus, errorThrown) {
+	        console.log(textStatus);
+	        console.log(errorThrown)
+	    }
+	});
+});
