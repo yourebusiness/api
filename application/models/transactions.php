@@ -1,12 +1,36 @@
 <?php
 
-class Transactions_model extends CI_Model_2 {
+class Transactions extends My_Model {
 	const WITH_SUBSCRIPTION = TRUE;
 	const NO_SUBSCRIPTION = FALSE;
 	
 	public function __construct() {
 		parent::__construct();
 	}
+
+	private function _checkDataFor_getPriceForCustomer(array $data) {
+
+	}
+
+	public function getPriceForCustomer(array $data) {
+		if ()
+
+        $query = "SELECT price FROM pricelist JOIN services ON pricelist.serviceId = services.id
+                WHERE services.id = ?
+                    AND pricelistCode = (SELECT (CASE WHEN custType = 0 THEN 0 ELSE 1 END)
+                                            FROM customers
+                                            WHERE id = ? AND services.companyId = ?)";
+        $query = $this->db->query($query, array($data["serviceId"], $data["customerId"], $data["companyId"]));
+        if (!$query)
+            return FALSE;
+        else {
+            if ($query->num_rows() <= 0)
+                return FALSE;
+            else
+                $row = $query->row_array();
+            return $row["price"];
+        }
+    }
 
 	public function withActiveSubscription($companyId) {
 		$query = $this->db->query("SELECT id FROM company_payment WHERE expiry > now() AND companyId=?", array($companyId));

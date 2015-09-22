@@ -41,7 +41,7 @@ if ( ! function_exists('checkUserRightsByUserId')) {
     }      
 }
 
-if ( ! function_exists('getPriceForCustomer')) {
+/*if ( ! function_exists('getPriceForCustomer')) {
     function getPriceForCustomer(array $data) {
         $ci =& get_instance();
         $ci->load->database();
@@ -49,7 +49,7 @@ if ( ! function_exists('getPriceForCustomer')) {
         $query = "SELECT price FROM pricelist JOIN services ON pricelist.serviceId = services.id
                 WHERE services.id = ?
                     AND pricelistCode = (SELECT (CASE WHEN custType = 0 THEN 0 ELSE 1 END)
-                                            FROM customer
+                                            FROM customers
                                             WHERE id = ? AND services.companyId = ?)";
         $query = $ci->db->query($query, array($data["serviceId"], $data["customerId"], $data["companyId"]));
         if (!$query)
@@ -62,4 +62,4 @@ if ( ! function_exists('getPriceForCustomer')) {
             return $row["price"];
         }
     }
-}
+}*/

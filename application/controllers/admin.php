@@ -517,7 +517,7 @@ class Admin extends CI_Controller {
 
 		switch ($this->method) {
 			case "DELETE":
-				$this->_transactions_delete();
+				// no delete for transaction
 				break;
 			case "POST":	//add a service
 				$this->_transactions_add();
@@ -545,7 +545,8 @@ class Admin extends CI_Controller {
 		}
 
 
-		/*$this->load->model("Transactions_model");
+		/*
+		$this->load->model("Transactions_model");
 		$subscription = $this->Transactions_model->withActiveSubscription($this->companyId);
 		
 		$headerData["title"] = "Transactions";
@@ -577,7 +578,8 @@ class Admin extends CI_Controller {
 		if ($subscription)
 			$this->load->view("sessioned/transaction_view", $data);
 		else
-			$this->load->view("sessioned/alertSubscription_view");*/
+			$this->load->view("sessioned/alertSubscription_view");
+		*/
 	}
 
 	private function _transactions_add() {
@@ -621,13 +623,8 @@ class Admin extends CI_Controller {
 					"companyId" => $this->companyId,
 				);
 		
-		$this->load->helper("record");
-		header("Content-type: application/json");
-		$price = getPriceForCustomer($data);
-		if ($price === FALSE)
-			$price = "0.00";
-
-		echo json_encode($price);
+		$this->load->model("Transactions");
+		$this->_response($this->Transactions->getPriceForCustomer($data));
 	}
 
 	public function successaddtransaction() {

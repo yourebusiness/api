@@ -35,7 +35,7 @@ $.ajax({
     }
 });
 
-$services = $("#services");
+var $services = $("#services");
 var $yesButton = $('#yesButton');
 
 $services.change(function() {
@@ -46,7 +46,7 @@ $services.change(function() {
 
         $.ajax({
             type: "GET",
-            url:"http://yourspa.com/admin/getPriceForCustomer?serviceId=" + serviceId + "&customerId=" + customerId + "&companyId=" + companyId ,
+            url:"http://yourspa.com/admin/getPriceForCustomer?serviceId=" + serviceId + "&customerId=" + customerId,
             success:function(data) {
                 var json_price = jQuery.parseJSON(data);
                 json_price = json_price.toFixed(2);

@@ -98,10 +98,10 @@
                         <div class="row">
                             <div class="col-sm-1">Price</div>
                             <div class="col-sm-4">
-                                <!-- <p class="form-control-static" id="price">0.00</p> -->
                                 <input class="form-control" type="text" id="price" value="0.00" readonly>
                             </div>
                         </div>
+                        <hr />
                         <div class="row">
                             <div class="col-sm-1">Amount Paid</div>
                             <div class="col-sm-4">
