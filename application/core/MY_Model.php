@@ -37,6 +37,12 @@ class My_model extends CI_Model {
 		parent::__construct();
 	}
 
+	/**
+	* $needles: values to check
+	* $haystack: an array with keys to check
+	* returns array whether one key doesn't exists in $haystack
+	*/
+
 	protected function checkArrayKeyExists(array $needles, array $haystack) {
     	foreach ($needles as $needle) {
             if (!array_key_exists($needle, $haystack)) {

@@ -1,6 +1,11 @@
 <?php
 
-class Api extends CI_Controller {
+class Api extends My_Controller {
+	public function getProvinces() {
+		$this->load->model("Api_model");
+		$this->_response($this->Api_model->getProvinces());
+	}
+
 	public function getCity($provinceId) {
 		$this->load->model("Api_model");
 		echo json_encode($this->Api_model->getCity($provinceId));

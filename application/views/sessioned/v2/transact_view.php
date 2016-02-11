@@ -82,7 +82,7 @@
                         <div class="row">
                             <div class="col-sm-1">Services</div>
                             <div class="col-sm-4">
-                                <select id="service" name="service" class="form-control">
+                                <select id="services" name="services" class="form-control">
                                     <option value="0">-- select --</option>
                                 </select>
                             </div>
@@ -90,7 +90,7 @@
                         <div class="row">
                             <div class="col-sm-1">Customers</div>
                             <div class="col-sm-4">
-                                <select id="customer" name="customer" class="form-control">
+                                <select id="customers" name="customers" class="form-control">
                                   <option value="0">-- select --</option>
                                 </select>
                             </div>

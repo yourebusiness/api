@@ -763,7 +763,7 @@ class Admin extends CI_Controller {
 			$data["uniqueCode"] = $this->session->userdata["uniqueCode"];
 
 			$this->load->model("Api_model");
-			$data["provinces"] = $this->Api_model->getProvince(); // get all province list
+			$data["provinces"] = $this->Api_model->getProvinces(); // get all province list
 
 			$this->load->model("Company_model");
 			$provinceId = $this->Company_model->getProvinceIdByCompanyId($data["companyId"])[0]["province"];

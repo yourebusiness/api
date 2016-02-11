@@ -17,7 +17,7 @@ class Registration extends My_Controller {
         $_SESSION['captcha'] = simple_php_captcha();
 
 		$this->load->model("Api_model");
-		$data["province"] = $this->Api_model->getProvince();
+		$data["province"] = $this->Api_model->getProvinces();
 		$headerData['title'] = "Register";
 		$this->load->view("templates/header", $headerData);
 		$this->load->view($page, $data);

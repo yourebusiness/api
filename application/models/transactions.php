@@ -8,12 +8,11 @@ class Transactions extends My_Model {
 		parent::__construct();
 	}
 
-	private function _checkDataFor_getPriceForCustomer(array $data) {
-
-	}
-
 	public function getPriceForCustomer(array $data) {
-		if ()
+		$needles = array("serviceId", "customerId", "companyId");
+		$status = $this->checkArrayKeyExists($needles, $data);
+        if ($status["statusCode"] != 0)
+            return $status;
 
         $query = "SELECT price FROM pricelist JOIN services ON pricelist.serviceId = services.id
                 WHERE services.id = ?
@@ -21,15 +20,18 @@ class Transactions extends My_Model {
                                             FROM customers
                                             WHERE id = ? AND services.companyId = ?)";
         $query = $this->db->query($query, array($data["serviceId"], $data["customerId"], $data["companyId"]));
-        if (!$query)
-            return FALSE;
-        else {
-            if ($query->num_rows() <= 0)
-                return FALSE;
-            else
-                $row = $query->row_array();
-            return $row["price"];
-        }
+    	if ( ! $query) {
+    		$msg = $this->db->_error_message();
+    		$num = $this->db->_error_number();
+    		log_message("error", "Database error ($num) $msg");
+			return array("statusCode" => parent::ERRORNO_DB_ERROR, "statusMessage" => parent::ERRORSTR_DB_ERROR, "statusDesc" => "");
+    	}
+
+        if ($query->num_rows() <= 0)
+            return array("statusCode" => parent::ERRORNO_UNEXPECTED_VALUE, "statusMessage" => parent::ERRORSTR_UNEXPECTED_VALUE, "statusDesc" => "");
+        else
+            $row = $query->row_array();
+        return $row["price"];
     }
 
 	public function withActiveSubscription($companyId) {

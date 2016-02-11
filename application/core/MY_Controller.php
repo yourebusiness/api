@@ -24,8 +24,9 @@ class My_controller extends CI_Controller {
 
     protected function _response($data, $status = 200) {
         $this->output
-                ->set_header("HTTP/1.1 " . $status . " " . $this->_requestStatus(200))
-                ->set_content_type('application/json')
+                ->set_header("HTTP/1.1 " . $status . " " . $this->_requestStatus($status))
+                ->set_header("Access-Control-Allow-Origin: http://localhost:8080")
+                ->set_content_type("application/json")
                 ->set_output(json_encode($data));
     }
 }

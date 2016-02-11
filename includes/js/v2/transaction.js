@@ -12,7 +12,7 @@ $.ajax({
 		});
 
 		$.each(response[0].services, function(key, value) {
-			$('#service')
+			$('#services')
 				.append(
 					$("<option></option>")
 					.attr("value", value["serviceId"])
@@ -39,6 +39,9 @@ var $services = $("#services");
 var $yesButton = $('#yesButton');
 
 $services.change(function() {
+
+		alert("ok.");
+
 		var $price = $('#price');
 	    var serviceId = $('#services').val();
 		var customerId = $('#customers').val();
@@ -46,7 +49,7 @@ $services.change(function() {
 
         $.ajax({
             type: "GET",
-            url:"http://yourspa.com/admin/getPriceForCustomer?serviceId=" + serviceId + "&customerId=" + customerId,
+            url:"http://yourspa.com/index.php/admin/getPriceForCustomer?serviceId=" + serviceId + "&customerId=" + customerId,
             success:function(data) {
                 var json_price = jQuery.parseJSON(data);
                 json_price = json_price.toFixed(2);

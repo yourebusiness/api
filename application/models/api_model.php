@@ -1,7 +1,7 @@
 <?php
 
 class Api_model extends CI_Model {
-	public function getProvince() {
+	public function getProvinces() {
 		$query = "select id,provinceName from province order by provinceName";
 		$query = $this->db->query($query);
 		return $query->result_array();
