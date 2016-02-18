@@ -139,8 +139,8 @@ class Registration extends My_Controller {
         $data["lName"] = $this->input->post("lName");
         $data["gender"] = $this->input->post("gender");
         $data["userEmail"] = $this->input->post("userEmail");
-        $data["hash"] = generateRandomString();
-        $data["captcha"] = "null";  // we do not need captcha to record anymore
+        $data["hash"] = generateRandomString(40);
+        $data["captcha"] = null;  // we do not need captcha to record anymore, we now use Google captcha.
 
         $this->load->model("Company");
         $status = $this->Company->add($data);

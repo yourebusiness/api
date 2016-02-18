@@ -85,7 +85,7 @@
 
         <div class="container">
             <h4 class="page_title">Successful</h4>
-            <p>Congratualtions!!! You have successfull registered.</p>
+            <p>Congratualtions!!! You have successfully registered.</p>
             <p>Please check your email for the registration code that you have to enter on your first login.</p>
         </div> <!-- end of container -->
 
