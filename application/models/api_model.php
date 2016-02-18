@@ -14,6 +14,14 @@ class Api_model extends CI_Model {
 		return $query->result_array();
 	}
 
+	public function getProvincesAndCities() {
+		$query = "select province.id AS provinceId, provinceName, city.id AS cityId, city.cityName
+					from province join city on province.id = city.provinceId
+					order by provinceId, cityId";
+		$query = $this->db->query($query);
+		return $query->result_array();
+	}
+
 	public function signIn(array $data) {
 		$this->load->model("Users");
 		return $this->Users->login($data);

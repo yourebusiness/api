@@ -4,6 +4,9 @@ class My_controller extends CI_Controller {
 	const ERRORNO_OK = 0;
 	const ERRORSTR_OK = "OK";
 
+    const ERRORNO_INVALID_CAPTCHA = 3;
+    const ERRORSTR_INVALID_CAPTCHA = "Invalid captcha.";
+
 	const ERRORNO_INVALID_VALUE = 7;
 	const ERRORSTR_INVALID_VALUE = "Invalid passed value.";
 
@@ -28,5 +31,5 @@ class My_controller extends CI_Controller {
                 ->set_header("Access-Control-Allow-Origin: http://localhost:8080")
                 ->set_content_type("application/json")
                 ->set_output(json_encode($data));
-    }
+    }   
 }

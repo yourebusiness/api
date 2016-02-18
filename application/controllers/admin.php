@@ -49,7 +49,7 @@ class Admin extends CI_Controller {
 
 	private function _response($data, $status = 200) {
 		$this->output
-				->set_header("HTTP/1.1 " . $status . " " . $this->_requestStatus(200))
+				->set_header("HTTP/1.1 " . $status . " " . $this->_requestStatus($status))
 				->set_content_type('application/json')
 				->set_output(json_encode($data));
 	}

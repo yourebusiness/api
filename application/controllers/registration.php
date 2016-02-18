@@ -59,20 +59,72 @@ class Registration extends My_Controller {
         }
 	}
 
+    private function _checkCaptcha() {
+        $captcha = $this->input->post("g-recaptcha-response");
+        if (!$captcha)
+            return array("statusCode" => parent::ERRORNO_INVALID_VALUE, "statusMessage" => parent::ERRORSTR_INVALID_VALUE, "statusDesc" => "Captcha is missing. Reload the page.");
+        if ($captcha == "")
+            return array("statusCode" => parent::ERRORNO_INVALID_VALUE, "statusMessage" => parent::ERRORSTR_INVALID_VALUE, "statusDesc" => "No value for captcha.");
+
+        return true;
+    }
+
+    private function _verifyCaptcha() {
+        define("secretKey", "6LfIjBgTAAAAADFjUP1JficN0G4QBDo6ohCDAc-D");    //from simply.amazing.wizard@g...
+        $data["secret"] = constant("secretKey");
+        $data["response"] = $this->input->post("g-recaptcha-response");
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "https://www.google.com/recaptcha/api/siteverify");
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $output = curl_exec($ch);
+        $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close ($ch);
+
+        /*$fileLocation = "/tmp/registration.txt";
+        $file = fopen($fileLocation, "w");
+        fwrite($file, print_r($output, true));
+        fclose($file);*/
+
+        $assocArray = json_decode($output, true);
+        if (!$assocArray["success"])
+            return array("statusCode" => parent::ERRORNO_INVALID_CAPTCHA, "statusMessage" => parent::ERRORSTR_INVALID_CAPTCHA, "statusDesc" => "Invalid captcha.");
+
+        return true;
+    }
+
     private function _registration_add() {
+        $status = $this->_checkCaptcha();
+        if ($status["statusCode"] != 0) {
+            $this->_response($status);
+            return;
+        }
+
+        // request for verification
+        $status = $this->_verifyCaptcha();
+        if ($status["statusCode"] != 0) {
+            $this->_response($status);
+            return;
+        }
+
         $data = array();
         $data["password"] = $this->input->post("password");
         $data["confirmPassword"] = $this->input->post("confirmPassword");
 
         $status = $this->_checkPWAndConfirmPW($data);
-        if ($status["statusCode"] != 0)
-            return $status;
+        if ($status["statusCode"] != 0) {
+            $this->_response($status);
+            return;
+        }
 
-        session_start();
-        $sessionCaptcha = strtolower($_SESSION['captcha']['code']);
-        $postCaptcha = strtolower($this->input->post("captcha"));
+        //session_start();
+        //$sessionCaptcha = strtolower($_SESSION['captcha']['code']);
+        //$sessionCaptcha = "ertertertertert";
+        /*$postCaptcha = strtolower($this->input->post("captcha"));
         if ($sessionCaptcha !== $postCaptcha)
-            return array("statusCode" => parent::ERRORNO_INVALID_VALUE, "statusMessage" => parent::ERRORSTR_INVALID_VALUE, "statusDesc" => "Wrong captcha.");
+            return array("statusCode" => parent::ERRORNO_INVALID_VALUE, "statusMessage" => parent::ERRORSTR_INVALID_VALUE, "statusDesc" => "Wrong captcha.");*/
 
         $this->load->helper("utility");
 
@@ -88,7 +140,7 @@ class Registration extends My_Controller {
         $data["gender"] = $this->input->post("gender");
         $data["userEmail"] = $this->input->post("userEmail");
         $data["hash"] = generateRandomString();
-        $data["captcha"] = $sessionCaptcha;
+        $data["captcha"] = "null";  // we do not need captcha to record anymore
 
         $this->load->model("Company");
         $status = $this->Company->add($data);

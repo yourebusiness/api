@@ -8,7 +8,12 @@ class Api extends My_Controller {
 
 	public function getCity($provinceId) {
 		$this->load->model("Api_model");
-		echo json_encode($this->Api_model->getCity($provinceId));
+		$this->_response($this->Api_model->getCity($provinceId));
+	}
+
+	public function provincesAndCities() {
+		$this->load->model("Api_model");
+		$this->_response($this->Api_model->getProvincesAndCities());
 	}
 
 	public function signIn() {
