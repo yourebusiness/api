@@ -47,6 +47,107 @@ class Api extends My_Controller {
 		}
 	}
 
+	public function forgotPassword() {
+		/*$status = array("statusCode" => parent::ERRORNO_INVALID_VALUE,
+			"statusMessage" => parent::ERRORSTR_INVALID_VALUE, "statusDesc" => "Test error.");
+		$this->_response($status);
+		return;*/
+		// needed not to execute succeeding codes below.
+
+		$email = $this->input->get("email");
+		$this->load->helper('utility');
+		$result = validateEmailAddress($email);
+
+		switch ($result) {
+			case 1:
+				break;
+			case 0:
+				$this->_response(array("statusCode" => parent::ERRORNO_INVALID_VALUE,
+					"statusMessage" => parent::ERRORSTR_INVALID_VALUE, "statusDesc" => "Invalid email address."));
+				die();
+				break;
+			case false:
+				$this->_response(array("statusCode" => parent::ERRORNO_INTERNAL_SERVER_ERROR,
+					"statusMessage" => parent::ERRORSTR_INTERNAL_SERVER_ERROR, "statusDesc" => "Internal server error."));
+				die();
+				break;
+		}
+
+		$this->load->model("Api_model");
+		$status = $this->Api_model->resetPassword($email);
+		if ($status["statusCode"] != 0) {
+			$this->_response($status);
+		} else {
+			$status = array("statusCode" => parent::ERRORNO_OK, "statusMessage" => parent::ERRORSTR_OK, "statusDesc" => "Okay.");
+
+			global $settings;
+            if ($settings["sendEmail"]) {
+            	$hash = generateRandomString(40);
+                if (!$this->sendEmail($email, $hash)) {	// want to do this in cron instead
+                	$status = array("statusCode" => parent::ERRORNO_INTERNAL_SERVER_ERROR, "statusMessage" => parent::ERRORSTR_INTERNAL_SERVER_ERROR, "statusDesc" => "Unable to send link for forgot password.");
+                }
+            }
+
+			$this->_response($status);
+		}
+
+		return; // needed not to execute succeeding codes below.
+	}
+
+	public function forgotPasswordReset($hash) {
+		if (!$hash) {
+			$status = array("statusCode" => parent::ERRORNO_INVALID_PARAMETER, "statusMessage" => parent::ERRORSTR_INVALID_PARAMETER, "statusDesc" => "No hash provided.");
+			$this->_response($status);
+			return;
+		}
+
+		$this->load->model("Api_model");
+		$this->Api_model->
+	}
+
+	private function sendEmail($email, $hash) {
+        $this->load->library("MY_PHPMailer.php");
+        $mail = new PHPMailer;
+
+        global $smtp;
+
+        $mail->isSMTP();                                      // Set mailer to use SMTP
+        $mail->Host = "smtp.mail.yahoo.com";  // Specify main and backup SMTP servers
+        $mail->SMTPAuth = true;                               // Enable SMTP authentication
+        $mail->Username = $smtp["username"];                 // SMTP username
+        $mail->Password = $smtp["password"];                           // SMTP password
+        $mail->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
+        $mail->Port = 465;                                    // TCP port to connect to
+
+        $mail->From = $smtp["from"];
+        $mail->FromName = 'yourspa Mailer';
+        $mail->addAddress($email);             // Add a recipient
+        $mail->isHTML(true);                                  // Set email format to HTML
+
+        $mail->Subject = 'Password Reset Request.';
+
+        global $url;
+
+        $message = "You have requested to reset your password based on your email. If you didn't ask this please disregard it.\n Click on the below link to reset your password.
+                    <a href='" . $url["temporaryUrl"] . "?hash=" . $hash . "'>Reset password.</a>";
+        $mail->Body    = $message;
+        $mail->AltBody = "Password reset requested.\n " . $url["temporaryUrl"] . "?hash=" . $hash;
+
+        if(!$mail->send()) {
+        	error_log($mail->ErrorInfo);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public function signIn2() {
+    	$this->load->library("OAuth2");
+
+		// Handle a request for an OAuth2.0 Access Token and send the response to the client
+		$server->handleTokenRequest(OAuth2\Request::createFromGlobals())->send();
+    }
+
 	public function logout() {
 		$this->session->sess_destroy();
 		$data["title"] = "Logged Out";

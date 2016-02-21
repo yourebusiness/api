@@ -119,13 +119,6 @@ class Registration extends My_Controller {
             return;
         }
 
-        //session_start();
-        //$sessionCaptcha = strtolower($_SESSION['captcha']['code']);
-        //$sessionCaptcha = "ertertertertert";
-        /*$postCaptcha = strtolower($this->input->post("captcha"));
-        if ($sessionCaptcha !== $postCaptcha)
-            return array("statusCode" => parent::ERRORNO_INVALID_VALUE, "statusMessage" => parent::ERRORSTR_INVALID_VALUE, "statusDesc" => "Wrong captcha.");*/
-
         $this->load->helper("utility");
 
         $data["company"] = $this->input->post("company");
@@ -142,14 +135,14 @@ class Registration extends My_Controller {
         $data["hash"] = generateRandomString(40);
         $data["captcha"] = null;  // we do not need captcha to record anymore, we now use Google captcha.
 
-        $this->load->model("Company");
-        $status = $this->Company->add($data);
+        $this->load->model("registration_model");
+        $status = $this->registration_model->add($data);
 
-        if ($status["statusCode"] == 0) {
+        /*if ($status["statusCode"] == 0) {
             global $settings;
             if ($settings["sendEmail"])
                 $this->sendEmail($data["userEmail"], $data["hash"]);
-        }
+        }*/
 
         $this->_response($status);
     }
@@ -171,12 +164,12 @@ class Registration extends My_Controller {
         $mail->SMTPAuth = true;                               // Enable SMTP authentication
         $mail->Username = $smtp["username"];                 // SMTP username
         $mail->Password = $smtp["password"];                           // SMTP password
-        $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
-        $mail->Port = 25;                                    // TCP port to connect to
+        $mail->SMTPSecure = 'ssl';                            // Enable TLS encryption, `ssl` also accepted
+        $mail->Port = 465;                                    // TCP port to connect to
 
         $mail->From = $smtp["from"];
         $mail->FromName = 'yourspa Mailer';
-        $mail->addAddress($smtp["recipients"]);             // Add a recipient
+        $mail->addAddress($email);             // Add a recipient
         $mail->isHTML(true);                                  // Set email format to HTML
 
         $mail->Subject = 'Registration to www.yourspa.com';

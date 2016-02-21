@@ -1,6 +1,6 @@
 <?php
 
-class Admin extends CI_Controller {
+class Admin extends My_controller {
 	private $username = "";
 	private $id = 0;
 	private $userId = 0;
@@ -12,7 +12,7 @@ class Admin extends CI_Controller {
 	public function __construct() {
 		parent::__construct();
 
-		if (!$this->session->userdata["username"])
+		/*if (!$this->session->userdata["username"])
 			redirect(site_url("api/signin"));
 		else {
 			$this->username = $this->session->userdata["username"];
@@ -20,7 +20,7 @@ class Admin extends CI_Controller {
 			$this->id = $this->session->userdata["id"];
 			$this->companyId = $this->session->userdata["companyId"];
 			$this->role = $this->session->userdata["role"];
-		}
+		}*/
 	}
 
 	public function index() {
@@ -34,6 +34,18 @@ class Admin extends CI_Controller {
 		// we want this to delete after exiting from company profile page.
 		$this->load->helper("cookie");
 		delete_cookie("yourspaFunc_CompanyProfile");
+	}
+
+	private function validate() {
+		$this->load->library("OAuth2");
+
+		// Handle a request to a resource and authenticate the access token
+		if (!$server->verifyResourceRequest(OAuth2\Request::createFromGlobals())) {
+			$server->getResponse()->send();
+			die;
+		}
+
+		return array('success' => true, 'message' => 'Success.');
 	}
 
 	private function _requestStatus($code) {
@@ -75,6 +87,12 @@ class Admin extends CI_Controller {
 				$this->_masseurs_add();
 				break;
 			case "GET":
+				$accessToken = $this->post->get("access_token");
+				if (!$accessToken) {
+					$this->_response(array("statusCode" => parent::ERRORNO_INVALID_PARAMETER, "statusMessage" => parent::ERRORSTR_INVALID_PARAMETER, "statusDesc" => "Invalid parameter token."));
+					die;
+				}
+
 				if (trim($list) == "list") {
 					$this->_getMasseursListByCompanyId($this->companyId);
 				} else {

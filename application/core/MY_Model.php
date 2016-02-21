@@ -26,6 +26,9 @@ class My_model extends CI_Model {
 	const ERRORNO_DB_VALUE_EXISTS = 9;
 	const ERRORSTR_DB_VALUE_EXISTS = "Database value already exists.";
 
+	const ERRORNO_RECORD_DOES_NOT_EXISTS = 11;
+	const ERRORSTR_RECORD_DOES_NOT_EXISTS = "Record does not exists.";
+
 	// a generic error
 	const ERRORNO_DB_ERROR = 10;
 	const ERRORSTR_DB_ERROR = "Database error.";

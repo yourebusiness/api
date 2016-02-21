@@ -1,6 +1,10 @@
 <?php
 
-class Api_model extends CI_Model {
+class Api_model extends My_model {
+	public function __construct() {
+		parent::__construct();
+	}
+
 	public function getProvinces() {
 		$query = "select id,provinceName from province order by provinceName";
 		$query = $this->db->query($query);
@@ -46,5 +50,33 @@ class Api_model extends CI_Model {
 			return false;
 		else
 			return true;
+	}
+
+	// when requesting password reset
+	public function resetPassword($email) {
+		// we need a result here because it returns false on not empty
+		if ($this->checkUsername($email)) {
+			return array("statusCode" => parent::ERRORNO_RECORD_DOES_NOT_EXISTS, "statusMessage" => parent::ERRORSTR_RECORD_DOES_NOT_EXISTS, "statusDesc" => 'Record was not found.');
+		}
+
+		$bind_vars = array($email);
+
+    	$query = "update users set resetPassword=1, resetPasswordDate=now() where username=?";
+    	$query = $this->db->query($query, $bind_vars);
+		if ( ! $query) {
+			$msg = $this->db->_error_number();
+			$num = $this->db->_error_message();
+			log_message("error", "Error running sql query in " . __METHOD__ . "(). ($num) $msg");
+			return array("statusCode" => parent::ERRORNO_DB_ERROR, "statusMessage" => parent::ERRORSTR_DB_ERROR,
+				"statusDesc" => 'Database error.');
+		}
+
+		return array("statusCode" => parent::ERRORNO_OK, "statusMessage" => parent::ERRORSTR_OK,
+			"statusDesc" => "Reset password success.");
+	}
+
+	// call from the link sent to the email
+	public function forgotPasswordReset() {
+
 	}
 }

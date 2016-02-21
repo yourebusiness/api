@@ -52,3 +52,12 @@ if ( ! function_exists('normalizeNumber')) {
 		return preg_replace("/[,]/", "", $value);
 	}
 }
+
+// email validation
+if ( ! function_exists('validateEmailAddress')) {
+	function validateEmailAddress($emailAddress) {
+		//$pattern = "/^[a-zA-Z]*$/i";
+		$pattern = "/[a-zA-Z\.]*$/i";
+		return preg_match($pattern, $emailAddress);	//preg_match() returns 1 if the pattern matches given subject, 0 if it does not, or FALSE if an error occurred.
+	}
+}

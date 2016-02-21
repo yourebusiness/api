@@ -3,12 +3,14 @@
 class My_controller extends CI_Controller {
 	const ERRORNO_OK = 0;
 	const ERRORSTR_OK = "OK";
-
     const ERRORNO_INVALID_CAPTCHA = 3;
     const ERRORSTR_INVALID_CAPTCHA = "Invalid captcha.";
-
+    const ERRORNO_INTERNAL_SERVER_ERROR = 6;
+    const ERRORSTR_INTERNAL_SERVER_ERROR = "Internal server error.";
 	const ERRORNO_INVALID_VALUE = 7;
 	const ERRORSTR_INVALID_VALUE = "Invalid passed value.";
+    const ERRORNO_INVALID_PARAMETER = 8;
+    const ERRORSTR_INVALID_PARAMETER = "Invalid passed parameter.";
 
 	public function __construct() {
 		parent::__construct();
