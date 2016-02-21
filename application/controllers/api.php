@@ -73,8 +73,9 @@ class Api extends My_Controller {
 				break;
 		}
 
+		$hash = generateRandomString(40);
 		$this->load->model("Api_model");
-		$status = $this->Api_model->resetPassword($email);
+		$status = $this->Api_model->resetPassword($email, $hash);
 		if ($status["statusCode"] != 0) {
 			$this->_response($status);
 		} else {
@@ -82,7 +83,6 @@ class Api extends My_Controller {
 
 			global $settings;
             if ($settings["sendEmail"]) {
-            	$hash = generateRandomString(40);
                 if (!$this->sendEmail($email, $hash)) {	// want to do this in cron instead
                 	$status = array("statusCode" => parent::ERRORNO_INTERNAL_SERVER_ERROR, "statusMessage" => parent::ERRORSTR_INTERNAL_SERVER_ERROR, "statusDesc" => "Unable to send link for forgot password.");
                 }
@@ -102,7 +102,9 @@ class Api extends My_Controller {
 		}
 
 		$this->load->model("Api_model");
-		$this->Api_model->
+		$status = $this->Api_model->forgotPasswordReset($hash);
+		if ($status["statusCode"] != 0)
+			$this->_response($status);
 	}
 
 	private function sendEmail($email, $hash) {
