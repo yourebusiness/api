@@ -92,9 +92,18 @@ class Api_model extends My_model {
 			"statusDesc" => "Reset password request success.");
 	}
 
+	private function _verifyHashForForgotPW() {
+		return array("statusCode" => parent::ERRORNO_OK, "statusMessage" => parent::ERRORSTR_OK,
+				"statusDesc" => 'To be continued.');
+	}
+
 	// call from the link sent to the email
 	public function forgotPasswordReset($hash) {
 		$bind_vars = array($hash);
+
+		$status = $this->_verifyHashForForgotPW($hash);
+		if ($status["statusCode"] != 0)
+			return $status;
 
     	$query = "UPDATE resetPasswordRequests SET resetPasswordSuccessDate=now() WHERE resetPasswordHash=?";
     	$query = $this->db->query($query, $bind_vars);
@@ -107,6 +116,6 @@ class Api_model extends My_model {
 		}
 
 		return array("statusCode" => parent::ERRORNO_OK, "statusMessage" => parent::ERRORSTR_OK,
-			"statusDesc" => "Reset password success.");
+			"statusDesc" => "Reset password has been successful.");
 	}
 }

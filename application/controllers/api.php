@@ -88,7 +88,14 @@ class Api extends My_Controller {
 		return; // needed not to execute succeeding codes below.
 	}
 
-	public function forgotPasswordReset($hash) {
+	public function forgotPasswordReset() {
+		$hash = $this->input->get("hash");
+
+		$fileLocation = "/tmp/registration.txt";
+        $file = fopen($fileLocation, "w");
+        fwrite($file, print_r($hash, true));
+        fclose($file);
+
 		if (!$hash) {
 			$status = array("statusCode" => parent::ERRORNO_INVALID_PARAMETER, "statusMessage" => parent::ERRORSTR_INVALID_PARAMETER, "statusDesc" => "No hash provided.");
 			$this->_response($status);
@@ -97,8 +104,8 @@ class Api extends My_Controller {
 
 		$this->load->model("Api_model");
 		$status = $this->Api_model->forgotPasswordReset($hash);
-		if ($status["statusCode"] != 0)
-			$this->_response($status);
+		$this->_response($status);
+		return;
 	}
 
 	private function sendEmail($email, $hash) {
