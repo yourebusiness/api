@@ -31,7 +31,7 @@ class Api_model extends My_model {
 		return $this->Users->login($data);
 	}
 
-	public function checkUsername($username) {
+	private function checkUsername($username) {
 		$bind_vars = array($username, $username);
 		$query = "select username from users where username = ? or email = ?";
 		$query = $this->db->query($query, $bind_vars);
@@ -52,19 +52,33 @@ class Api_model extends My_model {
 			return true;
 	}
 
+	private function _getUserIdByEmailOrUsername($emailOrUsername) {
+		$bind_vars = array($emailOrUsername, $emailOrUsername);
+		$query = "SELECT id from users WHERE username=? or email=?";
+		$query = $this->db->query($query, $bind_vars);
+		if ( ! $query) {
+			$msg = $this->db->_error_number();
+			$num = $this->db->_error_message();
+			log_message("error", "Error running sql query in " . __METHOD__ . "(). ($num) $msg");
+			return array("statusCode" => parent::ERRORNO_DB_ERROR, "statusMessage" => parent::ERRORSTR_DB_ERROR,
+				"statusDesc" => 'Database error.');
+		}
+
+		return $query->result_array();
+	}
+
 	// when requesting password reset
 	public function resetPassword($email, $hash) {
 		// we need a result here because it returns false on not empty
-		if ($this->checkUsername($email)) {
-			return array("statusCode" => parent::ERRORNO_RECORD_DOES_NOT_EXISTS, "statusMessage" => parent::ERRORSTR_RECORD_DOES_NOT_EXISTS, "statusDesc" => 'Record was not found.');
-		}
-		if (!$hash) {
+		if ($this->checkUsername($email))
+			return array("statusCode" => parent::ERRORNO_RECORD_DOES_NOT_EXISTS, "statusMessage" => parent::ERRORSTR_RECORD_DOES_NOT_EXISTS, "statusDesc" => 'Email address is not found.');
+		if (!$hash)
 			return array("statusCode" => parent::ERRORNO_INVALID_PARAMETER, "statusMessage" => parent::ERRORSTR_INVALID_PARAMETER, "statusDesc" => 'No reset password hash found.');
-		}
 
-		$bind_vars = array($email, $hash);
+		$result = $this->_getUserIdByEmailOrUsername($email);
+		$bind_vars = array($result[0]["id"], $hash);
 
-    	$query = "update users set resetPassword=1, resetPasswordDate=now(), resetPasswordHash=? where username=?";
+		$query = "insert into resetPasswordRequests(userId, resetPasswordDate, resetPasswordHash) values(?, now(), ?)";
     	$query = $this->db->query($query, $bind_vars);
 		if ( ! $query) {
 			$msg = $this->db->_error_number();
@@ -75,14 +89,14 @@ class Api_model extends My_model {
 		}
 
 		return array("statusCode" => parent::ERRORNO_OK, "statusMessage" => parent::ERRORSTR_OK,
-			"statusDesc" => "Reset password success.");
+			"statusDesc" => "Reset password request success.");
 	}
 
 	// call from the link sent to the email
 	public function forgotPasswordReset($hash) {
 		$bind_vars = array($hash);
 
-    	$query = "update users set resetPasswordSuccess=1, resetPasswordSuccessDate=now() where resetPasswordHash=?";
+    	$query = "UPDATE resetPasswordRequests SET resetPasswordSuccessDate=now() WHERE resetPasswordHash=?";
     	$query = $this->db->query($query, $bind_vars);
 		if ( ! $query) {
 			$msg = $this->db->_error_number();

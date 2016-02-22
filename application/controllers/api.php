@@ -48,12 +48,6 @@ class Api extends My_Controller {
 	}
 
 	public function forgotPassword() {
-		/*$status = array("statusCode" => parent::ERRORNO_INVALID_VALUE,
-			"statusMessage" => parent::ERRORSTR_INVALID_VALUE, "statusDesc" => "Test error.");
-		$this->_response($status);
-		return;*/
-		// needed not to execute succeeding codes below.
-
 		$email = $this->input->get("email");
 		$this->load->helper('utility');
 		$result = validateEmailAddress($email);
