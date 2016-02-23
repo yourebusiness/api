@@ -1,5 +1,6 @@
 <?php
 
+/* I may consider this https://gist.github.com/nambok/3834056 for extending CI input method. */
 class Api extends My_Controller {
 	public function getProvinces() {
 		$this->load->model("Api_model");
@@ -89,12 +90,42 @@ class Api extends My_Controller {
 	}
 
 	public function forgotPasswordReset() {
-		$hash = $this->input->get("hash");
+		$this->method = $_SERVER["REQUEST_METHOD"];
 
-		$fileLocation = "/tmp/registration.txt";
-        $file = fopen($fileLocation, "w");
-        fwrite($file, print_r($hash, true));
-        fclose($file);
+		//$.ajax() is Access-Control-Request-Method, PHP is HTTP_ACCESS_CONTROL_REQUEST_METHOD
+
+		if ($this->method == "OPTIONS" && array_key_exists("HTTP_ACCESS_CONTROL_REQUEST_METHOD", $_SERVER)) {
+			if ($_SERVER["HTTP_ACCESS_CONTROL_REQUEST_METHOD"] == "PUT")
+				$this->method = "PUT";
+			elseif ($_SERVER["HTTP_ACCESS_CONTROL_REQUEST_METHOD"] == "OPTIONS")
+				$this->method = "OPTIONS";
+			elseif ($_SERVER["HTTP_ACCESS_CONTROL_REQUEST_METHOD"] == "DELETE")
+				$this->method = "DELETE";
+			else
+				throw new Exception("Unexpected Header");
+		} else {
+			//throw new Exception("Unexpected Header");
+			$this->_response(array("Invalid method."), 405);
+		}
+
+		switch ($this->method) {
+			case "DELETE":
+				break;
+			case "POST":
+				break;
+			case "GET":
+				break;
+			case 'PUT':
+				$this->_forgotPasswordReset();
+				break;
+			default:
+				$this->_response(array("Invalid method."), 405);
+				break;
+		}
+	}
+
+	private function _forgotPasswordReset() {
+		$hash = $this->input->get("hash");
 
 		if (!$hash) {
 			$status = array("statusCode" => parent::ERRORNO_INVALID_PARAMETER, "statusMessage" => parent::ERRORSTR_INVALID_PARAMETER, "statusDesc" => "No hash provided.");

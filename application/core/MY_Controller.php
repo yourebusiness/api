@@ -31,6 +31,7 @@ class My_controller extends CI_Controller {
         $this->output
                 ->set_header("HTTP/1.1 " . $status . " " . $this->_requestStatus($status))
                 ->set_header("Access-Control-Allow-Origin: http://localhost:8080")
+                ->set_header("Access-Control-Allow-Methods: GET, PUT, POST, DELETE")
                 ->set_content_type("application/json")
                 ->set_output(json_encode($data));
     }   

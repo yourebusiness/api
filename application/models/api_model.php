@@ -92,21 +92,34 @@ class Api_model extends My_model {
 			"statusDesc" => "Reset password request success.");
 	}
 
-	private function _verifyHashForForgotPW() {
-		return array("statusCode" => parent::ERRORNO_OK, "statusMessage" => parent::ERRORSTR_OK,
-				"statusDesc" => 'To be continued.');
+	private function _checkHashIfActive($hash) {
+		$bind_vars = array($hash);
+		$query = "SELECT id FROM resetPasswordRequests WHERE resetPasswordHash=? AND (resetPasswordSuccessDate IS NULL OR resetPasswordSuccessDate = '0000-00-00 00:00:00')";
+		$query = $this->db->query($query, $bind_vars);
+		if ( ! $query) {
+			$msg = $this->db->_error_number();
+			$num = $this->db->_error_message();
+			log_message("error", "Error running sql query in " . __METHOD__ . "(). ($num) $msg");
+			return array("statusCode" => parent::ERRORNO_DB_ERROR, "statusMessage" => parent::ERRORSTR_DB_ERROR,
+				"statusDesc" => 'Database error.');
+		}
+
+		if ($query->num_rows()) {
+			return array("statusCode" => parent::ERRORNO_OK, "statusMessage" => parent::ERRORSTR_OK,
+				"statusDesc" => 'Hash is okay.');
+		} else {
+			return array("statusCode" => parent::ERRORNO_DB_VALUE_EXISTS, "statusMessage" => parent::ERRORSTR_DB_VALUE_EXISTS,
+				"statusDesc" => 'Hash is already used. You may re-do forgot password.' . $query->num_rows());
+		}
 	}
 
 	// call from the link sent to the email
 	public function forgotPasswordReset($hash) {
 		$bind_vars = array($hash);
 
-		$status = $this->_verifyHashForForgotPW($hash);
-		if ($status["statusCode"] != 0)
-			return $status;
-
     	$query = "UPDATE resetPasswordRequests SET resetPasswordSuccessDate=now() WHERE resetPasswordHash=?";
     	$query = $this->db->query($query, $bind_vars);
+
 		if ( ! $query) {
 			$msg = $this->db->_error_number();
 			$num = $this->db->_error_message();
