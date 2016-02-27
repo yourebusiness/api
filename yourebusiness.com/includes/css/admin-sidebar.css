@@ -1,0 +1,53 @@
+@media (min-width: 768px) {
+	
+}
+
+.sidebar {
+	z-index: 1;
+	position: absolute;
+	width: 200px;
+}
+
+.sidebar > .sidebar-nav.sidebar-collapse {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+.sidebar ul li {
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: rgb(231, 231, 231);
+
+	border-right-width: 1px;
+	border-right-style: solid;
+	border-right-color: #e7e7e7;
+}
+
+/* we want to avoid double border from .sidebar ul li (the parent ul li) */
+ul.nav-second-level li {
+	border-right-width: 0px;
+	border-bottom-width: 1px;
+}
+
+.sidebar .fa-plus, .sidebar .fa-minus {
+	float: right;
+}
+
+.sidebar .nav-second-level li a {
+	padding-left: 40px;
+}
+
+#main-content {
+	position: inherit;
+	padding: 0 30px;
+	margin-left: 200px;
+	margin-top: 30px;
+}
+
+.sidebar .nav-second-level li.active {
+	background-color: #eee;
+}
+
+.alert {
+	display: none;
+}
