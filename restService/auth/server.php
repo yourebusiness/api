@@ -17,32 +17,38 @@ ini_set('display_errors',1);error_reporting(E_ALL);
 require_once('../OAuth2/src/OAuth2/Autoloader.php');
 OAuth2\Autoloader::register();
 
+$dsn = array('dsn' => $dsn, 'username' => $username, 'password' => $password);
+$config = array('user_table' => 'users');
+
 // $dsn is the Data Source Name for your database, for exmaple "mysql:dbname=my_oauth2_db;host=localhost"
-$storage = new OAuth2\Storage\Pdo(array('dsn' => $dsn, 'username' => $username, 'password' => $password));
+$storage = new OAuth2\Storage\My_Pdo($dsn, $config);
 
 // Pass a storage object or array of storage objects to the OAuth2 server class
 $server = new OAuth2\Server($storage);
 
-// Add the "Client Credentials" grant type (it is the simplest of the grant types)
-//$server->addGrantType(new OAuth2\GrantType\ClientCredentials($storage));
+/* Add the "Client Credentials" grant type (it is the simplest of the grant types)
+$server->addGrantType(new OAuth2\GrantType\ClientCredentials($storage));
 
 // Add the "Authorization Code" grant type (this is where the oauth magic happens)
-//$server->addGrantType(new OAuth2\GrantType\AuthorizationCode($storage));
+$server->addGrantType(new OAuth2\GrantType\AuthorizationCode($storage));
 
 // create some users in memory
 $users = array('bshaffer' => array('password' => 'brent123', 'first_name' => 'Brent', 'last_name' => 'Shaffer'));
+$users = array();
 
 try {
 	$DBH = new PDO("mysql:host={$db['hostname']};dbname={$db['database']}", $db["username"], $db["password"]);
 	$DBH->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 
-	$DBH->prepare('SELECT username, psswd from users');
+	$result = $DBH->query('SELECT username, passwd from users');
+	foreach ($result as $row) {
+		$users[$row['username']] = array('password' => $row['passwd']);
+	}
 }
 catch(PDOException $e) {
     error_log($e->getMessage());
     die;
 }
-
 
 
 // create a storage object
@@ -52,4 +58,4 @@ $storage = new OAuth2\Storage\Memory(array('user_credentials' => $users));
 $grantType = new OAuth2\GrantType\UserCredentials($storage);
 
 // add the grant type to your OAuth server
-$server->addGrantType($grantType);
+$server->addGrantType($grantType);*/
