@@ -1,7 +1,5 @@
 <?php
 
-require_once('../restService/server.php');
-
 class Admin extends My_controller {
 	private $username = "";
 	private $id = 0;
@@ -14,7 +12,8 @@ class Admin extends My_controller {
 	public function __construct() {
 		parent::__construct();
 
-		/*if (!$this->session->userdata["username"])
+		/*
+		if (!$this->session->userdata["username"])
 			redirect(site_url("api/signin"));
 		else {
 			$this->username = $this->session->userdata["username"];
@@ -22,7 +21,10 @@ class Admin extends My_controller {
 			$this->id = $this->session->userdata["id"];
 			$this->companyId = $this->session->userdata["companyId"];
 			$this->role = $this->session->userdata["role"];
-		}*/
+		}
+		*/
+
+		require_once('server.php');
 
 		// Handle a request to a resource and authenticate the access token
 		if (!$server->verifyResourceRequest(OAuth2\Request::createFromGlobals())) {
@@ -32,7 +34,7 @@ class Admin extends My_controller {
 	}
 
 	public function index() {
-		$data["title"] = "Your Spa";
+		/*$data["title"] = "Your Spa";
 		$data["username"] = $this->username;
 		$data["userRights"] = $this->session->userdata["role"];
 
@@ -41,10 +43,12 @@ class Admin extends My_controller {
 
 		// we want this to delete after exiting from company profile page.
 		$this->load->helper("cookie");
-		delete_cookie("yourspaFunc_CompanyProfile");
+		delete_cookie("yourspaFunc_CompanyProfile");*/
+
+		$this->_response(array("success" => true, "message" => "Okay."), 200);
 	}
 
-	private function _requestStatus($code) {
+	/*private function _requestStatus($code) {
 		$status = array(
 				200 => "OK",
 				404 => "Not found",
@@ -60,7 +64,7 @@ class Admin extends My_controller {
 				->set_header("HTTP/1.1 " . $status . " " . $this->_requestStatus($status))
 				->set_content_type('application/json')
 				->set_output(json_encode($data));
-	}
+	}*/
 
 	/* controller for masseurs */
 	public function masseurs($list = "") {

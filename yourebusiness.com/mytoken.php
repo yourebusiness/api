@@ -16,6 +16,4 @@ $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 curl_close ($ch);
 
 header('Content-Type: application/json');
-header("Access-Control-Allow-Origin: http://localhost:8080");
-header("Access-Control-Allow-Methods: GET, PUT, POST, DELETE");
 echo $output;
