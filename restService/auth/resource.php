@@ -1,8 +1,12 @@
-<?php   /*No direct script access allowed*/
-// include our OAuth2 Server object
-require_once __DIR__.'/server.php';
+<?php
+/*No direct script access allowed*/
+//http://bshaffer.github.io/oauth2-server-php-docs/cookbook/
 
-// Handle a request to a resource and authenticate the access token
+include_once('./server.php');
+
+// Pass a storage object or array of storage objects to the OAuth2 server class
+$server = new OAuth2\Server($storage);
+
 if (!$server->verifyResourceRequest(OAuth2\Request::createFromGlobals())) {
     $server->getResponse()->send();
     die;

@@ -25,37 +25,3 @@ $storage = new OAuth2\Storage\My_Pdo($dsn, $config);
 
 // Pass a storage object or array of storage objects to the OAuth2 server class
 $server = new OAuth2\Server($storage);
-
-/* Add the "Client Credentials" grant type (it is the simplest of the grant types)
-$server->addGrantType(new OAuth2\GrantType\ClientCredentials($storage));
-
-// Add the "Authorization Code" grant type (this is where the oauth magic happens)
-$server->addGrantType(new OAuth2\GrantType\AuthorizationCode($storage));
-
-// create some users in memory
-$users = array('bshaffer' => array('password' => 'brent123', 'first_name' => 'Brent', 'last_name' => 'Shaffer'));
-$users = array();
-
-try {
-	$DBH = new PDO("mysql:host={$db['hostname']};dbname={$db['database']}", $db["username"], $db["password"]);
-	$DBH->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-
-	$result = $DBH->query('SELECT username, passwd from users');
-	foreach ($result as $row) {
-		$users[$row['username']] = array('password' => $row['passwd']);
-	}
-}
-catch(PDOException $e) {
-    error_log($e->getMessage());
-    die;
-}
-
-
-// create a storage object
-$storage = new OAuth2\Storage\Memory(array('user_credentials' => $users));
-
-// create the grant type
-$grantType = new OAuth2\GrantType\UserCredentials($storage);
-
-// add the grant type to your OAuth server
-$server->addGrantType($grantType);*/
