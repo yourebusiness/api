@@ -2,7 +2,7 @@
 /*No direct script access allowed*/
 //http://bshaffer.github.io/oauth2-server-php-docs/cookbook/
 
-include_once('../../yourebusiness.com/.inc/globals.inc.php');
+include_once('../../yourebusiness/.inc/globals.inc.php');
 
 global $db;
 		
