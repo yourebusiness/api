@@ -1,4 +1,9 @@
-var elixir = require('laravel-elixir');
+require('es6-promise').polyfill();
+const elixir = require('laravel-elixir');
+
+require('laravel-elixir-vue');
+
+require('babel-core');
 
 /*
  |--------------------------------------------------------------------------
@@ -11,6 +16,11 @@ var elixir = require('laravel-elixir');
  |
  */
 
+/*elixir(mix => {
+    mix.sass('app.scss')
+       .webpack('app.js');
+}); */
+
 elixir(function(mix) {
-    mix.sass('app.scss');
+    mix.sass('app.scss').webpack('app.js');
 });
