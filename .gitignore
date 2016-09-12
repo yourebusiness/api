@@ -18,3 +18,6 @@ includes/js/v2/test.js
 reactjs/
 tutorials/
 yourebusiness.com.renamed/
+.env
+node_modules/
+vendor/
