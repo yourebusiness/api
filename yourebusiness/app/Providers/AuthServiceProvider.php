@@ -25,10 +25,10 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-	Passport::routes();
+        Passport::routes();
 
-	// Pruning Revoked Tokens
-	Passport::pruneRevokedTokens();
+        // Pruning Revoked Tokens
+        Passport::pruneRevokedTokens();
         //
     }
 }

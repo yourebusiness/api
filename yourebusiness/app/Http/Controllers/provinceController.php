@@ -16,8 +16,8 @@ class provinceController extends Controller
     public function index()
     {
         $provinces = \App\province::all();
-        return response()->json($provinces)
-            ->header("Access-Control-Allow-Origin", "http://localhost:8080");
+        return response()->json($provinces);
+            // ->header("Access-Control-Allow-Origin", "http://localhost:8080");
     }
 
     /**

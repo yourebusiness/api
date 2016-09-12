@@ -11,10 +11,26 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+use Illuminate\Http\Request;
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index');
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('verify_token', 'verifyTokenController@index');
+
+Route::resource('province', 'provinceController', ['only' => [
+	'index'
+]]);
+
+Route::resource('city', 'cityController', ['only' => [
+	'show'
+]]);
+
+Route::resource('citiesinprovince', 'citiesinprovinceController', ['only' => [
+	'show'
+]]);

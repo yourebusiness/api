@@ -1,0 +1,29 @@
+# I just wanna save this.
+<VirtualHost *:80>
+        ServerAdmin webmaster@localhost
+        ServerName www.yourebusiness.com
+
+        DocumentRoot "/var/www/pmorcilladev/yourebusiness/public"
+        # this is where our front-end is
+        Alias "/fe" "/var/www/pmorcilladev/yourebusinessFrontEnd/web"
+        # this is where the admin pagess are
+        Alias "/admin" "/var/www/pmorcilladev/yourebusiness_admin/app"
+
+        <Directory "/var/www/pmorcilladev/yourebusiness/public">
+                Options Indexes FollowSymLinks MultiViews
+                AllowOverride All
+        </Directory>
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+
+<VirtualHost *:80>
+        ServerAdmin webmaster@localhost
+        # ServerAlias *.yourebusiness.com
+        ServerName yourebusiness.com
+        RedirectMatch permanent ^/(.*) http://www.yourebusiness.com/$1
+
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>

@@ -11,7 +11,9 @@
 |
 */
 
-Route::get('/', function () {
+// I don't know the diff bet Http\routes.php and routes\*.php. But the latter works.
+
+/*Route::get('/', function () {
     return view('welcome');
 });
 
@@ -25,4 +27,4 @@ Route::resource('city', 'cityController', ['only' => [
 
 Route::resource('citiesinprovince', 'citiesinprovinceController', ['only' => [
 	'show'
-]]);
+]]);*/
