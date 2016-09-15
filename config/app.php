@@ -177,8 +177,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-	// Laravel/Password
-	Laravel\Passport\PassportServiceProvider::class,
+	   // Laravel Password OAut2.0
+	   Laravel\Passport\PassportServiceProvider::class,
 
     ],
 
